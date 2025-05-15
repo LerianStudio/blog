@@ -2,10 +2,9 @@
 baseURL = 'https://example.org/'
 languageCode = 'en-us'
 title = 'Lerian Studio Blog'
-description = 'Thoughts, ideas, and projects from Lerian Studio'
 
 # Theme Configuration
-theme = 'hugo-dead-simple'
+theme = 'hugo-theme-terminal'
 
 # Content Configuration
 summaryLength = 30
@@ -16,16 +15,61 @@ enableGitInfo = true
 # URL Configuration
 canonifyURLs = true
 
-# Date Format
+# Terminal Theme Parameters
 [params]
-  dateFormat = "January 2, 2006"
-  mainSections = ["posts", "blog"]
-  description = "Lerian Studio Blog - Sharing insights and experiences"
-  images = ["site-feature-image.jpg"]
+  # dir name of your main content (default is `content/posts`)
+  # the list of set content will show up on your index page (baseurl).
+  contentTypeName = "posts"
+
+  # ["orange", "blue", "red", "green", "pink"]
+  themeColor = "blue"
+
+  # if you set this to 0, only submenu trigger will be visible
+  showMenuItems = 5
+
+  # show selector to switch language
+  showLanguageSelector = false
+
+  # set theme to full screen width
+  fullWidthTheme = false
+
+  # center theme with default width
+  centerTheme = true
+
+  # if your resource directory contains an image called `cover.(jpg|png|webp)`,
+  # then the file will be used as a cover automatically.
+  # With this option you don't have to put the `cover` param in a front-matter.
+  autoCover = true
+
+  # set post to show the last updated
+  # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
+  showLastUpdated = true
+
+  # set a custom favicon (default is a `themeColor` square)
+  # favicon = "favicon.ico"
+
+  # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
+  updatedDatePrefix = "Updated"
+
+  # set all headings to their default size (depending on browser settings)
+  # oneHeadingSize = true # default
+
+  # whether to show a page's estimated reading time
+  readingTime = true
+
+  # whether to show a table of contents
+  # can be overridden in a page's front-matter
+  Toc = true
+
+  # set title for the table of contents
+  # can be overridden in a page's front-matter
+  TocTitle = "Table of Contents"
+  
   # Social media links
-  github = "https://github.com/lerianstudio"
-  twitter = "https://twitter.com/lerianstudio"
-  linkedin = "https://linkedin.com/in/lerianstudio"
+  [params.social]
+    github = "https://github.com/lerianstudio"
+    twitter = "https://twitter.com/lerianstudio"
+    linkedin = "https://linkedin.com/in/lerianstudio"
 
 # Syntax Highlighting
 [markup]
@@ -41,27 +85,42 @@ canonifyURLs = true
     startLevel = 2
 
 # Menu Configuration
-[menu]
-  [[menu.main]]
-    identifier = "home"
-    name = "Home"
-    url = "/"
-    weight = 1
-  [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    url = "/posts/"
-    weight = 2
-  [[menu.main]]
-    identifier = "about"
-    name = "About"
-    url = "/about/"
-    weight = 3
-  [[menu.main]]
-    identifier = "contact"
-    name = "Contact"
-    url = "/contact/"
-    weight = 4
+[languages]
+  [languages.en]
+    languageName = "English"
+    title = "Lerian Studio Blog"
+    subtitle = "Thoughts, ideas, and projects from Lerian Studio"
+    owner = "Lerian Studio"
+    keywords = ""
+    copyright = ""
+    menuMore = "Show more"
+    readMore = "Read more"
+    readOtherPosts = "Read other posts"
+    newerPosts = "Newer posts"
+    olderPosts = "Older posts"
+    missingContentMessage = "Page not found..."
+    missingBackButtonLabel = "Back to home page"
+
+    [languages.en.params.logo]
+      logoText = "Lerian Studio Blog"
+      logoHomeLink = "/"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about"
+        weight = 1
+      [[languages.en.menu.main]]
+        identifier = "posts"
+        name = "Posts"
+        url = "/posts"
+        weight = 2
+      [[languages.en.menu.main]]
+        identifier = "contact"
+        name = "Contact"
+        url = "/contact"
+        weight = 3
 
 # Privacy Configuration
 [privacy]
