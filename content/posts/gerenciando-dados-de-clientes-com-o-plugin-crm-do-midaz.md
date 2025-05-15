@@ -1,4 +1,8 @@
-# gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar
++++
+date = '2025-05-15T06:41:02-03:00'
+draft = false
+title = 'gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar'
++++
 
 no mundo dos sistemas financeiros, o gerenciamento eficiente e seguro de dados de clientes é um requisito fundamental. o plugin crm do midaz foi desenvolvido especificamente para atender essa necessidade, oferecendo uma solução robusta e flexível para instituições financeiras de todos os portes.
 
@@ -9,11 +13,13 @@ no mundo dos sistemas financeiros, o gerenciamento eficiente e seguro de dados d
 a decisão de implementar o crm como um plugin, ao invés de um microservice tradicional, foi baseada em diversos fatores:
 
 1. **acoplamento controlado**:
+
    - como plugin: interface bem definida com o core, mas mantendo acoplamento necessário para operações críticas
    - como microservice: independência total, mas com overhead de comunicação e complexidade de deployment
    - decisão: plugin oferece melhor equilíbrio entre independência e integração
 
 2. **deployment simplificado**:
+
    - como plugin: deployment único com o core, reduzindo complexidade operacional
    - como microservice: deployment independente, mas com necessidade de gerenciar múltiplos serviços
    - decisão: modelo de plugin reduz overhead operacional mantendo flexibilidade
@@ -28,11 +34,13 @@ a decisão de implementar o crm como um plugin, ao invés de um microservice tra
 a escolha do mongodb como storage principal foi resultado de uma análise detalhada:
 
 1. **modelo de dados**:
+
    - mongodb: schema flexível, ideal para metadata dinâmica e evolução do modelo
    - postgresql: schema rígido, melhor para dados altamente estruturados
    - decisão: flexibilidade do mongodb mais adequada para necessidades variadas dos clientes
 
 2. **performance**:
+
    - mongodb: excelente performance em leitura, especialmente com índices compostos
    - postgresql: melhor para joins complexos e transações acid
    - decisão: padrão de acesso do crm favorece mongodb (mais leituras que escritas)
@@ -49,11 +57,13 @@ a escolha do mongodb como storage principal foi resultado de uma análise detalh
 a implementação de segurança foi cuidadosamente planejada:
 
 1. **algoritmo de criptografia**:
+
    - aes-gcm: oferece authenticated encryption, garantindo confidencialidade e integridade
    - alternativas consideradas: aes-cbc (mais simples, mas sem autenticação integrada)
    - decisão: aes-gcm oferece melhor segurança sem comprometer performance
 
 2. **estratégia de hashing**:
+
    - hmac-sha256: permite busca eficiente mantendo segurança
    - alternativas: bcrypt (mais lento, inadequado para busca)
    - decisão: hmac-sha256 ideal para nosso caso de uso de busca segura
@@ -70,11 +80,13 @@ a implementação de segurança foi cuidadosamente planejada:
 optamos por uma api rest pelos seguintes motivos:
 
 1. **maturidade**:
+
    - rest: ecossistema maduro, ferramentas estabelecidas
    - graphql: mais flexível, mas requer mais setup
    - decisão: rest mais adequado para nosso caso de uso
 
 2. **caching**:
+
    - rest: caching nativo http
    - graphql: requer implementação customizada
    - decisão: benefício do caching http para performance
@@ -89,6 +101,7 @@ optamos por uma api rest pelos seguintes motivos:
 estruturamos os endpoints considerando:
 
 1. **granularidade**:
+
    - endpoints específicos para cada operação
    - evitamos endpoints genéricos demais
    - decisão: melhor controle de permissões e performance
@@ -105,6 +118,7 @@ estruturamos os endpoints considerando:
 o sistema de metadata foi um ponto crucial:
 
 1. **estrutura**:
+
    - flat key-value: simples, fácil de indexar
    - nested objects: mais flexível, mas complexo
    - decisão: flat key-value pela simplicidade e performance
@@ -119,6 +133,7 @@ o sistema de metadata foi um ponto crucial:
 implementamos soft delete considerando:
 
 1. **benefícios**:
+
    - auditoria completa
    - recuperação de dados
    - manutenção de histórico
@@ -135,6 +150,7 @@ implementamos soft delete considerando:
 a integração com o plugin de auth foi planejada para:
 
 1. **controle de acesso**:
+
    - baseado em roles
    - permissões granulares
    - decisão: flexibilidade para diferentes modelos de negócio
@@ -151,6 +167,7 @@ a integração com o plugin de auth foi planejada para:
 implementamos uma estratégia de cache em múltiplas camadas:
 
 1. **application cache**:
+
    - dados frequentemente acessados
    - cache de configurações
    - decisão: redução de latência
@@ -173,6 +190,7 @@ sistema robusto de health checks:
 ## conclusão
 
 o plugin crm do midaz é resultado de decisões técnicas cuidadosamente pensadas, sempre considerando:
+
 - necessidades reais dos clientes
 - requisitos de segurança
 - performance e escalabilidade

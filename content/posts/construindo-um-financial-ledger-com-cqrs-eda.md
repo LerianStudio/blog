@@ -1,4 +1,8 @@
-# construindo um financial ledger com cqrs e eda
++++
+date = '2025-05-15T06:41:02-03:00'
+draft = false
+title = 'construindo um financial ledger com cqrs e eda'
++++
 
 no mundo da tecnologia financeira, construir sistemas robustos, escaláveis e confiáveis é fundamental. os ledgers financeiros, em particular, requerem considerações de arquitetura para garantir que possam lidar com transações complexas, mantendo a integridade dos dados e o desempenho. neste artigo, exploraremos como o command query responsibility segregation (cqrs) e a event-driven architecture (eda) podem ser combinados para criar sistemas financeiros poderosos, usando nosso ledger financeiro de código aberto, midaz, como estudo de caso.
 
