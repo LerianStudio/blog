@@ -1,0 +1,78 @@
+# Basic Configuration
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'Lerian Studio Blog'
+description = 'Thoughts, ideas, and projects from Lerian Studio'
+
+# Theme Configuration
+theme = 'hugo-dead-simple'
+
+# Content Configuration
+summaryLength = 30
+defaultContentLanguage = 'en'
+enableEmoji = true
+enableGitInfo = true
+
+# URL Configuration
+canonifyURLs = true
+
+# Date Format
+[params]
+  dateFormat = "January 2, 2006"
+  mainSections = ["posts", "blog"]
+  description = "Lerian Studio Blog - Sharing insights and experiences"
+  images = ["site-feature-image.jpg"]
+  # Social media links
+  github = "https://github.com/lerianstudio"
+  twitter = "https://twitter.com/lerianstudio"
+  linkedin = "https://linkedin.com/in/lerianstudio"
+
+# Syntax Highlighting
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = false
+    style = "monokai"
+
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = false
+    startLevel = 2
+
+# Menu Configuration
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "blog"
+    name = "Blog"
+    url = "/posts/"
+    weight = 2
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 3
+  [[menu.main]]
+    identifier = "contact"
+    name = "Contact"
+    url = "/contact/"
+    weight = 4
+
+# Privacy Configuration
+[privacy]
+  [privacy.disqus]
+    disable = true
+  [privacy.googleAnalytics]
+    anonymizeIP = true
+    disable = false
+    respectDoNotTrack = true
+  [privacy.instagram]
+    disable = true
+  [privacy.youtube]
+    disable = false
+    privacyEnhanced = true
