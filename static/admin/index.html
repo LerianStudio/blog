@@ -11,7 +11,35 @@
 
 <body>
     <!-- Static CMS (modern Decap CMS fork) -->
-    <script src="https://unpkg.com/@staticcms/app@^4.0.0/dist/static-cms-app.js"></script>
+    <script>
+        // Set manual initialization flag before loading the library
+        window.CMS_MANUAL_INIT = true;
+        console.log('CMS_MANUAL_INIT flag set:', window.CMS_MANUAL_INIT);
+    </script>
+    <script src="https://unpkg.com/@staticcms/app@4.3.0/dist/static-cms-app.js"></script>
+    <script>
+        // Initialize Static CMS with manual initialization
+        try {
+            console.log('Window object:', window);
+            console.log('CMS available:', !!window.CMS);
+            console.log('Init function available:', !!window.init);
+
+            if (window.CMS && window.init) {
+                const { CMS, init } = window;
+                console.log('Initializing Static CMS...');
+                init();
+                console.log('Static CMS initialized successfully');
+            } else if (window.StaticCMS) {
+                console.log('Using StaticCMS global...');
+                window.StaticCMS.init();
+            } else {
+                console.error('Static CMS not found on window object');
+                console.log('Available properties:', Object.keys(window).filter(key => key.includes('CMS') || key.includes('Static')));
+            }
+        } catch (error) {
+            console.error('Failed to initialize Static CMS:', error);
+        }
+    </script>
 </body>
 
 </html>
