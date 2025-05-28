@@ -1,5 +1,202 @@
+/* Import Inter and IBM Plex Mono fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* Override theme colors to match Lerian Studio */
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --accent: #ffff00;
+  --background: #ffffff;
+  --foreground: #000000;
+  --accent: #44f56b;
+  --color-background: #ffffff;
+  --color-main: #000000;
+  --color-secondary: #333333;
+  --color-accent: #44f56b;
+  --color-accent-2: #fc6359;
+  --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-stack-monospace: 'IBM Plex Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* Override dark mode colors to keep light theme */
+body.dark {
+  --background: #ffffff;
+  --foreground: #000000;
+  --accent: #44f56b;
+  --color-background: #ffffff;
+  --color-main: #000000;
+  --color-secondary: #333333;
+  --color-accent: #44f56b;
+}
+
+/* Force light background */
+body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-family: var(--font-stack) !important;
+}
+
+/* Header styling */
+.header {
+  background-color: transparent;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.header__logo .logo {
+  font-family: var(--font-stack);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #000000;
+}
+
+/* Remove terminal cursor animation */
+.logo::after {
+  display: none !important;
+}
+
+/* Navigation styling */
+.navigation-menu a,
+.menu__dropdown a {
+  color: #000000;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navigation-menu a:hover,
+.menu__dropdown a:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+/* Content styling */
+.content {
+  color: #000000;
+}
+
+/* Post titles and links */
+.post-title a {
+  color: #000000;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.post-title a:hover {
+  color: var(--color-accent);
+}
+
+/* Regular links */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom-color 0.2s ease;
+}
+
+a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+/* Buttons */
+.button {
+  background-color: var(--color-accent);
+  color: #000000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background-color: #3de55f;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Code blocks */
+pre, code {
+  font-family: var(--font-stack-monospace);
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+}
+
+code {
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre {
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+pre code {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}
+
+/* Post metadata */
+.post-meta {
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.footer {
+  border-top: 2px solid #f0f0f0;
+  background-color: transparent;
+}
+
+.footer__inner {
+  color: #666666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .header__logo .logo {
+    font-size: 1.25rem;
+  }
+}
+
+/* Override any dark mode switches */
+.color-mode__btn {
+  display: none !important;
+}
+
+/* Ensure white background on all elements */
+.container,
+.post,
+.index-content {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Override terminal theme specific styles */
+body:not(.dark) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.header,
+.header__inner {
+  background-color: transparent !important;
+}
+
+/* Fix read more button */
+.read-more {
+  color: #000000 !important;
+}
+
+.read-more::after {
+  content: "Read more →";
+}
+
+/* Remove brackets from read more */
+.read-more.button.inline {
+  font-size: 0;
+}
+
+.read-more.button.inline::after {
+  font-size: 1rem;
+  content: "Read more →";
 }

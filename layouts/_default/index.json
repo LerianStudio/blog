@@ -1,0 +1,58 @@
+[
+    {
+        {- range where site.RegularPages "Section""posts" -
+        }
+    }
+  {
+        "title": {
+            { .Title | jsonify
+            }
+        },
+        "date": {
+            { .Date.Format "2006-01-02" | jsonify
+            }
+        },
+        "permalink": {
+            { .Permalink | jsonify
+            }
+        },
+        "content": {
+            { .Content | plainify | jsonify
+            }
+        },
+        "summary": {
+            { .Summary | plainify | jsonify
+            }
+        },
+        "tags": [
+            {
+                { range .Params.tags
+                }
+            }{
+                { . | jsonify
+                }
+            }{
+                { if ne . (index $.Params.tags (sub (len $.Params.tags) 1))
+                }
+            },
+            {
+                { end
+                }
+            }{
+                { end
+                }
+            }
+        ]
+    }{
+        { if ne . (index (where site.RegularPages "Section""posts") (sub (len (where site.RegularPages "Section""posts")) 1))
+        }
+    },
+    {
+        { end
+        }
+    }
+{
+        {- end -
+        }
+    }
+]

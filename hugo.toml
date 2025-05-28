@@ -4,7 +4,7 @@ languageCode = 'en-us'
 title = 'Lerian Studio Blog'
 
 # Theme Configuration
-theme = 'compose'
+theme = 'hugo-theme-terminal'
 
 # Content Configuration
 summaryLength = 30
@@ -18,47 +18,45 @@ canonifyURLs = true
 [pagination]
   pagerSize = 10
 
-# Compose Theme Parameters
+# Terminal Theme Parameters
 [params]
   # Meta
   author = "Lerian Studio"
   description = "Thoughts, ideas, and projects from Lerian Studio"
-  
-  # Logo and favicon
-  logoText = "Lerian Studio"
-  [params.logo]
-    lightMode = "/favicon.svg"
-  favicon = "/favicon.svg"
+  keywords = "fintech, financial systems, cqrs, event-driven, software architecture"
   
   # Theme customization
+  contentTypeName = "posts"
   themeColor = "#44f56b"
-  accentColor = "#fc6359"
-  showSocialLinks = true
-  showToc = true
-  showDate = true
-  showReadTime = true
-  showAuthor = true
-  showLikes = false
-  darkMode = false  # Disable dark mode to match main site
+  logoText = "Lerian Studio"
+  logoHomeLink = "/"
   
-  # Search
-  enableSearch = true
-  searchProvider = "fuse"
+  # Features
+  showMenuItems = 4
+  fullWidthTheme = false
+  centerTheme = true
+  showLastUpdated = false
   
-  # Code highlighting
-  enableHighlight = true
-  highlightStyle = "monokai"
+  # Custom colors
+  # These will be overridden by our custom CSS
+  primaryColor = "#44f56b"
+  backgroundColor = "#ffffff"
   
   # Social media links
-  [params.social]
-    github = "https://github.com/lerianstudio"
-    twitter = "https://twitter.com/lerianstudio"
-    linkedin = "https://linkedin.com/in/lerianstudio"
+  [[params.social]]
+    name = "Github"
+    icon = "fab fa-github"
+    url = "https://github.com/lerianstudio"
     
-  # Custom footer
-  [params.footer]
-    copyright = "© 2025 Lerian Studio. All rights reserved."
-    poweredBy = false
+  [[params.social]]
+    name = "Twitter"
+    icon = "fab fa-twitter"
+    url = "https://twitter.com/lerianstudio"
+    
+  [[params.social]]
+    name = "LinkedIn"
+    icon = "fab fa-linkedin"
+    url = "https://linkedin.com/in/lerianstudio"
 
 # Syntax Highlighting
 [markup]
