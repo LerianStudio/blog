@@ -2,7 +2,7 @@ backend:
   name: github
   repo: LerianStudio/blog
   branch: main
-  base_url: https://netlify-cms-oauth.herokuapp.com
+  base_url: https://netlify-cms-oauth-provider.herokuapp.com
   auth_endpoint: auth
 
 # This line should *not* be indented
