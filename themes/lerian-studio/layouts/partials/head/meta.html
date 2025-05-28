@@ -1,6 +1,16 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>
+    {{- if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end -}}
+</title>
+
 <meta name="description"
     content="{{ if .Description }}{{ .Description }}{{ else }}{{ site.Params.description }}{{ end }}">
-<meta name="author" content="{{ if .Params.author }}{{ .Params.author }}{{ else }}{{ site.Params.author }}{{ end }}">
+
+{{ if .Params.author }}
+<meta name="author" content="{{ .Params.author }}">
+{{ end }}
 
 <meta property="og:title" content="{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end }}">
 <meta property="og:description"
@@ -13,5 +23,17 @@
 <meta name="twitter:description"
     content="{{ if .Description }}{{ .Description }}{{ else }}{{ site.Params.description }}{{ end }}">
 
+<!-- Favicon -->
 <link rel="icon" type="image/png" href="{{ " /favicon.png" | relURL }}">
+
+<!-- CSS -->
+<link rel="stylesheet" href="{{ " /css/main.css" | relURL }}">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
 <link rel="canonical" href="{{ .Permalink }}">

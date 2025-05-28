@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Api-Design on Lerian Studio Blog</title>
-    <link>https://blog.lerian.studio/tags/api-design/</link>
+    <link>http://localhost:1313/tags/api-design/</link>
     <description>Recent content in Api-Design on Lerian Studio Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 28 May 2025 07:58:40 -0300</lastBuildDate>
-    <atom:link href="https://blog.lerian.studio/tags/api-design/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/api-design/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</title>
-      <link>https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</link>
+      <link>http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</guid>
+      <guid>http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</guid>
       <description>&lt;p&gt;nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &amp;ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &amp;ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?&lt;/p&gt;</description>
     </item>
   </channel>

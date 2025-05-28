@@ -1,7 +1,6 @@
 +++
-date = '2025-05-15T06:41:02-03:00'
-draft = false
-title = 'About'
+title = "About Lerian Studio"
+description = "Learn about Lerian Studio, a leading financial technology company specializing in core banking solutions, ledger systems, and innovative fintech infrastructure."
 +++
 
 # About Lerian Studio
