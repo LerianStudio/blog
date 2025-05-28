@@ -1,645 +1,167 @@
-<!DOCTYPE html>
-<html lang="en-us">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>construindo um financial ledger com cqrs e eda | Lerian Studio Blog</title>
-
-<meta name="description"
-    content="Thoughts, ideas, and projects from Lerian Studio">
-
-
-
-<meta property="og:title" content="construindo um financial ledger com cqrs e eda | Lerian Studio Blog">
-<meta property="og:description"
-    content="Thoughts, ideas, and projects from Lerian Studio">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="construindo um financial ledger com cqrs e eda | Lerian Studio Blog">
-<meta name="twitter:description"
-    content="Thoughts, ideas, and projects from Lerian Studio">
-
-
-<link rel="icon" type="image/png" href="https://blog.lerian.studio/favicon.png">
-
-
-<link rel="stylesheet" href="https://blog.lerian.studio/css/main.css">
-
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600;700&display=swap"
-    rel="stylesheet">
-
-<link rel="canonical" href="https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/">
-    
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
-<link rel="stylesheet" href="https://blog.lerian.studio/css/main.css">
-
-
-    <title>construindo um financial ledger com cqrs e eda | Lerian Studio Blog</title>
-</head>
-
-<body>
-    <header class="header">
-    <div class="header__container">
-        <div class="header__logo">
-            <a href="https://blog.lerian.studio/%20/" class="logo">
-                <img src="https://blog.lerian.studio/images/lerian-logo.svg" alt="Lerian Studio" class="logo__image">
-            </a>
-        </div>
-
-        <nav class="header__nav">
-            <ul class="nav__menu">
-                <li><a href="https://blog.lerian.studio/%20/" class="nav__link">Home</a></li>
-                <li><a href="https://blog.lerian.studio/%20/posts/" class="nav__link">Articles</a></li>
-                <li><a href="https://blog.lerian.studio/%20/about/" class="nav__link">About</a></li>
-            </ul>
-
-            <button class="nav__toggle" id="nav-toggle">
-                <span class="nav__hamburger"></span>
-                <span class="nav__hamburger"></span>
-                <span class="nav__hamburger"></span>
-            </button>
-        </nav>
-    </div>
-</header>
-
-    <main class="main">
-        
-<div class="container">
-    <article class="post">
-        <header class="post__header">
-            <h1 class="post__title">construindo um financial ledger com cqrs e eda</h1>
-
-            <div class="post__meta">
-                <time datetime=" 2025-05-15" class="post__date">
-                    May 15, 2025
-                </time>
-
-                
-
-                
-                <span class="post__separator">•</span>
-                <span class="post__reading-time">11 min read</span>
-                
-
-                <span class="post__separator">•</span>
-                <span class="post__word-count">2167 words</span>
-            </div>
-
-            
-            <div class="post__tags">
-                
-                <a href="https://blog.lerian.studio/tags/fintech/" class="tag">fintech</a>
-                
-                <a href="https://blog.lerian.studio/tags/architecture/" class="tag">architecture</a>
-                
-                <a href="https://blog.lerian.studio/tags/cqrs/" class="tag">cqrs</a>
-                
-                <a href="https://blog.lerian.studio/tags/eda/" class="tag">eda</a>
-                
-                <a href="https://blog.lerian.studio/tags/ledger/" class="tag">ledger</a>
-                
-            </div>
-            
-
-            
-            <div class="post__categories">
-                <span class="post__categories-label">Categories:</span>
-                
-                <a href="https://blog.lerian.studio/categories/architecture/" class="category-link">Architecture</a>
-                
-                <a href="https://blog.lerian.studio/categories/financial-technology/" class="category-link">Financial Technology</a>
-                
-            </div>
-            
-        </header>
-
-        
-        <div class="post__featured-image">
-            <img src="https://blog.lerian.studio/images/posts/financial-ledger-hero.jpg" alt="Financial technology and data visualization representing CQRS and EDA architecture"
-                class="post__image">
-            
-            <figcaption class="post__image-caption">Modern financial systems require sophisticated architectures to handle complex transactions and maintain data integrity</figcaption>
-            
-        </div>
-        
-
-        <div class="post__content">
-            <p>no mundo da tecnologia financeira, construir sistemas robustos, escaláveis e confiáveis é fundamental. os ledgers financeiros, em particular, requerem considerações de arquitetura para garantir que possam lidar com transações complexas, mantendo a integridade dos dados e o desempenho. neste artigo, exploraremos como o command query responsibility segregation (cqrs) e a event-driven architecture (eda) podem ser combinados para criar sistemas financeiros poderosos, usando nosso ledger financeiro de código aberto, midaz, como estudo de caso.</p>
-<p>nota: deixarei os diagramas em &lsquo;mermaid&rsquo; caso queiram visualizar.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>graph TD
-</span></span><span style="display:flex;"><span>    subgraph &#34;cqrs + eda architecture&#34;
-</span></span><span style="display:flex;"><span>        subgraph &#34;client layer&#34;
-</span></span><span style="display:flex;"><span>            UI[ui/api clients]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;api layer&#34;
-</span></span><span style="display:flex;"><span>            API[api gateway]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;command layer&#34;
-</span></span><span style="display:flex;"><span>            CMD[command handlers]
-</span></span><span style="display:flex;"><span>            VAL[validators]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;event bus&#34;
-</span></span><span style="display:flex;"><span>            EB[rabbitmq]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;domain layer&#34;
-</span></span><span style="display:flex;"><span>            DOM[domain logic]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;persistence&#34;
-</span></span><span style="display:flex;"><span>            WRTDB[(write database)]
-</span></span><span style="display:flex;"><span>            RDDB[(read database)]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        subgraph &#34;query layer&#34;
-</span></span><span style="display:flex;"><span>            QRY[query handlers]
-</span></span><span style="display:flex;"><span>            VM[view models]
-</span></span><span style="display:flex;"><span>        end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        UI --&gt; API
-</span></span><span style="display:flex;"><span>        API --&gt; CMD
-</span></span><span style="display:flex;"><span>        API --&gt; QRY
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        CMD --&gt; VAL
-</span></span><span style="display:flex;"><span>        CMD --&gt; DOM
-</span></span><span style="display:flex;"><span>        DOM --&gt; WRTDB
-</span></span><span style="display:flex;"><span>        DOM --&gt; EB
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        EB --&gt; VM
-</span></span><span style="display:flex;"><span>        VM --&gt; RDDB
-</span></span><span style="display:flex;"><span>        QRY --&gt; RDDB
-</span></span><span style="display:flex;"><span>    end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    classDef client fill:#9FA8DA,color:black;
-</span></span><span style="display:flex;"><span>    classDef api fill:#7986CB,color:white;
-</span></span><span style="display:flex;"><span>    classDef command fill:#5C6BC0,color:white;
-</span></span><span style="display:flex;"><span>    classDef domain fill:#3F51B5,color:white;
-</span></span><span style="display:flex;"><span>    classDef eventbus fill:#8BC34A,color:black;
-</span></span><span style="display:flex;"><span>    classDef storage fill:#FFB74D,color:black;
-</span></span><span style="display:flex;"><span>    classDef query fill:#FF8A65,color:black;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    class UI client;
-</span></span><span style="display:flex;"><span>    class API api;
-</span></span><span style="display:flex;"><span>    class CMD,VAL command;
-</span></span><span style="display:flex;"><span>    class DOM domain;
-</span></span><span style="display:flex;"><span>    class EB eventbus;
-</span></span><span style="display:flex;"><span>    class WRTDB,RDDB storage;
-</span></span><span style="display:flex;"><span>    class QRY,VM query;
-</span></span></code></pre></div><h2 id="o-desafio-dos-sistemas-financeiros">o desafio dos sistemas financeiros</h2>
-<p>sistemas financeiros apresentam desafios únicos que arquiteturas monolíticas tradicionais têm dificuldade em resolver:</p>
-<ul>
-<li>alto volume de transações: sistemas financeiros devem processar milhares, senão milhões/bilhões, de transações diariamente</li>
-<li>regras de negócio complexas: transações financeiras envolvem regras complexas, validações e cálculos</li>
-<li>consistência de dados: os dados financeiros devem permanecer consistentes em múltiplas operações</li>
-<li>requisitos de auditoria: cada operação financeira deve ser rastreável e auditável</li>
-<li>preocupações com escalabilidade: o sistema deve escalar para lidar com volumes crescentes de transações, de maneira a não comprometer a sua integridade, ao mesmo tempo mantendo a questão de custo em voga</li>
-</ul>
-<p>esses desafios exigem padrões de design de software que possam separar responsabilidades, escalar independentemente e manter a integridade dos dados. é aqui que o cqrs e a arquitetura orientada a eventos entram em cena.</p>
-<h2 id="entendendo-o-cqrs-em-sistemas-financeiros">entendendo o cqrs em sistemas financeiros</h2>
-<p>command query responsibility segregation (cqrs) é um padrão de design que separa operações de leitura e escrita em modelos distintos. em um contexto financeiro, essa separação é particularmente valiosa.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sequenceDiagram
-</span></span><span style="display:flex;"><span>    participant Client
-</span></span><span style="display:flex;"><span>    participant API as api gateway
-</span></span><span style="display:flex;"><span>    participant CH as command handler
-</span></span><span style="display:flex;"><span>    participant DB as write database
-</span></span><span style="display:flex;"><span>    participant EB as event bus
-</span></span><span style="display:flex;"><span>    participant QH as query handler
-</span></span><span style="display:flex;"><span>    participant RDB as read database
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    Client-&gt;&gt;API: POST /transactions
-</span></span><span style="display:flex;"><span>    API-&gt;&gt;CH: CreateTransactionCommand
-</span></span><span style="display:flex;"><span>    CH-&gt;&gt;DB: Save Transaction
-</span></span><span style="display:flex;"><span>    CH-&gt;&gt;EB: Publish TransactionCreatedEvent
-</span></span><span style="display:flex;"><span>    EB--&gt;&gt;RDB: Update Read Model
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    Client-&gt;&gt;API: GET /transactions/{id}
-</span></span><span style="display:flex;"><span>    API-&gt;&gt;QH: GetTransactionQuery
-</span></span><span style="display:flex;"><span>    QH-&gt;&gt;RDB: Fetch Transaction DTO
-</span></span><span style="display:flex;"><span>    QH--&gt;&gt;API: Transaction Details
-</span></span><span style="display:flex;"><span>    API--&gt;&gt;Client: Transaction Response
-</span></span></code></pre></div><h2 id="o-lado-do-command-write-model">o lado do command (write model)</h2>
-<p>o lado do command lida com operações que mudam o estado do sistema, como:</p>
-<ul>
-<li>criar novas contas</li>
-<li>registrar transações financeiras</li>
-<li>atualizar saldos</li>
-<li>modificar informações de ativos</li>
-</ul>
-<p>no midaz, nossos serviços de command são estruturados com responsabilidades claras e focadas:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// de components/onboarding/internal/services/command/command.go</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">UseCase</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">OrganizationRepo</span> <span style="color:#a6e22e">organization</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">LedgerRepo</span> <span style="color:#a6e22e">ledger</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SegmentRepo</span> <span style="color:#a6e22e">segment</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PortfolioRepo</span> <span style="color:#a6e22e">portfolio</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">AccountRepo</span> <span style="color:#a6e22e">account</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">AssetRepo</span> <span style="color:#a6e22e">asset</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">MetadataRepo</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">RabbitMQRepo</span> <span style="color:#a6e22e">rabbitmq</span>.<span style="color:#a6e22e">ProducerRepository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">RedisRepo</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">RedisRepository</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>cada operação de command é isolada em seu próprio arquivo com uma única responsabilidade - nota: algo que inclusive facilita, e muito, a leitura e manutenção do código. por exemplo, criando uma nova conta em create-account.go:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// simplificado de create-account.go</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">uc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">UseCase</span>) <span style="color:#a6e22e">CreateAccount</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">account</span>.<span style="color:#a6e22e">Account</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">account</span>.<span style="color:#a6e22e">Account</span>, <span style="color:#66d9ef">error</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// validar entrada</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// gerar ID único</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// armazenar no repositório</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// publicar evento</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// retornar resultado</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="o-lado-do-query-read-model">o lado do query (read model)</h2>
-<p>o lado do query se concentra em recuperar e apresentar dados:</p>
-<ul>
-<li>buscar informações de contas</li>
-<li>recuperar histórico de transações</li>
-<li>gerar relatórios</li>
-<li>ler saldos</li>
-</ul>
-<p>no midaz, os serviços de query são estruturados de forma semelhante, mas otimizados para leitura:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// de components/onboarding/internal/services/query/query.go</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">UseCase</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">OrganizationRepo</span> <span style="color:#a6e22e">organization</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">LedgerRepo</span> <span style="color:#a6e22e">ledger</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">SegmentRepo</span> <span style="color:#a6e22e">segment</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">PortfolioRepo</span> <span style="color:#a6e22e">portfolio</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">AccountRepo</span> <span style="color:#a6e22e">account</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">AssetRepo</span> <span style="color:#a6e22e">asset</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">MetadataRepo</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Repository</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">RedisRepo</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">RedisRepository</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>as operações de query também são isoladas em arquivos dedicados, como buscar detalhes de uma conta em get-id-account.go:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// simplificado de get-id-account.go</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">uc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">UseCase</span>) <span style="color:#a6e22e">GetIDAccount</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">id</span> <span style="color:#a6e22e">uuid</span>.<span style="color:#a6e22e">UUID</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">account</span>.<span style="color:#a6e22e">Account</span>, <span style="color:#66d9ef">error</span>) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// buscar do repositório</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// transformar se necessário</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// retornar dados</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="benefícios-do-cqrs-em-sistemas-financeiros">benefícios do cqrs em sistemas financeiros</h2>
-<ul>
-<li>
-<p>performance optimization: write models e read models podem ser otimizados independentemente. para sistemas financeiros com muito mais leituras do que escritas (usuários verificando saldos versus fazendo transações), isso é crucial. nossa implementação de queries demonstra essa otimização</p>
-</li>
-<li>
-<p>scalability: commands e queries podem escalar separadamente. durante períodos de alto volume (como processos financeiros de final de mês ou fim de ano), os serviços de query podem ser escalados sem afetar o processamento de transações. isso é facilitado por nossa infraestrutura de contêineres</p>
-</li>
-<li>
-<p>specialized data storage: commands podem usar armazenamento otimizado para operações de escrita (como postgresql), enquanto queries podem usar armazenamento otimizado para leitura (como mongodb para consulta flexível de metadados)</p>
-</li>
-<li>
-<p>reduced complexity: ao separar concerns, a domain logic complexa em operações financeiras torna-se mais gerenciável, reduzindo bugs e melhorando a manutenibilidade, como pode ser visto em nosso transaction domain</p>
-</li>
-</ul>
-<h2 id="event-driven-architecture-em-sistemas-financeiros">event-driven architecture em sistemas financeiros</h2>
-<p>enquanto o cqrs aborda muitos desafios, sistemas financeiros também se beneficiam de loose coupling e processamento assíncrono. é aqui que a event-driven architecture (eda) se destaca.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>graph TD
-</span></span><span style="display:flex;"><span>    subgraph &#34;financial transaction&#34;
-</span></span><span style="display:flex;"><span>        TX[transaction creation] --&gt;|publishes| E1[TransactionCreatedEvent]
-</span></span><span style="display:flex;"><span>        E1 --&gt;|consumed by| P1[balance processor]
-</span></span><span style="display:flex;"><span>        E1 --&gt;|consumed by| P2[notification processor]
-</span></span><span style="display:flex;"><span>        E1 --&gt;|consumed by| P3[audit service]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        P1 --&gt;|publishes| E2[BalanceUpdatedEvent]
-</span></span><span style="display:flex;"><span>        E2 --&gt;|consumed by| P4[reporting service]
-</span></span><span style="display:flex;"><span>        E2 --&gt;|consumed by| P5[customer notification]
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        P3 --&gt;|publishes| E3[AuditRecordEvent]
-</span></span><span style="display:flex;"><span>        E3 --&gt;|consumed by| P6[regulatory compliance]
-</span></span><span style="display:flex;"><span>    end
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    classDef command fill:#4CAF50,color:white;
-</span></span><span style="display:flex;"><span>    classDef event fill:#FF9800,color:white;
-</span></span><span style="display:flex;"><span>    classDef processor fill:#2196F3,color:white;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    class TX command;
-</span></span><span style="display:flex;"><span>    class E1,E2,E3 event;
-</span></span><span style="display:flex;"><span>    class P1,P2,P3,P4,P5,P6 processor;
-</span></span></code></pre></div><h2 id="conceitos-principais-de-eda-no-contexto-financeiro">conceitos principais de eda no contexto financeiro</h2>
-<ul>
-<li>events as facts: cada evento financeiro (transação criada, saldo atualizado, etc.) é registrado como um fato imutável</li>
-<li>asynchronous processing: operações que não exigem respostas imediatas podem ser processadas de forma assíncrona, melhorando o desempenho e a experiência do usuário</li>
-<li>decoupled services: serviços se comunicam através de eventos, reduzindo dependências diretas</li>
-</ul>
-<h2 id="o-transaction-flow">o transaction flow</h2>
-<ul>
-<li>command initiation: um command é recebido para criar uma transação (por exemplo, transferir fundos entre contas)</li>
-<li>validation and processing: o command handler valida a transação, cria os registros necessários e publica um evento</li>
-<li>asynchronous effects: event handlers processam os efeitos da transação de forma assíncrona:
-<ul>
-<li>atualizando saldos de contas</li>
-<li>criando registros de operação</li>
-<li>gerando logs de auditoria</li>
-</ul>
-</li>
-<li>read model updates: uma vez que os efeitos estão completos, os read models são atualizados, tornando as mudanças visíveis para queries</li>
-</ul>
-<h2 id="a-technical-architecture">a technical architecture</h2>
-<p>nossos serviços são estruturados para suportar este fluxo:</p>
-<ul>
-<li>api layer: endpoints http recebem commands e queries, documentados em nossa api swagger</li>
-<li>command/query services: serviços separados lidam com as respectivas operações em components/transaction/internal/services</li>
-<li>event bus: rabbitmq fornece reliable message delivery entre serviços</li>
-<li>storage layer:
-<ul>
-<li>postgresql para dados transacionais estruturados</li>
-<li>mongodb para armazenamento flexível de metadados</li>
-<li>redis para dados efêmeros como idempotency keys</li>
-</ul>
-</li>
-</ul>
-<h2 id="distributed-transactions">distributed transactions</h2>
-<p>um dos desafios em sistemas financeiros é manter a consistência entre operações distribuídas. no midaz, lidamos com isso através de:</p>
-<ul>
-<li>eventual consistency: a maioria das operações não requer consistência imediata, permitindo-nos usar processamento assíncrono via rabbitmq</li>
-<li>optimistic concurrency: quando conflitos podem ocorrer, usamos version tracking para detectá-los e tratá-los, como implementado em nossos data models</li>
-<li>compensating actions: para falhas em processos de múltiplas etapas, implementamos compensating actions para manter a consistência geral através dos event consumers</li>
-</ul>
-<h2 id="benefícios-no-mundo-real-e-lições-aprendidas">benefícios no mundo real e lições aprendidas</h2>
-<p>a implementação de cqrs e eda no midaz trouxe vários benefícios significativos que têm impactado diretamente a qualidade, manutenibilidade e eficiência do nosso sistema financeiro.</p>
-<h3 id="benefícios-tangíveis">benefícios tangíveis</h3>
-<p>melhor desempenho: ao separar preocupações de leitura e escrita, otimizamos cada caminho para seus requisitos específicos. nossos serviços de query são especializados para recuperar dados com alta eficiência, enquanto os serviços de command são projetados para garantir a integridade dos dados durante as operações de escrita. na prática, isso nos permitiu:</p>
-<ul>
-<li>reduzir o tempo de resposta para consultas frequentes em até 60%</li>
-<li>aumentar o throughput de transações em períodos de pico</li>
-<li>eliminar contenções de recursos entre operações de leitura e escrita</li>
-</ul>
-<p>melhor escalabilidade: serviços podem escalar independentemente com base em seus padrões de carga. isso foi particularmente valioso durante:</p>
-<ul>
-<li>períodos de fechamento financeiro mensal, quando a frequência de consultas aumenta significativamente</li>
-<li>processamentos em lote de transações, que podem ser escalados horizontalmente sem afetar os serviços de consulta</li>
-<li>expansão para novos mercados, permitindo-nos aumentar seletivamente a capacidade de serviços específicos</li>
-</ul>
-<p>nossa configuração de infraestrutura facilita essa escalabilidade independente.</p>
-<p>confiabilidade aprimorada: processamento assíncrono e operações idempotentes reduzem o impacto de falhas temporárias. nosso mecanismo de idempotência garante que transações não sejam duplicadas, mesmo em caso de retentativas, enquanto nosso sistema de mensageria assíncrona permite:</p>
-<ul>
-<li>recuperação graceful após falhas em componentes</li>
-<li>resiliência contra indisponibilidade temporária de serviços</li>
-<li>processamento consistente mesmo durante picos de carga</li>
-</ul>
-<p>evolução mais fácil: serviços desacoplados nos permitem evoluir diferentes partes do sistema independentemente. nossa experiência prática demonstrou que:</p>
-<ul>
-<li>novas funcionalidades podem ser adicionadas aos serviços de transaction sem afetar os serviços de onboarding</li>
-<li>atualizações de esquema em um modelo (leitura ou escrita) podem ser realizadas sem impactar o outro</li>
-<li>novas versões de apis podem ser lançadas gradualmente, mantendo compatibilidade com versões anteriores</li>
-</ul>
-<p>auditabilidade aprimorada: um benefício não antecipado inicialmente foi a excelente rastreabilidade proporcionada por nossa arquitetura orientada a eventos. cada mudança de estado é registrada como um evento, facilitando:</p>
-<ul>
-<li>reconstrução do histórico completo de transações</li>
-<li>atendimento a requisitos regulatórios de auditoria financeira</li>
-<li>análise de causa-raiz em cenários de inconsistência de dados</li>
-</ul>
-<p>nossa implementação de logs de transações demonstra esse compromisso com a auditabilidade.</p>
-<h3 id="lições-valiosas-aprendidas">lições valiosas aprendidas</h3>
-<p>trade-off de complexidade: cqrs e eda adicionam complexidade que deve ser justificada pelos benefícios. aprendemos que:</p>
-<ul>
-<li>a separação de modelos não é necessária para todas as entidades do domínio. entidades com baixa taxa de mudança e consulta simples podem usar um modelo unificado</li>
-<li>a complexidade adicional exige investimento em documentação clara e treinamento da equipe. nosso CONTRIBUTING.md e STRUCTURE.md foram criados para facilitar esse processo</li>
-<li>ferramentas de observabilidade são essenciais para entender o fluxo de dados em um sistema distribuído. investimos em integração com grafana para monitoramento</li>
-</ul>
-<p>desafios de consistência eventual: as equipes precisam projetar uis e experiências que levem em conta a consistência eventual. isso incluiu:</p>
-<ul>
-<li>desenvolver padrões de ux para comunicar estados temporários aos usuários</li>
-<li>implementar mecanismos de polling e notificação para atualizar a interface quando dados são modificados</li>
-<li>educar stakeholders sobre os trade-offs entre consistência forte e disponibilidade</li>
-<li>criar mecanismos de sincronização para casos críticos onde a consistência imediata é necessária</li>
-</ul>
-<p>importância do monitoramento: sistemas distribuídos orientados a eventos requerem monitoramento e rastreamento abrangentes. para isso:</p>
-<ul>
-<li>implementamos rastreamento distribuído em todo o sistema usando opentelemetry, como visto em nossos serviços de command</li>
-<li>criamos dashboards especializados para visualizar fluxos de eventos e filas</li>
-<li>estabelecemos alertas para detectar anomalias em padrões de consumo de eventos</li>
-<li>introduzimos correlação de ids entre serviços para facilitar o rastreamento de transações completas</li>
-</ul>
-<p>estratégias de teste: testar sistemas orientados a eventos requer abordagens diferentes das aplicações monolíticas tradicionais. nosso aprendizado incluiu:</p>
-<ul>
-<li>desenvolver testes de integração que simulam o fluxo completo de eventos</li>
-<li>criar mocks de produtores e consumidores para testar componentes isoladamente</li>
-<li>implementar testes que verificam a idempotência e a resiliência a falhas</li>
-<li>utilizar golden files para validar a consistência dos resultados</li>
-</ul>
-<p>equilibrando inovação técnica e valor de negócio: uma lição fundamental foi a importância de alinhar decisões de design com necessidades reais de negócio:</p>
-<ul>
-<li>nem todas as partes do sistema precisam da mesma sofisticação técnica</li>
-<li>iniciar com componentes críticos para o negócio e evoluir incrementalmente</li>
-<li>medir o impacto real das otimizações em métricas de negócio, como tempo de processamento de transações e disponibilidade do sistema</li>
-<li>envolver stakeholders não-técnicos na compreensão dos trade-offs da arquitetura adotada</li>
-</ul>
-<h2 id="casos-de-uso-reais">casos de uso reais</h2>
-<p>para ilustrar o impacto prático dessas escolhas de design, destacamos alguns casos de uso reais onde cqrs e eda provaram seu valor:</p>
-<ul>
-<li>processamento de transações de alta frequência: o sistema consegue processar milhões de transações por minuto, com cada transação seguindo o fluxo de validação, processamento assíncrono e atualização consistente de saldos</li>
-<li>geração de relatórios em tempo real: mesmo durante períodos de alto volume transacional, os usuários conseguem gerar relatórios complexos sem impactar o desempenho do sistema de processamento</li>
-<li>recuperação de falhas: durante eventos de indisponibilidade de componentes, o sistema consegue retomar o processamento sem perda de dados, graças aos mecanismos de persistência de eventos e idempotência implementados no consumer rabbitmq</li>
-</ul>
-<h2 id="conclusão">conclusão</h2>
-<p>cqrs e arquitetura orientada a eventos fornecem padrões poderosos para construir sistemas financeiros robustos. ao separar preocupações de leitura e escrita e aproveitar o processamento assíncrono, esses padrões permitem ledgers financeiros escaláveis, confiáveis e de fácil manutenção.</p>
-<p>no midaz, vimos como esses padrões podem ser aplicados para criar uma plataforma financeira flexível que lida com transações complexas, mantendo o desempenho e a integridade dos dados. a combinação de cqrs e eda provou ser especialmente valiosa para problemas do domínio financeiro, onde consistência de dados, requisitos de auditoria e regras de negócio complexas convergem.</p>
-<p>à medida que a tecnologia financeira continua a evoluir, padrões de design como esses se tornarão ferramentas cada vez mais importantes na caixa de ferramentas do desenvolvedor para construir a próxima geração de sistemas financeiros.</p>
-
-        </div>
-
-        
-        <div class="post__sharing">
-            <h3 class="post__sharing-title">Share this article</h3>
-            <div class="social-share">
-                <a href="https://twitter.com/intent/tweet?text=construindo&#43;um&#43;financial&#43;ledger&#43;com&#43;cqrs&#43;e&#43;eda&url=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f"
-                    target="_blank" rel="noopener" class="social-share__link social-share__twitter">
-                    <span class="social-share__icon">𝕏</span>
-                    <span class="social-share__text">Twitter</span>
-                </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f" target="_blank"
-                    rel="noopener" class="social-share__link social-share__linkedin">
-                    <span class="social-share__icon">in</span>
-                    <span class="social-share__text">LinkedIn</span>
-                </a>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f" target="_blank" rel="noopener"
-                    class="social-share__link social-share__facebook">
-                    <span class="social-share__icon">f</span>
-                    <span class="social-share__text">Facebook</span>
-                </a>
-                <button class="social-share__link social-share__copy" onclick="copyToClipboard('https:\/\/blog.lerian.studio\/posts\/construindo-um-financial-ledger-cqrs-eda\/')">
-                    <span class="social-share__icon">🔗</span>
-                    <span class="social-share__text">Copy Link</span>
-                </button>
-            </div>
-        </div>
-
-        <footer class="post__footer">
-            <div class="post__navigation">
-                
-
-                
-                <a href="https://blog.lerian.studio/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/" class="post__nav post__nav--next">
-                    <div class="post__nav-direction">Next →</div>
-                    <div class="post__nav-title">gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar</div>
-                </a>
-                
-            </div>
-
-            <div class="post__back">
-                <a href="https://blog.lerian.studio/posts/" class="btn btn--outline">
-                    ← Back to Articles
-                </a>
-            </div>
-        </footer>
-    </article>
-
-    
-    
-    
-    <section class="related-posts">
-        <h2 class="related-posts__title">Related Articles</h2>
-        <div class="related-posts__grid">
-            
-            <article class="related-post">
-                
-                <div class="related-post__image">
-                    <a href="https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">
-                        <img src="https://blog.lerian.studio/images/posts/sdk-development-hero.jpg"
-                            alt="Software development and API integration for financial SDK" class="related-post__img">
-                    </a>
-                </div>
-                
-
-                <div class="related-post__content">
-                    <h3 class="related-post__title">
-                        <a href="https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</a>
-                    </h3>
-
-                    <div class="related-post__meta">
-                        <time datetime=" 2025-05-15">
-                            May 15, 2025
-                        </time>
-                        
-                        <span class="related-post__separator">•</span>
-                        <span class="related-post__reading-time">19 min read</span>
-                        
-                    </div>
-                </div>
-            </article>
-            
-        </div>
-    </section>
-    
-</div>
-
-<script>
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function () {
-            const button = event.target.closest('.social-share__copy');
-            const originalText = button.querySelector('.social-share__text').textContent;
-            button.querySelector('.social-share__text').textContent = 'Copied!';
-            setTimeout(() => {
-                button.querySelector('.social-share__text').textContent = originalText;
-            }, 2000);
-        });
-    }
-</script>
-
-    </main>
-
-    <footer class="footer">
-    <div class="container">
-        <div class="footer__content">
-            <p class="footer__text">
-                © 2025 Lerian Studio Blog. All rights reserved.
-            </p>
-
-            
-            <div class="footer__social">
-                
-                <a href="https://github.com/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
-                    Github
-                </a>
-                
-                <a href="https://twitter.com/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
-                    Twitter
-                </a>
-                
-                <a href="https://linkedin.com/in/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
-                    LinkedIn
-                </a>
-                
-            </div>
-            
-        </div>
-    </div>
-</footer>
-
-<style>
-    .footer {
-        border-top: 1px solid var(--color-gray-200);
-        margin-top: var(--spacing-2xl);
-        padding: var(--spacing-xl) 0;
-    }
-
-    .footer__content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: var(--spacing-md);
-    }
-
-    .footer__text {
-        color: var(--color-gray-700);
-        margin: 0;
-        font-size: 0.875rem;
-    }
-
-    .footer__social {
-        display: flex;
-        gap: var(--spacing-md);
-    }
-
-    .footer__social-link {
-        color: var(--color-gray-700);
-        text-decoration: none;
-        font-size: 0.875rem;
-        transition: color 0.2s ease;
-    }
-
-    .footer__social-link:hover {
-        color: var(--color-secondary);
-    }
-
-    @media (max-width: 768px) {
-        .footer__content {
-            flex-direction: column;
-            text-align: center;
-        }
-    }
-</style>
-    
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const toggle = document.querySelector('.nav__toggle');
-        const menu = document.querySelector('.nav__menu');
-
-        if (toggle && menu) {
-            toggle.addEventListener('click', function () {
-                menu.classList.toggle('nav__menu--open');
-            });
-        }
-    });
-</script>
-</body>
-
-</html>
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>construindo um financial ledger com cqrs e eda | Lerian Studio Blog</title><meta name=description content="Thoughts, ideas, and projects from Lerian Studio"><meta property="og:title" content="construindo um financial ledger com cqrs e eda | Lerian Studio Blog"><meta property="og:description" content="Thoughts, ideas, and projects from Lerian Studio"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/"><meta name=twitter:card content="summary_large_image"><meta name=twitter:title content="construindo um financial ledger com cqrs e eda | Lerian Studio Blog"><meta name=twitter:description content="Thoughts, ideas, and projects from Lerian Studio"><link rel=icon type=image/png href=https://blog.lerian.studio/favicon.png><link rel=stylesheet href=https://blog.lerian.studio/css/main.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel=stylesheet><link rel=canonical href=https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel=stylesheet><link rel=stylesheet href=https://blog.lerian.studio/css/main.css><title>construindo um financial ledger com cqrs e eda | Lerian Studio Blog</title></head><body><header class=header><div class=header__container><div class=header__logo><a href=https://blog.lerian.studio/%20/ class=logo><img src=https://blog.lerian.studio/images/lerian-logo.svg alt="Lerian Studio" class=logo__image></a></div><nav class=header__nav><ul class=nav__menu><li><a href=https://blog.lerian.studio/%20/ class=nav__link>Home</a></li><li><a href=https://blog.lerian.studio/%20/posts/ class=nav__link>Articles</a></li><li><a href=https://blog.lerian.studio/%20/about/ class=nav__link>About</a></li></ul><button class=nav__toggle id=nav-toggle>
+<span class=nav__hamburger></span>
+<span class=nav__hamburger></span>
+<span class=nav__hamburger></span></button></nav></div></header><main class=main><div class=container><article class=post><header class=post__header><h1 class=post__title>construindo um financial ledger com cqrs e eda</h1><div class=post__meta><time datetime=2025-05-15 class=post__date>May 15, 2025
+</time><span class=post__separator>•</span>
+<span class=post__reading-time>11 min read</span>
+<span class=post__separator>•</span>
+<span class=post__word-count>2167 words</span></div><div class=post__tags><a href=https://blog.lerian.studio/tags/fintech/ class=tag>fintech</a>
+<a href=https://blog.lerian.studio/tags/architecture/ class=tag>architecture</a>
+<a href=https://blog.lerian.studio/tags/cqrs/ class=tag>cqrs</a>
+<a href=https://blog.lerian.studio/tags/eda/ class=tag>eda</a>
+<a href=https://blog.lerian.studio/tags/ledger/ class=tag>ledger</a></div><div class=post__categories><span class=post__categories-label>Categories:</span>
+<a href=https://blog.lerian.studio/categories/architecture/ class=category-link>Architecture</a>
+<a href=https://blog.lerian.studio/categories/financial-technology/ class=category-link>Financial Technology</a></div></header><div class=post__featured-image><img src=https://blog.lerian.studio/images/posts/financial-ledger-hero.jpg alt="Financial technology and data visualization representing CQRS and EDA architecture" class=post__image><figcaption class=post__image-caption>Modern financial systems require sophisticated architectures to handle complex transactions and maintain data integrity</figcaption></div><div class=post__content><p>no mundo da tecnologia financeira, construir sistemas robustos, escaláveis e confiáveis é fundamental. os ledgers financeiros, em particular, requerem considerações de arquitetura para garantir que possam lidar com transações complexas, mantendo a integridade dos dados e o desempenho. neste artigo, exploraremos como o command query responsibility segregation (cqrs) e a event-driven architecture (eda) podem ser combinados para criar sistemas financeiros poderosos, usando nosso ledger financeiro de código aberto, midaz, como estudo de caso.</p><p>nota: deixarei os diagramas em &lsquo;mermaid&rsquo; caso queiram visualizar.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-fallback data-lang=fallback><span style=display:flex><span>graph TD
+</span></span><span style=display:flex><span>    subgraph &#34;cqrs + eda architecture&#34;
+</span></span><span style=display:flex><span>        subgraph &#34;client layer&#34;
+</span></span><span style=display:flex><span>            UI[ui/api clients]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;api layer&#34;
+</span></span><span style=display:flex><span>            API[api gateway]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;command layer&#34;
+</span></span><span style=display:flex><span>            CMD[command handlers]
+</span></span><span style=display:flex><span>            VAL[validators]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;event bus&#34;
+</span></span><span style=display:flex><span>            EB[rabbitmq]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;domain layer&#34;
+</span></span><span style=display:flex><span>            DOM[domain logic]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;persistence&#34;
+</span></span><span style=display:flex><span>            WRTDB[(write database)]
+</span></span><span style=display:flex><span>            RDDB[(read database)]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        subgraph &#34;query layer&#34;
+</span></span><span style=display:flex><span>            QRY[query handlers]
+</span></span><span style=display:flex><span>            VM[view models]
+</span></span><span style=display:flex><span>        end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        UI --&gt; API
+</span></span><span style=display:flex><span>        API --&gt; CMD
+</span></span><span style=display:flex><span>        API --&gt; QRY
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        CMD --&gt; VAL
+</span></span><span style=display:flex><span>        CMD --&gt; DOM
+</span></span><span style=display:flex><span>        DOM --&gt; WRTDB
+</span></span><span style=display:flex><span>        DOM --&gt; EB
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        EB --&gt; VM
+</span></span><span style=display:flex><span>        VM --&gt; RDDB
+</span></span><span style=display:flex><span>        QRY --&gt; RDDB
+</span></span><span style=display:flex><span>    end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    classDef client fill:#9FA8DA,color:black;
+</span></span><span style=display:flex><span>    classDef api fill:#7986CB,color:white;
+</span></span><span style=display:flex><span>    classDef command fill:#5C6BC0,color:white;
+</span></span><span style=display:flex><span>    classDef domain fill:#3F51B5,color:white;
+</span></span><span style=display:flex><span>    classDef eventbus fill:#8BC34A,color:black;
+</span></span><span style=display:flex><span>    classDef storage fill:#FFB74D,color:black;
+</span></span><span style=display:flex><span>    classDef query fill:#FF8A65,color:black;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    class UI client;
+</span></span><span style=display:flex><span>    class API api;
+</span></span><span style=display:flex><span>    class CMD,VAL command;
+</span></span><span style=display:flex><span>    class DOM domain;
+</span></span><span style=display:flex><span>    class EB eventbus;
+</span></span><span style=display:flex><span>    class WRTDB,RDDB storage;
+</span></span><span style=display:flex><span>    class QRY,VM query;
+</span></span></code></pre></div><h2 id=o-desafio-dos-sistemas-financeiros>o desafio dos sistemas financeiros</h2><p>sistemas financeiros apresentam desafios únicos que arquiteturas monolíticas tradicionais têm dificuldade em resolver:</p><ul><li>alto volume de transações: sistemas financeiros devem processar milhares, senão milhões/bilhões, de transações diariamente</li><li>regras de negócio complexas: transações financeiras envolvem regras complexas, validações e cálculos</li><li>consistência de dados: os dados financeiros devem permanecer consistentes em múltiplas operações</li><li>requisitos de auditoria: cada operação financeira deve ser rastreável e auditável</li><li>preocupações com escalabilidade: o sistema deve escalar para lidar com volumes crescentes de transações, de maneira a não comprometer a sua integridade, ao mesmo tempo mantendo a questão de custo em voga</li></ul><p>esses desafios exigem padrões de design de software que possam separar responsabilidades, escalar independentemente e manter a integridade dos dados. é aqui que o cqrs e a arquitetura orientada a eventos entram em cena.</p><h2 id=entendendo-o-cqrs-em-sistemas-financeiros>entendendo o cqrs em sistemas financeiros</h2><p>command query responsibility segregation (cqrs) é um padrão de design que separa operações de leitura e escrita em modelos distintos. em um contexto financeiro, essa separação é particularmente valiosa.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-fallback data-lang=fallback><span style=display:flex><span>sequenceDiagram
+</span></span><span style=display:flex><span>    participant Client
+</span></span><span style=display:flex><span>    participant API as api gateway
+</span></span><span style=display:flex><span>    participant CH as command handler
+</span></span><span style=display:flex><span>    participant DB as write database
+</span></span><span style=display:flex><span>    participant EB as event bus
+</span></span><span style=display:flex><span>    participant QH as query handler
+</span></span><span style=display:flex><span>    participant RDB as read database
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Client-&gt;&gt;API: POST /transactions
+</span></span><span style=display:flex><span>    API-&gt;&gt;CH: CreateTransactionCommand
+</span></span><span style=display:flex><span>    CH-&gt;&gt;DB: Save Transaction
+</span></span><span style=display:flex><span>    CH-&gt;&gt;EB: Publish TransactionCreatedEvent
+</span></span><span style=display:flex><span>    EB--&gt;&gt;RDB: Update Read Model
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Client-&gt;&gt;API: GET /transactions/{id}
+</span></span><span style=display:flex><span>    API-&gt;&gt;QH: GetTransactionQuery
+</span></span><span style=display:flex><span>    QH-&gt;&gt;RDB: Fetch Transaction DTO
+</span></span><span style=display:flex><span>    QH--&gt;&gt;API: Transaction Details
+</span></span><span style=display:flex><span>    API--&gt;&gt;Client: Transaction Response
+</span></span></code></pre></div><h2 id=o-lado-do-command-write-model>o lado do command (write model)</h2><p>o lado do command lida com operações que mudam o estado do sistema, como:</p><ul><li>criar novas contas</li><li>registrar transações financeiras</li><li>atualizar saldos</li><li>modificar informações de ativos</li></ul><p>no midaz, nossos serviços de command são estruturados com responsabilidades claras e focadas:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// de components/onboarding/internal/services/command/command.go</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UseCase</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>OrganizationRepo</span> <span style=color:#a6e22e>organization</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>LedgerRepo</span> <span style=color:#a6e22e>ledger</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SegmentRepo</span> <span style=color:#a6e22e>segment</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>PortfolioRepo</span> <span style=color:#a6e22e>portfolio</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AccountRepo</span> <span style=color:#a6e22e>account</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AssetRepo</span> <span style=color:#a6e22e>asset</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>MetadataRepo</span> <span style=color:#a6e22e>mongodb</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>RabbitMQRepo</span> <span style=color:#a6e22e>rabbitmq</span>.<span style=color:#a6e22e>ProducerRepository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>RedisRepo</span> <span style=color:#a6e22e>redis</span>.<span style=color:#a6e22e>RedisRepository</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>cada operação de command é isolada em seu próprio arquivo com uma única responsabilidade - nota: algo que inclusive facilita, e muito, a leitura e manutenção do código. por exemplo, criando uma nova conta em create-account.go:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// simplificado de create-account.go</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>uc</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UseCase</span>) <span style=color:#a6e22e>CreateAccount</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>req</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>account</span>.<span style=color:#a6e22e>Account</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>account</span>.<span style=color:#a6e22e>Account</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// validar entrada</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// gerar ID único</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// armazenar no repositório</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// publicar evento</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// retornar resultado</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=o-lado-do-query-read-model>o lado do query (read model)</h2><p>o lado do query se concentra em recuperar e apresentar dados:</p><ul><li>buscar informações de contas</li><li>recuperar histórico de transações</li><li>gerar relatórios</li><li>ler saldos</li></ul><p>no midaz, os serviços de query são estruturados de forma semelhante, mas otimizados para leitura:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// de components/onboarding/internal/services/query/query.go</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UseCase</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>OrganizationRepo</span> <span style=color:#a6e22e>organization</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>LedgerRepo</span> <span style=color:#a6e22e>ledger</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SegmentRepo</span> <span style=color:#a6e22e>segment</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>PortfolioRepo</span> <span style=color:#a6e22e>portfolio</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AccountRepo</span> <span style=color:#a6e22e>account</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AssetRepo</span> <span style=color:#a6e22e>asset</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>MetadataRepo</span> <span style=color:#a6e22e>mongodb</span>.<span style=color:#a6e22e>Repository</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>RedisRepo</span> <span style=color:#a6e22e>redis</span>.<span style=color:#a6e22e>RedisRepository</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>as operações de query também são isoladas em arquivos dedicados, como buscar detalhes de uma conta em get-id-account.go:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// simplificado de get-id-account.go</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>uc</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UseCase</span>) <span style=color:#a6e22e>GetIDAccount</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>id</span> <span style=color:#a6e22e>uuid</span>.<span style=color:#a6e22e>UUID</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>account</span>.<span style=color:#a6e22e>Account</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// buscar do repositório</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// transformar se necessário</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// retornar dados</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=benefícios-do-cqrs-em-sistemas-financeiros>benefícios do cqrs em sistemas financeiros</h2><ul><li><p>performance optimization: write models e read models podem ser otimizados independentemente. para sistemas financeiros com muito mais leituras do que escritas (usuários verificando saldos versus fazendo transações), isso é crucial. nossa implementação de queries demonstra essa otimização</p></li><li><p>scalability: commands e queries podem escalar separadamente. durante períodos de alto volume (como processos financeiros de final de mês ou fim de ano), os serviços de query podem ser escalados sem afetar o processamento de transações. isso é facilitado por nossa infraestrutura de contêineres</p></li><li><p>specialized data storage: commands podem usar armazenamento otimizado para operações de escrita (como postgresql), enquanto queries podem usar armazenamento otimizado para leitura (como mongodb para consulta flexível de metadados)</p></li><li><p>reduced complexity: ao separar concerns, a domain logic complexa em operações financeiras torna-se mais gerenciável, reduzindo bugs e melhorando a manutenibilidade, como pode ser visto em nosso transaction domain</p></li></ul><h2 id=event-driven-architecture-em-sistemas-financeiros>event-driven architecture em sistemas financeiros</h2><p>enquanto o cqrs aborda muitos desafios, sistemas financeiros também se beneficiam de loose coupling e processamento assíncrono. é aqui que a event-driven architecture (eda) se destaca.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-fallback data-lang=fallback><span style=display:flex><span>graph TD
+</span></span><span style=display:flex><span>    subgraph &#34;financial transaction&#34;
+</span></span><span style=display:flex><span>        TX[transaction creation] --&gt;|publishes| E1[TransactionCreatedEvent]
+</span></span><span style=display:flex><span>        E1 --&gt;|consumed by| P1[balance processor]
+</span></span><span style=display:flex><span>        E1 --&gt;|consumed by| P2[notification processor]
+</span></span><span style=display:flex><span>        E1 --&gt;|consumed by| P3[audit service]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        P1 --&gt;|publishes| E2[BalanceUpdatedEvent]
+</span></span><span style=display:flex><span>        E2 --&gt;|consumed by| P4[reporting service]
+</span></span><span style=display:flex><span>        E2 --&gt;|consumed by| P5[customer notification]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        P3 --&gt;|publishes| E3[AuditRecordEvent]
+</span></span><span style=display:flex><span>        E3 --&gt;|consumed by| P6[regulatory compliance]
+</span></span><span style=display:flex><span>    end
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    classDef command fill:#4CAF50,color:white;
+</span></span><span style=display:flex><span>    classDef event fill:#FF9800,color:white;
+</span></span><span style=display:flex><span>    classDef processor fill:#2196F3,color:white;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    class TX command;
+</span></span><span style=display:flex><span>    class E1,E2,E3 event;
+</span></span><span style=display:flex><span>    class P1,P2,P3,P4,P5,P6 processor;
+</span></span></code></pre></div><h2 id=conceitos-principais-de-eda-no-contexto-financeiro>conceitos principais de eda no contexto financeiro</h2><ul><li>events as facts: cada evento financeiro (transação criada, saldo atualizado, etc.) é registrado como um fato imutável</li><li>asynchronous processing: operações que não exigem respostas imediatas podem ser processadas de forma assíncrona, melhorando o desempenho e a experiência do usuário</li><li>decoupled services: serviços se comunicam através de eventos, reduzindo dependências diretas</li></ul><h2 id=o-transaction-flow>o transaction flow</h2><ul><li>command initiation: um command é recebido para criar uma transação (por exemplo, transferir fundos entre contas)</li><li>validation and processing: o command handler valida a transação, cria os registros necessários e publica um evento</li><li>asynchronous effects: event handlers processam os efeitos da transação de forma assíncrona:<ul><li>atualizando saldos de contas</li><li>criando registros de operação</li><li>gerando logs de auditoria</li></ul></li><li>read model updates: uma vez que os efeitos estão completos, os read models são atualizados, tornando as mudanças visíveis para queries</li></ul><h2 id=a-technical-architecture>a technical architecture</h2><p>nossos serviços são estruturados para suportar este fluxo:</p><ul><li>api layer: endpoints http recebem commands e queries, documentados em nossa api swagger</li><li>command/query services: serviços separados lidam com as respectivas operações em components/transaction/internal/services</li><li>event bus: rabbitmq fornece reliable message delivery entre serviços</li><li>storage layer:<ul><li>postgresql para dados transacionais estruturados</li><li>mongodb para armazenamento flexível de metadados</li><li>redis para dados efêmeros como idempotency keys</li></ul></li></ul><h2 id=distributed-transactions>distributed transactions</h2><p>um dos desafios em sistemas financeiros é manter a consistência entre operações distribuídas. no midaz, lidamos com isso através de:</p><ul><li>eventual consistency: a maioria das operações não requer consistência imediata, permitindo-nos usar processamento assíncrono via rabbitmq</li><li>optimistic concurrency: quando conflitos podem ocorrer, usamos version tracking para detectá-los e tratá-los, como implementado em nossos data models</li><li>compensating actions: para falhas em processos de múltiplas etapas, implementamos compensating actions para manter a consistência geral através dos event consumers</li></ul><h2 id=benefícios-no-mundo-real-e-lições-aprendidas>benefícios no mundo real e lições aprendidas</h2><p>a implementação de cqrs e eda no midaz trouxe vários benefícios significativos que têm impactado diretamente a qualidade, manutenibilidade e eficiência do nosso sistema financeiro.</p><h3 id=benefícios-tangíveis>benefícios tangíveis</h3><p>melhor desempenho: ao separar preocupações de leitura e escrita, otimizamos cada caminho para seus requisitos específicos. nossos serviços de query são especializados para recuperar dados com alta eficiência, enquanto os serviços de command são projetados para garantir a integridade dos dados durante as operações de escrita. na prática, isso nos permitiu:</p><ul><li>reduzir o tempo de resposta para consultas frequentes em até 60%</li><li>aumentar o throughput de transações em períodos de pico</li><li>eliminar contenções de recursos entre operações de leitura e escrita</li></ul><p>melhor escalabilidade: serviços podem escalar independentemente com base em seus padrões de carga. isso foi particularmente valioso durante:</p><ul><li>períodos de fechamento financeiro mensal, quando a frequência de consultas aumenta significativamente</li><li>processamentos em lote de transações, que podem ser escalados horizontalmente sem afetar os serviços de consulta</li><li>expansão para novos mercados, permitindo-nos aumentar seletivamente a capacidade de serviços específicos</li></ul><p>nossa configuração de infraestrutura facilita essa escalabilidade independente.</p><p>confiabilidade aprimorada: processamento assíncrono e operações idempotentes reduzem o impacto de falhas temporárias. nosso mecanismo de idempotência garante que transações não sejam duplicadas, mesmo em caso de retentativas, enquanto nosso sistema de mensageria assíncrona permite:</p><ul><li>recuperação graceful após falhas em componentes</li><li>resiliência contra indisponibilidade temporária de serviços</li><li>processamento consistente mesmo durante picos de carga</li></ul><p>evolução mais fácil: serviços desacoplados nos permitem evoluir diferentes partes do sistema independentemente. nossa experiência prática demonstrou que:</p><ul><li>novas funcionalidades podem ser adicionadas aos serviços de transaction sem afetar os serviços de onboarding</li><li>atualizações de esquema em um modelo (leitura ou escrita) podem ser realizadas sem impactar o outro</li><li>novas versões de apis podem ser lançadas gradualmente, mantendo compatibilidade com versões anteriores</li></ul><p>auditabilidade aprimorada: um benefício não antecipado inicialmente foi a excelente rastreabilidade proporcionada por nossa arquitetura orientada a eventos. cada mudança de estado é registrada como um evento, facilitando:</p><ul><li>reconstrução do histórico completo de transações</li><li>atendimento a requisitos regulatórios de auditoria financeira</li><li>análise de causa-raiz em cenários de inconsistência de dados</li></ul><p>nossa implementação de logs de transações demonstra esse compromisso com a auditabilidade.</p><h3 id=lições-valiosas-aprendidas>lições valiosas aprendidas</h3><p>trade-off de complexidade: cqrs e eda adicionam complexidade que deve ser justificada pelos benefícios. aprendemos que:</p><ul><li>a separação de modelos não é necessária para todas as entidades do domínio. entidades com baixa taxa de mudança e consulta simples podem usar um modelo unificado</li><li>a complexidade adicional exige investimento em documentação clara e treinamento da equipe. nosso CONTRIBUTING.md e STRUCTURE.md foram criados para facilitar esse processo</li><li>ferramentas de observabilidade são essenciais para entender o fluxo de dados em um sistema distribuído. investimos em integração com grafana para monitoramento</li></ul><p>desafios de consistência eventual: as equipes precisam projetar uis e experiências que levem em conta a consistência eventual. isso incluiu:</p><ul><li>desenvolver padrões de ux para comunicar estados temporários aos usuários</li><li>implementar mecanismos de polling e notificação para atualizar a interface quando dados são modificados</li><li>educar stakeholders sobre os trade-offs entre consistência forte e disponibilidade</li><li>criar mecanismos de sincronização para casos críticos onde a consistência imediata é necessária</li></ul><p>importância do monitoramento: sistemas distribuídos orientados a eventos requerem monitoramento e rastreamento abrangentes. para isso:</p><ul><li>implementamos rastreamento distribuído em todo o sistema usando opentelemetry, como visto em nossos serviços de command</li><li>criamos dashboards especializados para visualizar fluxos de eventos e filas</li><li>estabelecemos alertas para detectar anomalias em padrões de consumo de eventos</li><li>introduzimos correlação de ids entre serviços para facilitar o rastreamento de transações completas</li></ul><p>estratégias de teste: testar sistemas orientados a eventos requer abordagens diferentes das aplicações monolíticas tradicionais. nosso aprendizado incluiu:</p><ul><li>desenvolver testes de integração que simulam o fluxo completo de eventos</li><li>criar mocks de produtores e consumidores para testar componentes isoladamente</li><li>implementar testes que verificam a idempotência e a resiliência a falhas</li><li>utilizar golden files para validar a consistência dos resultados</li></ul><p>equilibrando inovação técnica e valor de negócio: uma lição fundamental foi a importância de alinhar decisões de design com necessidades reais de negócio:</p><ul><li>nem todas as partes do sistema precisam da mesma sofisticação técnica</li><li>iniciar com componentes críticos para o negócio e evoluir incrementalmente</li><li>medir o impacto real das otimizações em métricas de negócio, como tempo de processamento de transações e disponibilidade do sistema</li><li>envolver stakeholders não-técnicos na compreensão dos trade-offs da arquitetura adotada</li></ul><h2 id=casos-de-uso-reais>casos de uso reais</h2><p>para ilustrar o impacto prático dessas escolhas de design, destacamos alguns casos de uso reais onde cqrs e eda provaram seu valor:</p><ul><li>processamento de transações de alta frequência: o sistema consegue processar milhões de transações por minuto, com cada transação seguindo o fluxo de validação, processamento assíncrono e atualização consistente de saldos</li><li>geração de relatórios em tempo real: mesmo durante períodos de alto volume transacional, os usuários conseguem gerar relatórios complexos sem impactar o desempenho do sistema de processamento</li><li>recuperação de falhas: durante eventos de indisponibilidade de componentes, o sistema consegue retomar o processamento sem perda de dados, graças aos mecanismos de persistência de eventos e idempotência implementados no consumer rabbitmq</li></ul><h2 id=conclusão>conclusão</h2><p>cqrs e arquitetura orientada a eventos fornecem padrões poderosos para construir sistemas financeiros robustos. ao separar preocupações de leitura e escrita e aproveitar o processamento assíncrono, esses padrões permitem ledgers financeiros escaláveis, confiáveis e de fácil manutenção.</p><p>no midaz, vimos como esses padrões podem ser aplicados para criar uma plataforma financeira flexível que lida com transações complexas, mantendo o desempenho e a integridade dos dados. a combinação de cqrs e eda provou ser especialmente valiosa para problemas do domínio financeiro, onde consistência de dados, requisitos de auditoria e regras de negócio complexas convergem.</p><p>à medida que a tecnologia financeira continua a evoluir, padrões de design como esses se tornarão ferramentas cada vez mais importantes na caixa de ferramentas do desenvolvedor para construir a próxima geração de sistemas financeiros.</p></div><div class=post__sharing><h3 class=post__sharing-title>Share this article</h3><div class=social-share><a href="https://twitter.com/intent/tweet?text=construindo+um+financial+ledger+com+cqrs+e+eda&url=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f" target=_blank rel=noopener class="social-share__link social-share__twitter"><span class=social-share__icon>𝕏</span>
+<span class=social-share__text>Twitter</span>
+</a><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f" target=_blank rel=noopener class="social-share__link social-share__linkedin"><span class=social-share__icon>in</span>
+<span class=social-share__text>LinkedIn</span>
+</a><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fblog.lerian.studio%2fposts%2fconstruindo-um-financial-ledger-cqrs-eda%2f" target=_blank rel=noopener class="social-share__link social-share__facebook"><span class=social-share__icon>f</span>
+<span class=social-share__text>Facebook</span>
+</a><button class="social-share__link social-share__copy" onclick='copyToClipboard("https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/")'>
+<span class=social-share__icon>🔗</span>
+<span class=social-share__text>Copy Link</span></button></div></div><footer class=post__footer><div class=post__navigation><a href=https://blog.lerian.studio/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/ class="post__nav post__nav--next"><div class=post__nav-direction>Next →</div><div class=post__nav-title>gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar</div></a></div><div class=post__back><a href=https://blog.lerian.studio/posts/ class="btn btn--outline">← Back to Articles</a></div></footer></article><section class=related-posts><h2 class=related-posts__title>Related Articles</h2><div class=related-posts__grid><article class=related-post><div class=related-post__image><a href=https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/><img src=https://blog.lerian.studio/images/posts/sdk-development-hero.jpg alt="Software development and API integration for financial SDK" class=related-post__img></a></div><div class=related-post__content><h3 class=related-post__title><a href=https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</a></h3><div class=related-post__meta><time datetime=2025-05-15>May 15, 2025
+</time><span class=related-post__separator>•</span>
+<span class=related-post__reading-time>19 min read</span></div></div></article></div></section></div><script>function copyToClipboard(e){navigator.clipboard.writeText(e).then(function(){const e=event.target.closest(".social-share__copy"),t=e.querySelector(".social-share__text").textContent;e.querySelector(".social-share__text").textContent="Copied!",setTimeout(()=>{e.querySelector(".social-share__text").textContent=t},2e3)})}</script></main><footer class=footer><div class=container><div class=footer__content><p class=footer__text>© 2025 Lerian Studio Blog. All rights reserved.</p><div class=footer__social><a href=https://github.com/lerianstudio class=footer__social-link target=_blank rel="noopener noreferrer">Github
+</a><a href=https://twitter.com/lerianstudio class=footer__social-link target=_blank rel="noopener noreferrer">Twitter
+</a><a href=https://linkedin.com/in/lerianstudio class=footer__social-link target=_blank rel="noopener noreferrer">LinkedIn</a></div></div></div></footer><style>.footer{border-top:1px solid var(--color-gray-200);margin-top:var(--spacing-2xl);padding:var(--spacing-xl)0}.footer__content{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--spacing-md)}.footer__text{color:var(--color-gray-700);margin:0;font-size:.875rem}.footer__social{display:flex;gap:var(--spacing-md)}.footer__social-link{color:var(--color-gray-700);text-decoration:none;font-size:.875rem;transition:color .2s ease}.footer__social-link:hover{color:var(--color-secondary)}@media(max-width:768px){.footer__content{flex-direction:column;text-align:center}}</style><script>document.addEventListener("DOMContentLoaded",function(){const e=document.querySelector(".nav__toggle"),t=document.querySelector(".nav__menu");e&&t&&e.addEventListener("click",function(){t.classList.toggle("nav__menu--open")})})</script></body></html>
