@@ -6,7 +6,7 @@
         <p class="hero__description">{{ site.Params.description }}</p>
         <div class="hero__cta">
             <a href="#latest-posts" class="btn">Explore Articles</a>
-            <a href="{{ " /about/" | relURL }}" class="btn btn--outline">About Us</a>
+            <a href="{{ "/about/" | relURL }}" class="btn btn--outline">About Us</a>
         </div>
     </div>
 
@@ -126,7 +126,7 @@
 
         {{ if gt (len (where site.RegularPages "Section" "posts")) 7 }}
         <div class="posts__footer">
-            <a href="{{ " /posts/" | relURL }}" class="btn">View All Articles</a>
+            <a href="{{ "/posts/" | relURL }}" class="btn">View All Articles</a>
         </div>
         {{ end }}
     </section>

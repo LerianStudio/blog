@@ -24,9 +24,9 @@
         <div class="filter-group">
             <h3 class="filter-group__title">Browse by Category</h3>
             <div class="filter-tags">
-                <a href="{{ " /posts/" | relURL }}" class="filter-tag filter-tag--active">All</a>
+                <a href="{{ "/posts/" | relURL }}" class="filter-tag filter-tag--active">All</a>
                 {{ range $name, $taxonomy := site.Taxonomies.categories }}
-                <a href="{{ " /categories/" | relURL }}{{ $name | urlize }}/" class="filter-tag">
+                <a href="{{ "/categories/" | relURL }}{{ $name | urlize }}/" class="filter-tag">
                     {{ $name | title }} ({{ len $taxonomy }})
                 </a>
                 {{ end }}
@@ -37,7 +37,7 @@
             <h3 class="filter-group__title">Popular Tags</h3>
             <div class="filter-tags">
                 {{ range first 10 site.Taxonomies.tags.ByCount }}
-                <a href="{{ " /tags/" | relURL }}{{ .Name | urlize }}/" class="filter-tag filter-tag--small">
+                <a href="{{ "/tags/" | relURL }}{{ .Name | urlize }}/" class="filter-tag filter-tag--small">
                     {{ .Name }} ({{ .Count }})
                 </a>
                 {{ end }}
@@ -99,12 +99,12 @@
     <div class="section-empty">
         <h2>No articles found</h2>
         <p>There are no articles published yet.</p>
-        <a href="{{ " /" | relURL }}" class="btn">Back to Home</a>
+        <a href="{{ "/" | relURL }}" class="btn">Back to Home</a>
     </div>
     {{ end }}
 
     <div class="section-navigation">
-        <a href="{{ " /" | relURL }}" class="btn btn--outline">← Back to Home</a>
+        <a href="{{ "/" | relURL }}" class="btn btn--outline">← Back to Home</a>
     </div>
 </div>
 {{ end }}

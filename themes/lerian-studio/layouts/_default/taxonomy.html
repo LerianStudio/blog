@@ -77,12 +77,12 @@
     <div class="taxonomy-empty">
         <h2>No articles found</h2>
         <p>There are no articles in this {{ if eq .Type "categories" }}category{{ else }}tag{{ end }} yet.</p>
-        <a href="{{ " /" | relURL }}" class="btn">Browse All Articles</a>
+        <a href="{{ "/" | relURL }}" class="btn">Browse All Articles</a>
     </div>
     {{ end }}
 
     <div class="taxonomy-navigation">
-        <a href="{{ " /" | relURL }}" class="btn btn--outline">← Back to Home</a>
+        <a href="{{ "/" | relURL }}" class="btn btn--outline">← Back to Home</a>
     </div>
 </div>
 {{ end }}

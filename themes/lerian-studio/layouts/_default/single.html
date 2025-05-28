@@ -26,7 +26,7 @@
             {{ if .Params.tags }}
             <div class="post__tags">
                 {{ range .Params.tags }}
-                <a href="{{ " /tags/" | relURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
+                <a href="{{ "/tags/" | relURL }}{{ . | urlize }}/" class="tag">{{ . }}</a>
                 {{ end }}
             </div>
             {{ end }}
@@ -35,7 +35,7 @@
             <div class="post__categories">
                 <span class="post__categories-label">Categories:</span>
                 {{ range .Params.categories }}
-                <a href="{{ " /categories/" | relURL }}{{ . | urlize }}/" class="category-link">{{ . }}</a>
+                <a href="{{ "/categories/" | relURL }}{{ . | urlize }}/" class="category-link">{{ . }}</a>
                 {{ end }}
             </div>
             {{ end }}
@@ -99,7 +99,7 @@
             </div>
 
             <div class="post__back">
-                <a href="{{ " /posts/" | relURL }}" class="btn btn--outline">
+                <a href="{{ "/posts/" | relURL }}" class="btn btn--outline">
                     ← Back to Articles
                 </a>
             </div>
