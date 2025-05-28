@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sdk on Lerian Studio Blog</title>
+    <link>http://localhost:1313/tags/sdk/</link>
+    <description>Recent content in Sdk on Lerian Studio Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 15 May 2025 06:52:19 -0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/sdk/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</title>
+      <link>http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</link>
+      <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
+      <guid>http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</guid>
+      <description>&lt;p&gt;nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &amp;ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &amp;ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

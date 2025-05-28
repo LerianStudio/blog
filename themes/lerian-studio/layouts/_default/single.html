@@ -29,6 +29,16 @@
             {{ end }}
         </header>
 
+        {{ if .Params.featured_image }}
+        <div class="post__featured-image">
+            <img src="{{ .Params.featured_image | relURL }}" alt="{{ .Params.featured_image_alt | default .Title }}"
+                class="post__image">
+            {{ if .Params.featured_image_caption }}
+            <figcaption class="post__image-caption">{{ .Params.featured_image_caption }}</figcaption>
+            {{ end }}
+        </div>
+        {{ end }}
+
         <div class="post__content">
             {{ .Content }}
         </div>

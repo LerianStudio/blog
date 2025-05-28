@@ -2,6 +2,11 @@
 date = '2025-05-15T06:41:02-03:00'
 draft = false
 title = 'lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?'
+slug = 'licoes-aprendidas-na-construcao-de-uma-sdk-financeira'
+featured_image = '/images/posts/sdk-development-hero.jpg'
+featured_image_alt = 'Software development and API integration for financial SDK'
+featured_image_caption = 'Building financial SDKs requires careful consideration of the boundary between backend and client responsibilities'
+tags = ['sdk', 'api-design', 'fintech', 'software-architecture']
 +++
 
 nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples -- afinal, openapi documentation e uma infinidade de ferramentas para generation --, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?

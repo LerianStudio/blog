@@ -13,6 +13,15 @@
         <div class="posts__grid">
             {{ range first 6 (where site.RegularPages "Section" "posts") }}
             <article class="post-card">
+                {{ if .Params.featured_image }}
+                <div class="post-card__image">
+                    <a href="{{ .Permalink }}">
+                        <img src="{{ .Params.featured_image | relURL }}"
+                            alt="{{ .Params.featured_image_alt | default .Title }}" class="post-card__img">
+                    </a>
+                </div>
+                {{ end }}
+
                 <div class="post-card__content">
                     <h3 class="post-card__title">
                         <a href="{{ .Permalink }}">{{ .Title }}</a>

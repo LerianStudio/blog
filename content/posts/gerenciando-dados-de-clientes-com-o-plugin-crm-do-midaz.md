@@ -2,6 +2,11 @@
 date = '2025-05-15T06:41:02-03:00'
 draft = false
 title = 'gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar'
+slug = 'gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz'
+featured_image = '/images/posts/crm-plugin-hero.jpg'
+featured_image_alt = 'Customer relationship management and data security in financial systems'
+featured_image_caption = 'Secure and flexible customer data management is essential for modern financial platforms'
+tags = ['crm', 'data-security', 'midaz', 'customer-management']
 +++
 
 no mundo dos sistemas financeiros, o gerenciamento eficiente e seguro de dados de clientes é um requisito fundamental. o plugin crm do midaz foi desenvolvido especificamente para atender essa necessidade, oferecendo uma solução robusta e flexível para instituições financeiras de todos os portes.
