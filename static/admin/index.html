@@ -7,38 +7,293 @@
     <meta name="robots" content="noindex" />
     <title>Content Manager - Lerian Studio Blog</title>
     <link rel="icon" href="/images/lerian-logo.svg" type="image/svg+xml">
+    <style>
+        /* Ensure CMS is visible */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #fff;
+            overflow: auto !important;
+        }
+
+        /* Make sure CMS container is visible and on top */
+        #nc-root,
+        [data-slate-editor],
+        .css-0,
+        .cms-app {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+            position: relative !important;
+            z-index: 9999 !important;
+            background: white !important;
+            min-height: 100vh !important;
+        }
+
+        /* Hide/fix authentication overlay issues */
+        .auth-page,
+        .login-page {
+            z-index: 10000 !important;
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(2px);
+        }
+
+        /* Ensure main CMS interface appears above auth elements */
+        [class*="cms"],
+        [class*="CMS"],
+        [id*="cms"],
+        [id*="CMS"] {
+            z-index: 9999 !important;
+            position: relative !important;
+        }
+
+        /* Fix any potential iframe issues */
+        iframe {
+            z-index: 1 !important;
+        }
+
+        /* Fallback styling for hidden elements */
+        * {
+            max-width: none !important;
+        }
+
+        /* Loading indicator - higher z-index */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #666;
+            z-index: 10001 !important;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Force visibility on common CMS class patterns */
+        [class*="nc-"],
+        [class*="netlify"],
+        [class*="decap"] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            z-index: 9999 !important;
+        }
+
+        /* Hide login button after authentication */
+        .auth-success+* {
+            display: none !important;
+        }
+
+        /* Hide login overlay after CMS loads */
+        .login-page,
+        .auth-page,
+        [class*="login"],
+        [class*="auth"] {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Static CMS (modern Decap CMS fork) -->
-    <script>
-        // Set manual initialization flag before loading the library
-        window.CMS_MANUAL_INIT = true;
-        console.log('CMS_MANUAL_INIT flag set:', window.CMS_MANUAL_INIT);
-    </script>
-    <script src="https://unpkg.com/@staticcms/app@4.3.0/dist/static-cms-app.js"></script>
-    <script>
-        // Initialize Static CMS with manual initialization
-        try {
-            console.log('Window object:', window);
-            console.log('CMS available:', !!window.CMS);
-            console.log('Init function available:', !!window.init);
+    <div class="loading" id="loading">Loading CMS...</div>
 
-            if (window.CMS && window.init) {
-                const { CMS, init } = window;
-                console.log('Initializing Static CMS...');
-                init();
-                console.log('Static CMS initialized successfully');
-            } else if (window.StaticCMS) {
-                console.log('Using StaticCMS global...');
-                window.StaticCMS.init();
-            } else {
-                console.error('Static CMS not found on window object');
-                console.log('Available properties:', Object.keys(window).filter(key => key.includes('CMS') || key.includes('Static')));
+    <!-- Decap CMS with manual initialization -->
+    <script>
+        window.CMS_MANUAL_INIT = true;
+    </script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+        console.log('🚀 Decap CMS loading with manual init...');
+
+        // Initialize CMS with configuration
+        CMS.init({
+            config: {
+                backend: {
+                    name: 'github',
+                    repo: 'LerianStudio/blog',
+                    branch: 'main',
+                    base_url: 'https://decap-oauth-vercel-omqwct67c-fred-amarals-projects.vercel.app',
+                    auth_endpoint: 'api/auth'
+                },
+                load_config_file: false,
+                publish_mode: 'editorial_workflow',
+                media_folder: 'static/images/uploads',
+                public_folder: '/images/uploads',
+                site_url: 'https://blog.lerian.studio',
+                display_url: 'https://blog.lerian.studio',
+                logo_url: '/images/lerian-logo.svg',
+                collections: [
+                    {
+                        name: 'posts',
+                        label: 'Blog Posts',
+                        folder: 'content/posts',
+                        create: true,
+                        slug: '{{slug}}',
+                        fields: [
+                            { label: 'Title', name: 'title', widget: 'string' },
+                            { label: 'Slug', name: 'slug', widget: 'string' },
+                            { label: 'Date', name: 'date', widget: 'datetime' },
+                            { label: 'Draft', name: 'draft', widget: 'boolean', default: false },
+                            { label: 'Featured Image', name: 'featured_image', widget: 'image', required: false },
+                            { label: 'Featured Image Alt', name: 'featured_image_alt', widget: 'string', required: false },
+                            { label: 'Featured Image Caption', name: 'featured_image_caption', widget: 'string', required: false },
+                            {
+                                label: 'Categories',
+                                name: 'categories',
+                                widget: 'select',
+                                multiple: true,
+                                options: ['Architecture', 'Financial Technology', 'Development', 'Product', 'API Design', 'Data Security']
+                            },
+                            {
+                                label: 'Tags',
+                                name: 'tags',
+                                widget: 'select',
+                                multiple: true,
+                                options: ['fintech', 'architecture', 'cqrs', 'eda', 'ledger', 'midaz', 'sdk', 'api-design', 'software-architecture', 'crm', 'customer-management', 'data-security']
+                            },
+                            { label: 'Content', name: 'body', widget: 'markdown' }
+                        ]
+                    },
+                    {
+                        name: 'pages',
+                        label: 'Pages',
+                        files: [
+                            {
+                                label: 'About Page',
+                                name: 'about',
+                                file: 'content/about/_index.md',
+                                fields: [
+                                    { label: 'Title', name: 'title', widget: 'string' },
+                                    { label: 'Date', name: 'date', widget: 'datetime', required: false },
+                                    { label: 'Draft', name: 'draft', widget: 'boolean', default: false },
+                                    { label: 'Content', name: 'body', widget: 'markdown' }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
-        } catch (error) {
-            console.error('Failed to initialize Static CMS:', error);
+        });
+
+        console.log('✅ CMS initialized with manual config');
+
+        // Function to force show main CMS interface
+        function forceShowCMSInterface() {
+            console.log('💪 Forcing CMS interface to be visible...');
+
+            // Hide all login-related elements with valid selectors
+            const loginSelectors = [
+                'button[class*="login"]',
+                'button[class*="auth"]',
+                '[class*="login-page"]',
+                '[class*="auth-page"]',
+                'button' // Get all buttons and filter by text content
+            ];
+
+            loginSelectors.forEach(selector => {
+                try {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        // Check if button contains GitHub or Login text
+                        if (el.textContent &&
+                            (el.textContent.toLowerCase().includes('github') ||
+                                el.textContent.toLowerCase().includes('login'))) {
+                            el.style.display = 'none !important';
+                            el.style.visibility = 'hidden !important';
+                            el.style.opacity = '0 !important';
+                        }
+                    });
+                } catch (e) {
+                    console.log('Selector error (ignoring):', selector);
+                }
+            });
+
+            // Force show CMS root and all its children
+            const cmsRoot = document.querySelector('#nc-root');
+            if (cmsRoot) {
+                cmsRoot.style.display = 'block !important';
+                cmsRoot.style.visibility = 'visible !important';
+                cmsRoot.style.opacity = '1 !important';
+                cmsRoot.style.zIndex = '9999 !important';
+                cmsRoot.style.position = 'relative !important';
+                cmsRoot.style.background = 'white !important';
+                cmsRoot.style.minHeight = '100vh !important';
+
+                // Force show all children
+                const allChildren = cmsRoot.querySelectorAll('*');
+                allChildren.forEach(child => {
+                    if (child.style) {
+                        child.style.opacity = '1 !important';
+                        child.style.visibility = 'visible !important';
+                        child.style.display = 'block !important';
+                    }
+                });
+
+                console.log('✅ CMS interface forced to be visible');
+                console.log('📊 CMS children visible:', allChildren.length);
+            }
         }
+
+        // Remove loading indicator and force interface
+        setTimeout(() => {
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = 'none';
+
+            // Force show the interface immediately
+            forceShowCMSInterface();
+        }, 3000);
+
+        // Listen for authentication events (but also force interface regardless)
+        window.addEventListener('message', (event) => {
+            console.log('📨 Received message:', event.data);
+
+            if (event.data && typeof event.data === 'string' && event.data.includes('authorization:github:success')) {
+                console.log('🎉 GitHub authentication successful!');
+
+                // Force show interface immediately after auth
+                setTimeout(() => {
+                    forceShowCMSInterface();
+                }, 500);
+
+                // Also refresh after a delay as backup
+                setTimeout(() => {
+                    console.log('🔄 Refreshing page after authentication...');
+                    window.location.reload();
+                }, 3000);
+            }
+        });
+
+        // Aggressive interface forcing every 2 seconds
+        setInterval(() => {
+            const cmsRoot = document.querySelector('#nc-root');
+            if (cmsRoot && cmsRoot.children.length > 0) {
+                // Check if login is still showing
+                const loginBtn = document.querySelector('button');
+                if (loginBtn && loginBtn.textContent && loginBtn.textContent.toLowerCase().includes('github')) {
+                    console.log('🔧 Login still showing, forcing interface...');
+                    forceShowCMSInterface();
+                }
+            }
+        }, 2000);
+
+        // Debug information
+        setTimeout(() => {
+            console.log('📊 CMS status check:');
+            console.log('- CMS object:', !!window.CMS);
+            console.log('- Root element:', !!document.querySelector('#nc-root'));
+
+            const cmsRoot = document.querySelector('#nc-root');
+            if (cmsRoot) {
+                console.log('- CMS children:', cmsRoot.children.length);
+                console.log('- CMS content:', cmsRoot.innerHTML.length > 100 ? 'Has content' : 'Empty');
+
+                // Final aggressive force
+                forceShowCMSInterface();
+            }
+        }, 5000);
     </script>
 </body>
 
