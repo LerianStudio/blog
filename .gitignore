@@ -4,3 +4,7 @@ ide/
 
 node_modules
 .env
+
+# Hugo build output
+public/
+resources/
