@@ -44,12 +44,12 @@ export default async function handler(req, res) {
       throw new Error(tokenData.error_description || tokenData.error);
     }
 
-    // Return the exact format Decap CMS expects
+    // Simple success page that matches working OAuth providers
     const html = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Authorization Complete</title>
+  <title>Success</title>
   <style>
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -61,43 +61,19 @@ export default async function handler(req, res) {
   </style>
 </head>
 <body>
-  <h1 class="success">✅ Success!</h1>
-  <p>Completing authentication...</p>
+  <h1 class="success">✅ Authentication Complete</h1>
+  <p>You can close this window.</p>
   <script>
     (function() {
-      function receiveMessage(e) {
-        console.log("Received message:", e);
-      }
-      window.addEventListener("message", receiveMessage, false);
+      const token = "${tokenData.access_token}";
       
-      // Send message in the format Decap CMS expects
-      const data = {
-        token: "${tokenData.access_token}",
-        provider: "github"
-      };
-      
-      // Try different approaches
+      // The exact format used by successful OAuth providers
       if (window.opener) {
-        // Method 1: Direct postMessage (most common)
         window.opener.postMessage(
-          "authorization:github:success:" + JSON.stringify(data), 
+          'authorization:github:success:{"token":"' + token + '","provider":"github"}',
           "*"
         );
-        
-        // Method 2: Standard format
-        window.opener.postMessage({
-          type: "authorization_grant",
-          provider: "github", 
-          token: "${tokenData.access_token}"
-        }, "*");
-        
-        setTimeout(() => window.close(), 1000);
-      } else {
-        // Fallback for iframe or other scenarios
-        window.parent.postMessage(
-          "authorization:github:success:" + JSON.stringify(data), 
-          "*"
-        );
+        window.close();
       }
     })();
   </script>
@@ -114,7 +90,7 @@ export default async function handler(req, res) {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Authorization Failed</title>
+  <title>Error</title>
   <style>
     body { 
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -126,16 +102,15 @@ export default async function handler(req, res) {
   </style>
 </head>
 <body>
-  <h1 class="error">❌ Authorization Failed</h1>
+  <h1 class="error">❌ Authentication Failed</h1>
   <p>Error: ${error.message}</p>
-  <p>Please close this window and try again.</p>
   <script>
     if (window.opener) {
       window.opener.postMessage(
-        "authorization:github:error:" + JSON.stringify({error: "${error.message}"}), 
+        'authorization:github:error:{"error":"${error.message}"}',
         "*"
       );
-      setTimeout(() => window.close(), 3000);
+      window.close();
     }
   </script>
 </body>

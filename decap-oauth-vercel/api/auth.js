@@ -1,5 +1,5 @@
 export default function handler(req, res) {
-    const { provider = 'github', scope = 'repo' } = req.query;
+    const { provider = 'github', scope = 'repo,user:email' } = req.query;
 
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,8 +16,8 @@ export default function handler(req, res) {
         return res.status(500).json({ error: 'OAuth client ID not configured' });
     }
 
-    // GitHub OAuth URL
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${scope}&state=${Date.now()}`;
+    // GitHub OAuth URL with expanded scope
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=${encodeURIComponent(scope)}&state=${Date.now()}`;
 
     // Redirect to GitHub OAuth
     res.redirect(302, authUrl);
