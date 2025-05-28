@@ -1,21 +1,19 @@
 <header class="header">
     <div class="header__container">
         <div class="header__logo">
-            <a href="{{ " /" | relURL }}" class="logo">
-                lerian
-            </a>
+            <a href="{{ " /" | relURL }}" class="logo">{{ site.Title }}</a>
         </div>
 
         <nav class="header__nav">
-            <div class="nav__menu">
-                {{ range site.Menus.main }}
-                <a href="{{ .URL | relURL }}" class="nav__link">
-                    {{ .Name }}
-                </a>
-                {{ end }}
-            </div>
+            <ul class="nav__menu">
+                <li><a href="{{ " /" | relURL }}" class="nav__link">Home</a></li>
+                <li><a href="{{ " /posts/" | relURL }}" class="nav__link">Articles</a></li>
+                <li><a href="{{ " /categories/" | relURL }}" class="nav__link">Categories</a></li>
+                <li><a href="{{ " /tags/" | relURL }}" class="nav__link">Tags</a></li>
+                <li><a href="{{ " /about/" | relURL }}" class="nav__link">About</a></li>
+            </ul>
 
-            <button class="nav__toggle" aria-label="Toggle navigation">
+            <button class="nav__toggle" id="nav-toggle">
                 <span class="nav__hamburger"></span>
                 <span class="nav__hamburger"></span>
                 <span class="nav__hamburger"></span>
