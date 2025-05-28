@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Customer-Management on Lerian Studio Blog</title>
-    <link>http://localhost:1313/tags/customer-management/</link>
+    <link>https://blog.lerian.studio/tags/customer-management/</link>
     <description>Recent content in Customer-Management on Lerian Studio Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 May 2025 06:52:19 -0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/customer-management/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 May 2025 07:53:02 -0300</lastBuildDate>
+    <atom:link href="https://blog.lerian.studio/tags/customer-management/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar</title>
-      <link>http://localhost:1313/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/</link>
+      <link>https://blog.lerian.studio/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/</guid>
+      <guid>https://blog.lerian.studio/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/</guid>
       <description>&lt;p&gt;no mundo dos sistemas financeiros, o gerenciamento eficiente e seguro de dados de clientes é um requisito fundamental. o plugin crm do midaz foi desenvolvido especificamente para atender essa necessidade, oferecendo uma solução robusta e flexível para instituições financeiras de todos os portes.&lt;/p&gt;</description>
     </item>
   </channel>

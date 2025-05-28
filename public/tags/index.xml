@@ -2,94 +2,94 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Lerian Studio Blog</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://blog.lerian.studio/tags/</link>
     <description>Recent content in Tags on Lerian Studio Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 May 2025 06:56:28 -0300</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 28 May 2025 07:53:02 -0300</lastBuildDate>
+    <atom:link href="https://blog.lerian.studio/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Api-Design</title>
-      <link>http://localhost:1313/tags/api-design/</link>
+      <link>https://blog.lerian.studio/tags/api-design/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/api-design/</guid>
+      <guid>https://blog.lerian.studio/tags/api-design/</guid>
       <description></description>
     </item>
     <item>
       <title>Architecture</title>
-      <link>http://localhost:1313/tags/architecture/</link>
+      <link>https://blog.lerian.studio/tags/architecture/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/architecture/</guid>
+      <guid>https://blog.lerian.studio/tags/architecture/</guid>
       <description></description>
     </item>
     <item>
       <title>Cqrs</title>
-      <link>http://localhost:1313/tags/cqrs/</link>
+      <link>https://blog.lerian.studio/tags/cqrs/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/cqrs/</guid>
+      <guid>https://blog.lerian.studio/tags/cqrs/</guid>
       <description></description>
     </item>
     <item>
       <title>Crm</title>
-      <link>http://localhost:1313/tags/crm/</link>
+      <link>https://blog.lerian.studio/tags/crm/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/crm/</guid>
+      <guid>https://blog.lerian.studio/tags/crm/</guid>
       <description></description>
     </item>
     <item>
       <title>Customer-Management</title>
-      <link>http://localhost:1313/tags/customer-management/</link>
+      <link>https://blog.lerian.studio/tags/customer-management/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/customer-management/</guid>
+      <guid>https://blog.lerian.studio/tags/customer-management/</guid>
       <description></description>
     </item>
     <item>
       <title>Data-Security</title>
-      <link>http://localhost:1313/tags/data-security/</link>
+      <link>https://blog.lerian.studio/tags/data-security/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/data-security/</guid>
+      <guid>https://blog.lerian.studio/tags/data-security/</guid>
       <description></description>
     </item>
     <item>
       <title>Eda</title>
-      <link>http://localhost:1313/tags/eda/</link>
+      <link>https://blog.lerian.studio/tags/eda/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/eda/</guid>
+      <guid>https://blog.lerian.studio/tags/eda/</guid>
       <description></description>
     </item>
     <item>
       <title>Fintech</title>
-      <link>http://localhost:1313/tags/fintech/</link>
+      <link>https://blog.lerian.studio/tags/fintech/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/fintech/</guid>
+      <guid>https://blog.lerian.studio/tags/fintech/</guid>
       <description></description>
     </item>
     <item>
       <title>Ledger</title>
-      <link>http://localhost:1313/tags/ledger/</link>
+      <link>https://blog.lerian.studio/tags/ledger/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/ledger/</guid>
+      <guid>https://blog.lerian.studio/tags/ledger/</guid>
       <description></description>
     </item>
     <item>
       <title>Midaz</title>
-      <link>http://localhost:1313/tags/midaz/</link>
+      <link>https://blog.lerian.studio/tags/midaz/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/midaz/</guid>
+      <guid>https://blog.lerian.studio/tags/midaz/</guid>
       <description></description>
     </item>
     <item>
       <title>Sdk</title>
-      <link>http://localhost:1313/tags/sdk/</link>
+      <link>https://blog.lerian.studio/tags/sdk/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/sdk/</guid>
+      <guid>https://blog.lerian.studio/tags/sdk/</guid>
       <description></description>
     </item>
     <item>
       <title>Software-Architecture</title>
-      <link>http://localhost:1313/tags/software-architecture/</link>
+      <link>https://blog.lerian.studio/tags/software-architecture/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
-      <guid>http://localhost:1313/tags/software-architecture/</guid>
+      <guid>https://blog.lerian.studio/tags/software-architecture/</guid>
       <description></description>
     </item>
   </channel>
