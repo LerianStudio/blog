@@ -116,9 +116,9 @@ canonifyURLs = true
     disable = false
     privacyEnhanced = true
 
-# Outputs for search
+# Outputs
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+  home = ["HTML", "RSS"]
   section = ["HTML", "RSS"]
 
 # Taxonomies
