@@ -4,7 +4,7 @@ languageCode = 'en-us'
 title = 'Lerian Studio Blog'
 
 # Theme Configuration
-theme = 'hugo-theme-terminal'
+theme = 'lerian-studio'
 
 # Content Configuration
 summaryLength = 30

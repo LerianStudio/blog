@@ -1,110 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
+
 <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  
-    <title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? :: Lerian Studio Blog</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?
-" />
-<meta name="keywords" content="fintech, financial systems, cqrs, event-driven, software architecture" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="robots" content="noodp" />
+    <meta name="description"
+    content="Thoughts, ideas, and projects from Lerian Studio">
+<meta name="author" content="Lerian Studio">
 
-<link rel="canonical" href="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/" />
+<meta property="og:title" content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? | Lerian Studio Blog">
+<meta property="og:description"
+    content="Thoughts, ideas, and projects from Lerian Studio">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">
 
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? | Lerian Studio Blog">
+<meta name="twitter:description"
+    content="Thoughts, ideas, and projects from Lerian Studio">
 
-
-
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/main.min.775ac2af004d44c22a6d000fbd1d9af529642f5cef27399d0280d180af2c2e9b.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/menu.min.310d32205bdedd6f43144e3c3273c9deecd238eba5f9108db5ea96ca0cfbe377.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/post.min.ad50c7f4d00e7975918f37fc74c6029e1959a40d66fb5b2c6564a8715e985573.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/syntax.min.e9ab635cf918bc84b901eb65c0b2caa74c9544245e3647c1af5c129896ef276e.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+<link rel="icon" type="image/png" href="http://localhost:1313/%20/favicon.png">
+<link rel="canonical" href="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">
+    
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-<link rel="stylesheet" href="http://localhost:1313/terminal.css">
+<link rel="stylesheet" href="http://localhost:1313/%20css/main.css">
 
-
-
-
-<link rel="shortcut icon" href="http://localhost:1313/favicon.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-
-
-<meta name="twitter:card" content="summary" />
-
-
-
-<meta property="og:locale" content="en" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?">
-<meta property="og:description" content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?
-" />
-<meta property="og:url" content="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/" />
-<meta property="og:site_name" content="Lerian Studio Blog" />
-
-  <meta property="og:image" content="http://localhost:1313/og-image.png">
-
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="627">
-
-
-  <meta property="article:published_time" content="2025-05-15 06:41:02 -0300 -03" />
-
-
-
-
-
-
-
-
-
-
-
-
+    <title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? | Lerian Studio Blog</title>
 </head>
+
 <body>
-
-
-<div class="container center">
-
-  <header class="header">
+    <header class="header">
   <div class="header__inner">
     <div class="header__logo">
       <a href="http://localhost:1313/">
@@ -152,23 +82,32 @@
   
 </header>
 
-  <div class="content">
-    
-<article class="post">
-  <h1 class="post-title">
-    <a href="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</a>
-  </h1>
-  <div class="post-meta"><time class="post-date">2025-05-15</time></div>
+    <main class="main">
+        
+<div class="container">
+    <article class="post">
+        <header class="post__header">
+            <h1 class="post__title">lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</h1>
 
-  
-  
+            <div class="post__meta">
+                <time datetime=" 2025-05-15" class="post__date">
+                    May 15, 2025
+                </time>
 
+                
 
-  
+                
+                <span class="post__separator">•</span>
+                <span class="post__reading-time">19 min read</span>
+                
+            </div>
 
-  <div class="post-content"><div>
-        <p>nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?</p>
-<h2 id="fronteiras-de-responsabilidade">fronteiras de responsabilidade<a href="#fronteiras-de-responsabilidade" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+            
+        </header>
+
+        <div class="post__content">
+            <p>nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?</p>
+<h2 id="fronteiras-de-responsabilidade">fronteiras de responsabilidade</h2>
 <p>quando começamos a desenvolver a SDK para o Midaz (em Go), a pergunta que constantemente nos perseguia era: até onde a API do backend deve ir e onde começa a responsabilidade de integração/implementação do cliente? ou seja, onde termina o backend e começa o colo do cliente?</p>
 <p>esta pergunta aparentemente simples esconde uma complexidade enorme. tradicionalmente, muitos desenvolvedores consideram que:</p>
 <ul>
@@ -176,7 +115,7 @@
 <li><strong>cliente/sdk</strong>: responsável apenas por fazer requisições HTTP, serializar/deserializar dados</li>
 </ul>
 <p>mas será que essa divisão simplista funciona bem na prática? especialmente quando falamos de sistemas financeiros com requisitos rigorosos de consistência, performance e resiliência?</p>
-<h2 id="por-que-uma-sdk-robusta-importa">por que uma sdk robusta importa?<a href="#por-que-uma-sdk-robusta-importa" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="por-que-uma-sdk-robusta-importa">por que uma sdk robusta importa?</h2>
 <p>durante o desenvolvimento, percebemos que uma sdk financeira precisa ir muito além de simplesmente fazer o wrapping de endpoints REST. ela precisa ser uma camada que:</p>
 <ol>
 <li>protege o servidor contra inputs inválidos (validação do lado cliente)</li>
@@ -186,7 +125,7 @@
 <li>proporciona uma experiência de desenvolvimento fluida (tipos fortemente definidos, erros descritivos)</li>
 </ol>
 <p>vamos explorar cada um desses aspectos detalhadamente, com exemplos práticos do que implementamos na nossa primeira sdk.</p>
-<h2 id="validação-no-cliente-evitando-viagens-desnecessárias">validação no cliente: evitando viagens desnecessárias<a href="#validação-no-cliente-evitando-viagens-desnecessárias" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="validação-no-cliente-evitando-viagens-desnecessárias">validação no cliente: evitando viagens desnecessárias</h2>
 <p>uma das primeiras decisões que tomamos foi implementar validações robustas no lado cliente. por quê? simples: por que enviar ao servidor uma requisição que sabemos que vai falhar?</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// exemplo de validação de transação financeira no lado cliente</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ValidateTransactionDSL</span>(<span style="color:#a6e22e">input</span> <span style="color:#a6e22e">TransactionDSLValidator</span>) <span style="color:#66d9ef">error</span> {
@@ -225,7 +164,7 @@
 <li>mensagens de erro mais contextualizadas e úteis</li>
 </ul>
 <p>a validação no cliente não substitui a validação no servidor (que continua essencial por razões de segurança), mas cria uma experiência de desenvolvimento superior e reduz o tráfego de rede.</p>
-<h2 id="resiliência-através-de-retry-inteligente">resiliência através de retry inteligente<a href="#resiliência-através-de-retry-inteligente" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="resiliência-através-de-retry-inteligente">resiliência através de retry inteligente</h2>
 <p>sistemas distribuídos falham. esta é uma realidade, não uma possibilidade. quando trabalhamos com operações financeiras, essas falhas são ainda mais críticas e podem ter consequências significativas.</p>
 <p>por isso, implementamos mecanismos sofisticados de retry com exponential backoff:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// configuração de retry com backoff exponencial</span>
@@ -308,7 +247,7 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusServiceUnavailable</span>,  <span style="color:#75715e">// 503</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusGatewayTimeout</span>,      <span style="color:#75715e">// 504</span>
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="gerenciamento-avançado-de-configurações">gerenciamento avançado de configurações<a href="#gerenciamento-avançado-de-configurações" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+</span></span></code></pre></div><h2 id="gerenciamento-avançado-de-configurações">gerenciamento avançado de configurações</h2>
 <p>a modularidade da configuração foi um ponto crítico do design. utilizamos o padrão de opções funcionais (não são 100% fluentes como pede o figurin) para permitir uma configuração limpa e extensível:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// padrão de options funcionais para configuração flexível</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">New</span>(
@@ -342,7 +281,7 @@
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">MIDAZ_DEBUG</span>=<span style="color:#66d9ef">true</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">MIDAZ_MAX_RETRIES</span>=<span style="color:#ae81ff">5</span>
 </span></span></code></pre></div><p>isso permite uma integração mais suave com diferentes ambientes de deploy, especialmente em contextos de containers e kubernetes.</p>
-<h2 id="performance-otimizada-para-json">performance otimizada para JSON<a href="#performance-otimizada-para-json" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="performance-otimizada-para-json">performance otimizada para JSON</h2>
 <p>Em sistemas financeiros, performance não é luxo, é requisito. Um dos pontos de maior otimização foi o processamento JSON, que pode rapidamente se tornar um gargalo:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// exemplo de nossa implementação de pooling de buffers para JSON</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">JSONPerformance</span> <span style="color:#66d9ef">struct</span> {
@@ -395,7 +334,7 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>, <span style="color:#66d9ef">nil</span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>Esta abordagem reduziu alocações de memória em nossos benchmarks, principalmente quando fazíamos em conjunto com o pooling de buffers, o que é crucial para sistemas financeiros de alto volume que processam milhões de transações.</p>
-<h2 id="páginação-inteligente-e-universal">páginação inteligente e universal<a href="#páginação-inteligente-e-universal" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="páginação-inteligente-e-universal">páginação inteligente e universal</h2>
 <p>Lidar com grandes conjuntos de dados é um desafio comum em operações financeiras. Por isso, desenvolvemos um sistema de paginação universal que funciona com diferentes endpoints e paradigmas:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// interface genérica para qualquer tipo de paginador</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Paginator</span>[<span style="color:#a6e22e">T</span> <span style="color:#66d9ef">any</span>] <span style="color:#66d9ef">interface</span> {
@@ -534,7 +473,7 @@
 <li>Cancelamento gracioso de operações em andamento</li>
 <li>Timeouts individuais para tarefas</li>
 </ul>
-<h2 id="tratamento-avançado-de-erros-financeiros">tratamento avançado de erros financeiros<a href="#tratamento-avançado-de-erros-financeiros" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="tratamento-avançado-de-erros-financeiros">tratamento avançado de erros financeiros</h2>
 <p>Em um sistema financeiro, os erros são parte crítica da experiência do desenvolvedor. Investimos em um sistema sofisticado de tratamento de erros:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// exemplo de uso de erros especializados</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">switch</span> {
@@ -615,7 +554,7 @@
 <li>Validar limites de recursos (memória, CPU, conexões, e o próprio sistema distribuído)</li>
 </ul>
 <p>No ponto específico de validar limites de recursos e do sistema distribuído, utilizamos o pumba para simular cenários de caos (em docker), e isso nos ajudou a identificar pontos interessantes na implementação do próprio backend.</p>
-<h2 id="documentação-direcionada-por-exemplos">documentação direcionada por exemplos<a href="#documentação-direcionada-por-exemplos" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="documentação-direcionada-por-exemplos">documentação direcionada por exemplos</h2>
 <p>Percebemos que bons exemplos são mais valiosos que documentação abstrata. Por isso, demos ênfase especial a exemplos práticos:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// exemplo completo de transferência entre contas</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ExampleTransferBetweenAccounts</span>() {
@@ -721,7 +660,7 @@ Voltando à questão inicial sobre as fronteiras de responsabilidade entre servi
 <li>Domínio: o servidor define o modelo, mas o cliente pode enriquecê-lo com abstrações úteis</li>
 </ul>
 <p>O que ficou claro é que SDKs não são meros wrappers de API - elas são produtos completos que precisam considerar toda a experiência do desenvolvedor e os requisitos específicos do domínio.</p>
-<h2 id="trade-offs-e-desafios-de-design-importantes">trade-offs e desafios de design importantes<a href="#trade-offs-e-desafios-de-design-importantes" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="trade-offs-e-desafios-de-design-importantes">trade-offs e desafios de design importantes</h2>
 <p>Durante o desenvolvimento da SDK, nos confrontamos com vários trade-offs importantes que impactam diretamente desenvolvedores e usuários:</p>
 <ul>
 <li>Validação no cliente vs. sincronização com o servidor</li>
@@ -818,7 +757,7 @@ Voltando à questão inicial sobre as fronteiras de responsabilidade entre servi
 <p>Começamos com polling simples para compatibilidade ampla
 Adicionaremos suporte a webhooks para notificações em tempo real
 E planejamos, por fim, streaming de atualizações para casos de uso mais complexos</p>
-<h2 id="estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz">estratégia de versionamento e compatibilidade planejado para em breve, dado que estamos na V1 do Midaz<a href="#estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz">estratégia de versionamento e compatibilidade planejado para em breve, dado que estamos na V1 do Midaz</h2>
 <p>O versionamento é um desafio significativo em APIs financeiras que evoluem constantemente:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Suporte a múltiplas versões de API</span>
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">client</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">New</span>(
@@ -839,7 +778,7 @@ E planejamos, por fim, streaming de atualizações para casos de uso mais comple
 <li>Feature flags para recursos experimentais</li>
 <li>Aliases de métodos deprecados com warnings para facilitar migrações</li>
 </ul>
-<h2 id="aprendizados-para-o-futuro">aprendizados para o futuro<a href="#aprendizados-para-o-futuro" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h2 id="aprendizados-para-o-futuro">aprendizados para o futuro</h2>
 <p>Lançar a primeira versão de uma SDK não é o fim da jornada, mas apenas o começo. Já identificamos diversas áreas para evolução:</p>
 <ul>
 <li>Estratégia evolutiva: como evoluir a API sem quebrar compatibilidade? como evoluir o backend sem quebrar compatibilidade? como fazer tudo isso e mantermos o decoupling super necessário entre midaz e midaz-sdk-golang versioning</li>
@@ -856,7 +795,7 @@ E planejamos, por fim, streaming de atualizações para casos de uso mais comple
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">transferResult</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Workflows</span>.<span style="color:#a6e22e">DoTransfer</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">transferOptions</span>)
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">paymentResult</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Workflows</span>.<span style="color:#a6e22e">DoPayment</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">paymentOptions</span>)
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">fxResult</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">Workflows</span>.<span style="color:#a6e22e">DoForeignExchangeTransfer</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">fxOptions</span>)
-</span></span></code></pre></div><h2 id="o-padrão-functional-options-flexibilidade-sem-complexidade">o padrão functional options: flexibilidade sem complexidade<a href="#o-padrão-functional-options-flexibilidade-sem-complexidade" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+</span></span></code></pre></div><h2 id="o-padrão-functional-options-flexibilidade-sem-complexidade">o padrão functional options: flexibilidade sem complexidade</h2>
 <p>um padrão de design que merece destaque especial na nossa sdk é o uso extensivo de functional options (ou a implementação parcial de fluent apis). este padrão permite configuração flexível sem comprometer a legibilidade ou simplicidade:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// definição básica do padrão</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">ClientOption</span> <span style="color:#66d9ef">func</span>(<span style="color:#f92672">*</span><span style="color:#a6e22e">Client</span>) <span style="color:#66d9ef">error</span>
@@ -899,7 +838,7 @@ E planejamos, por fim, streaming de atualizações para casos de uso mais comple
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">accounts</span>.<span style="color:#a6e22e">WithCaching</span>(<span style="color:#66d9ef">true</span>),
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">accounts</span>.<span style="color:#a6e22e">WithValidation</span>(<span style="color:#a6e22e">accounts</span>.<span style="color:#a6e22e">ValidationStrict</span>),
 </span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><h2 id="conclusão">conclusão<a href="#conclusão" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+</span></span></code></pre></div><h2 id="conclusão">conclusão</h2>
 <p>construir a sdk do midaz foi uma jornada de aprendizado e de um estado de flow absurdo. as complexidades de sistemas distribuídos, especialmente no domínio financeiro, e as decisões que tomamos - desde validação robusta no cliente até mecanismos avançados de resiliência e performance - foram todas guiadas pela pergunta: &ldquo;o que tornaria a vida do desenvolvedor mais fácil e o sistema mais confiável?&rdquo;</p>
 <p>no final, a fronteira entre cliente e servidor é mais sobre colaboração do que separação. uma boa sdk não apenas encapsula uma api, mas amplia suas capacidades e protege contra suas limitações.</p>
 <p>a gestão cuidadosa dos trade-offs que destacamos - validação no cliente versus sincronização com o servidor, tratamento automático versus exposição de erros, modularidade de observabilidade, e estratégias para operações assíncronas - moldou uma sdk que equilibra simplicidade e poder.</p>
@@ -912,62 +851,115 @@ port para js. quite a challenge!</p>
 <p>beijos,
 fred.</p>
 
-      </div></div>
+        </div>
 
-  
-    
-<div class="pagination">
-  <div class="pagination__title">
-    <span class="pagination__title-h"></span>
-    <hr />
-  </div>
-  <div class="pagination__buttons">
-    
-      <a href="http://localhost:1313/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/" class="button inline prev">
-        &lt; [<span class="button__text">gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar</span>]
-      </a>
-    
-    
-    
-  </div>
+        <footer class="post__footer">
+            <div class="post__navigation">
+                
+                <a href="http://localhost:1313/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/" class="post__nav post__nav--prev">
+                    ← gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar
+                </a>
+                
+
+                
+            </div>
+
+            <div class="post__back">
+                <a href="http://localhost:1313/%20/posts/" class="btn btn--outline">
+                    ← Back to Posts
+                </a>
+            </div>
+        </footer>
+    </article>
 </div>
 
+    </main>
 
-  
-
-  
-    
-
-  
-</article>
-
-  </div>
-
-  
     <footer class="footer">
-  <div class="footer__inner">
-    
-      <div class="copyright">
-        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
-    
-      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
-      </div>
-  </div>
+    <div class="container">
+        <div class="footer__content">
+            <p class="footer__text">
+                © 2025 Lerian Studio Blog. All rights reserved.
+            </p>
+
+            
+            <div class="footer__social">
+                
+                <a href="https://github.com/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
+                    Github
+                </a>
+                
+                <a href="https://twitter.com/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
+                    Twitter
+                </a>
+                
+                <a href="https://linkedin.com/in/lerianstudio" class="footer__social-link" target="_blank" rel="noopener noreferrer">
+                    LinkedIn
+                </a>
+                
+            </div>
+            
+        </div>
+    </div>
 </footer>
 
+<style>
+    .footer {
+        border-top: 1px solid var(--color-gray-200);
+        margin-top: var(--spacing-2xl);
+        padding: var(--spacing-xl) 0;
+    }
 
+    .footer__content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+    }
 
+    .footer__text {
+        color: var(--color-gray-700);
+        margin: 0;
+        font-size: 0.875rem;
+    }
 
+    .footer__social {
+        display: flex;
+        gap: var(--spacing-md);
+    }
 
+    .footer__social-link {
+        color: var(--color-gray-700);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s ease;
+    }
 
-<script type="text/javascript" src="http://localhost:1313/bundle.min.js"></script>
+    .footer__social-link:hover {
+        color: var(--color-secondary);
+    }
 
+    @media (max-width: 768px) {
+        .footer__content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggle = document.querySelector('.nav__toggle');
+        const menu = document.querySelector('.nav__menu');
 
-
-
-
-  
-</div>
-
+        if (toggle && menu) {
+            toggle.addEventListener('click', function () {
+                menu.classList.toggle('nav__menu--open');
+            });
+        }
+    });
+</script>
 </body>
+
 </html>

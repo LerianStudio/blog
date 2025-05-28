@@ -1,0 +1,25 @@
+<header class="header">
+    <div class="header__container">
+        <div class="header__logo">
+            <a href="{{ " /" | relURL }}" class="logo">
+                lerian
+            </a>
+        </div>
+
+        <nav class="header__nav">
+            <div class="nav__menu">
+                {{ range site.Menus.main }}
+                <a href="{{ .URL | relURL }}" class="nav__link">
+                    {{ .Name }}
+                </a>
+                {{ end }}
+            </div>
+
+            <button class="nav__toggle" aria-label="Toggle navigation">
+                <span class="nav__hamburger"></span>
+                <span class="nav__hamburger"></span>
+                <span class="nav__hamburger"></span>
+            </button>
+        </nav>
+    </div>
+</header>

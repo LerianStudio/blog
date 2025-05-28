@@ -1,0 +1,12 @@
+name = "lerian-studio"
+license = "MIT"
+licenselink = "https://github.com/lerianstudio/blog/blob/main/LICENSE"
+description = "Custom Hugo theme for Lerian Studio Blog"
+homepage = "https://blog.lerian.studio/"
+tags = ["blog", "fintech", "corporate", "clean", "responsive"]
+features = ["responsive", "light-theme", "corporate"]
+min_version = "0.121.0"
+
+[author]
+  name = "Lerian Studio"
+  homepage = "https://lerian.studio" 
