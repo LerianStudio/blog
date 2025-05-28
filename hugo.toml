@@ -25,20 +25,21 @@ canonifyURLs = true
   description = "Thoughts, ideas, and projects from Lerian Studio"
   
   # Logo and favicon
+  logoText = "Lerian Studio"
   [params.logo]
     lightMode = "/favicon.png"
-    darkMode = "/favicon.png"
   favicon = "/favicon.png"
   
   # Theme customization
-  themeColor = "#000000"
-  accentColor = "#ffff00"
+  themeColor = "#44f56b"
+  accentColor = "#fc6359"
   showSocialLinks = true
   showToc = true
   showDate = true
   showReadTime = true
   showAuthor = true
   showLikes = false
+  darkMode = false  # Disable dark mode to match main site
   
   # Search
   enableSearch = true

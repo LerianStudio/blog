@@ -1,0 +1,59 @@
+{{ $nav := .Site.Menus.main }}
+{{ $separator := .Site.Params.navSeparator }}
+{{ $navItemLength := len $nav }}
+{{ $base := .Site.BaseURL }}
+<nav class="nav" role="navigation">
+  <div class="nav__content">
+    <div class="nav__left">
+      <a href="{{ $base }}" class="nav__brand">
+        <span style="font-weight: 700; font-size: 1.25rem; color: #000;">{{ .Site.Params.logoText | default .Site.Title }}</span>
+      </a>
+    </div>
+    <div class="nav__right">
+      {{- range $index, $item := $nav -}}
+      <a href='{{ $item.URL }}' class="nav__item">
+        {{ $item.Name }}
+      </a>
+      {{- if and $separator (lt (add 1 $index) $navItemLength) -}}
+        <span class="nav__separator">{{ $separator }}</span>
+      {{- end -}}
+      {{- end -}}
+    </div>
+  </div>
+</nav>
+
+<style>
+.nav__content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.nav__left {
+  display: flex;
+  align-items: center;
+}
+
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav__brand:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .nav__content {
+    padding: 1rem;
+  }
+  
+  .nav__right {
+    gap: 1rem;
+  }
+}
+</style>
