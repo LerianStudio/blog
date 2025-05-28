@@ -27,8 +27,8 @@ canonifyURLs = true
   # Logo and favicon
   logoText = "Lerian Studio"
   [params.logo]
-    lightMode = "/favicon.png"
-  favicon = "/favicon.png"
+    lightMode = "/favicon.svg"
+  favicon = "/favicon.svg"
   
   # Theme customization
   themeColor = "#44f56b"
