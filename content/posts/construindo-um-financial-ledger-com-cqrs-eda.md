@@ -6,6 +6,7 @@ slug = "construindo-um-financial-ledger-cqrs-eda"
 featured_image = "/images/posts/financial-ledger-hero.jpg"
 featured_image_alt = "Financial technology and data visualization representing CQRS and EDA architecture"
 featured_image_caption = "Modern financial systems require sophisticated architectures to handle complex transactions and maintain data integrity"
+categories = ["Architecture", "Financial Technology"]
 tags = ["fintech", "architecture", "cqrs", "eda", "ledger"]
 +++
 

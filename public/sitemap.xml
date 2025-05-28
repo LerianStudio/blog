@@ -8,10 +8,19 @@
     <loc>https://blog.lerian.studio/about/</loc>
     <lastmod>2025-05-15T06:52:19-03:00</lastmod>
   </url><url>
+    <loc>https://blog.lerian.studio/categories/api-design/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
     <loc>https://blog.lerian.studio/tags/api-design/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
+    <loc>https://blog.lerian.studio/categories/architecture/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
     <loc>https://blog.lerian.studio/tags/architecture/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
+    <loc>https://blog.lerian.studio/categories/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
     <loc>https://blog.lerian.studio/posts/construindo-um-financial-ledger-cqrs-eda/</loc>
@@ -26,10 +35,19 @@
     <loc>https://blog.lerian.studio/tags/customer-management/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
+    <loc>https://blog.lerian.studio/categories/data-security/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
     <loc>https://blog.lerian.studio/tags/data-security/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
+    <loc>https://blog.lerian.studio/categories/development/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
     <loc>https://blog.lerian.studio/tags/eda/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
+    <loc>https://blog.lerian.studio/categories/financial-technology/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
     <loc>https://blog.lerian.studio/tags/fintech/</loc>
@@ -50,6 +68,9 @@
     <loc>https://blog.lerian.studio/posts/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
+    <loc>https://blog.lerian.studio/categories/product/</loc>
+    <lastmod>2025-05-28T07:53:02-03:00</lastmod>
+  </url><url>
     <loc>https://blog.lerian.studio/tags/sdk/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
   </url><url>
@@ -58,8 +79,6 @@
   </url><url>
     <loc>https://blog.lerian.studio/tags/</loc>
     <lastmod>2025-05-28T07:53:02-03:00</lastmod>
-  </url><url>
-    <loc>https://blog.lerian.studio/categories/</loc>
   </url><url>
     <loc>https://blog.lerian.studio/series/</loc>
   </url>

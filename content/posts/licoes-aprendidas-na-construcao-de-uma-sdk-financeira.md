@@ -6,6 +6,7 @@ slug = 'licoes-aprendidas-na-construcao-de-uma-sdk-financeira'
 featured_image = '/images/posts/sdk-development-hero.jpg'
 featured_image_alt = 'Software development and API integration for financial SDK'
 featured_image_caption = 'Building financial SDKs requires careful consideration of the boundary between backend and client responsibilities'
+categories = ['Development', 'API Design']
 tags = ['sdk', 'api-design', 'fintech', 'software-architecture']
 +++
 

@@ -6,6 +6,7 @@ slug = 'gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz'
 featured_image = '/images/posts/crm-plugin-hero.jpg'
 featured_image_alt = 'Customer relationship management and data security in financial systems'
 featured_image_caption = 'Secure and flexible customer data management is essential for modern financial platforms'
+categories = ['Product', 'Data Security']
 tags = ['crm', 'data-security', 'midaz', 'customer-management']
 +++
 

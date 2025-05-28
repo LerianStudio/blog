@@ -1,0 +1,70 @@
+{{ define "main" }}
+<div class="container">
+    <div class="terms-header">
+        <h1 class="terms-header__title">
+            {{ if eq .Type "categories" }}
+            All Categories
+            {{ else if eq .Type "tags" }}
+            All Tags
+            {{ else }}
+            {{ .Title }}
+            {{ end }}
+        </h1>
+
+        <p class="terms-header__description">
+            {{ if eq .Type "categories" }}
+            Browse articles by category to find content that interests you most.
+            {{ else if eq .Type "tags" }}
+            Explore articles by tags to discover specific topics and technologies.
+            {{ else }}
+            Browse all available {{ .Type }}.
+            {{ end }}
+        </p>
+    </div>
+
+    {{ if .Data.Terms }}
+    <section class="terms-grid">
+        {{ range .Data.Terms.Alphabetical }}
+        <div class="term-card">
+            <h3 class="term-card__title">
+                <a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a>
+            </h3>
+
+            <div class="term-card__meta">
+                <span class="term-card__count">
+                    {{ .Count }} {{ if eq .Count 1 }}article{{ else }}articles{{ end }}
+                </span>
+            </div>
+
+            {{ if .Page.Description }}
+            <p class="term-card__description">{{ .Page.Description }}</p>
+            {{ end }}
+
+            <div class="term-card__preview">
+                {{ range first 3 .Pages }}
+                <a href="{{ .Permalink }}" class="term-card__preview-link">
+                    {{ .Title }}
+                </a>
+                {{ end }}
+                {{ if gt .Count 3 }}
+                <span class="term-card__more">
+                    and {{ sub .Count 3 }} more...
+                </span>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+    </section>
+    {{ else }}
+    <div class="terms-empty">
+        <h2>No {{ .Type }} found</h2>
+        <p>There are no {{ .Type }} available yet.</p>
+        <a href="{{ " /" | relURL }}" class="btn">Browse All Articles</a>
+    </div>
+    {{ end }}
+
+    <div class="terms-navigation">
+        <a href="{{ " /" | relURL }}" class="btn btn--outline">← Back to Home</a>
+    </div>
+</div>
+{{ end }}
