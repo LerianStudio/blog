@@ -13,7 +13,7 @@
       <link>https://blog.lerian.studio/about/</link>
       <pubDate>Thu, 15 May 2025 06:41:02 -0300</pubDate>
       <guid>https://blog.lerian.studio/about/</guid>
-      <description>&lt;p&gt;lorem ipsum&lt;/p&gt;</description>
+      <description>&lt;h1 id=&#34;about-lerian-studio&#34;&gt;About Lerian Studio&lt;/h1&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lerian Studio&lt;/strong&gt; is a cutting-edge financial technology company dedicated to building the infrastructure that powers the future of finance. We specialize in creating robust, scalable, and secure solutions for modern financial institutions.&lt;/p&gt;</description>
     </item>
     <item>
       <title>construindo um financial ledger com cqrs e eda</title>

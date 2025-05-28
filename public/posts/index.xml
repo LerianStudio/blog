@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Lerian Studio Blog</title>
+    <title>Articles on Lerian Studio Blog</title>
     <link>https://blog.lerian.studio/posts/</link>
-    <description>Recent content in Posts on Lerian Studio Blog</description>
+    <description>Recent content in Articles on Lerian Studio Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 28 May 2025 07:58:40 -0300</lastBuildDate>
