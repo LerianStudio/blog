@@ -2,37 +2,16 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex" />
-  <title>Content Manager - Lerian Studio Blog</title>
-  <link rel="icon" href="/images/lerian-logo.svg" type="image/svg+xml">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Content Manager - Lerian Studio Blog</title>
+    <link rel="icon" href="/images/lerian-logo.svg" type="image/svg+xml">
 </head>
 
 <body>
-  <!-- Include the script that builds the page and powers Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-
-  <script>
-    // Configure GitHub authentication
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      // For local development, use the test backend
-      CMS.registerBackend('test-repo', {
-        init: () => { },
-        authComponent: () => {
-          return {
-            name: 'test',
-            login: () => Promise.resolve({ name: 'Test User', email: 'test@example.com' }),
-            logout: () => Promise.resolve(),
-            getUser: () => Promise.resolve({ name: 'Test User', email: 'test@example.com' })
-          };
-        }
-      });
-    }
-
-    // Initialize Decap CMS
-    CMS.init();
-  </script>
+    <!-- Include the script that builds the page and powers Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 
 </html>

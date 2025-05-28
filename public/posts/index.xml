@@ -28,5 +28,12 @@
       <guid>https://blog.lerian.studio/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/</guid>
       <description>&lt;p&gt;nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &amp;ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &amp;ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>Hello, World!</title>
+      <link>https://blog.lerian.studio/posts/hello-world/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://blog.lerian.studio/posts/hello-world/</guid>
+      <description>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h2&gt;&#xA;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non lorem diam. Quisque vulputate nibh sodales eros pretium tincidunt. Aenean porttitor efficitur convallis. Nulla sagittis finibus convallis. Phasellus in fermentum quam, eu egestas tortor. Maecenas ac mollis leo. Integer maximus eu nisl vel sagittis.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

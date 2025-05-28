@@ -6,9 +6,6 @@ backend:
 # This line should *not* be indented
 publish_mode: editorial_workflow
 
-# Remove local_backend for production use
-# local_backend: true
-
 # Media files will be stored in the repo
 media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
@@ -20,90 +17,77 @@ display_url: https://blog.lerian.studio
 # Logo for admin UI
 logo_url: /images/lerian-logo.svg
 
-# Collections define the content types
 collections:
   - name: "posts"
     label: "Blog Posts"
-    label_singular: "Post"
     folder: "content/posts"
     create: true
     slug: "{{slug}}"
-    preview_path: "posts/{{slug}}"
-    editor:
-      preview: true
     fields:
       - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Draft", name: "draft", widget: "boolean", default: false }
       - {
-          label: "Description",
-          name: "description",
-          widget: "text",
+          label: "Featured Image",
+          name: "featured_image",
+          widget: "image",
           required: false,
         }
-      - { label: "Tags", name: "tags", widget: "list", required: false }
       - {
-          label: "Categories",
-          name: "categories",
-          widget: "list",
+          label: "Featured Image Alt",
+          name: "featured_image_alt",
+          widget: "string",
           required: false,
         }
-      - label: "Author"
-        name: "author"
-        widget: "string"
-        default: "Lerian Studio"
-      - label: "Featured Image"
-        name: "image"
-        widget: "image"
-        required: false
-        choose_url: true
-        media_library:
-          config:
-            multiple: false
-      - { label: "Body", name: "body", widget: "markdown" }
+      - {
+          label: "Featured Image Caption",
+          name: "featured_image_caption",
+          widget: "string",
+          required: false,
+        }
+      - label: "Categories"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options:
+          [
+            "Architecture",
+            "Financial Technology",
+            "Development",
+            "Product",
+            "API Design",
+            "Data Security",
+          ]
+      - label: "Tags"
+        name: "tags"
+        widget: "select"
+        multiple: true
+        options:
+          [
+            "fintech",
+            "architecture",
+            "cqrs",
+            "eda",
+            "ledger",
+            "midaz",
+            "sdk",
+            "api-design",
+            "software-architecture",
+            "crm",
+            "customer-management",
+            "data-security",
+          ]
+      - { label: "Content", name: "body", widget: "markdown" }
 
   - name: "pages"
     label: "Pages"
     files:
-      - file: "content/about.md"
-        label: "About"
+      - label: "About Page"
         name: "about"
+        file: "content/about/_index.md"
         fields:
           - { label: "Title", name: "title", widget: "string" }
-          - { label: "Date", name: "date", widget: "datetime" }
-          - { label: "Body", name: "body", widget: "markdown" }
-      - file: "content/contact.md"
-        label: "Contact"
-        name: "contact"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Date", name: "date", widget: "datetime" }
-          - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "drafts"
-    label: "Draft Articles"
-    label_singular: "Draft"
-    folder: "raw/articles"
-    create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    extension: "md"
-    editor:
-      preview: false
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - {
-          label: "Status",
-          name: "status",
-          widget: "select",
-          options: ["draft", "review", "ready"],
-          default: "draft",
-        }
-      - {
-          label: "Language",
-          name: "language",
-          widget: "select",
-          options: ["pt", "en"],
-          default: "pt",
-        }
-      - { label: "Body", name: "body", widget: "markdown" }
+          - { label: "Date", name: "date", widget: "datetime", required: false }
+          - { label: "Draft", name: "draft", widget: "boolean", default: false }
+          - { label: "Content", name: "body", widget: "markdown" }

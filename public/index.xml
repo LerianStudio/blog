@@ -36,5 +36,12 @@
       <guid>https://blog.lerian.studio/about/</guid>
       <description>&lt;h1 id=&#34;about-lerian-studio&#34;&gt;About Lerian Studio&lt;/h1&gt;&#xA;&lt;p&gt;&lt;strong&gt;Lerian Studio&lt;/strong&gt; is a cutting-edge financial technology company dedicated to building the infrastructure that powers the future of finance. We specialize in creating robust, scalable, and secure solutions for modern financial institutions.&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>Hello, World!</title>
+      <link>https://blog.lerian.studio/posts/hello-world/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://blog.lerian.studio/posts/hello-world/</guid>
+      <description>&lt;h2 id=&#34;hello-world&#34;&gt;Hello World!&lt;/h2&gt;&#xA;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non lorem diam. Quisque vulputate nibh sodales eros pretium tincidunt. Aenean porttitor efficitur convallis. Nulla sagittis finibus convallis. Phasellus in fermentum quam, eu egestas tortor. Maecenas ac mollis leo. Integer maximus eu nisl vel sagittis.&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>
