@@ -13,12 +13,12 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Sanity client configuration
+// Sanity client configuration with environment variables
 const client = createClient({
-    projectId: 'ouf5coh1', // Your project ID from sanity.config.ts
-    dataset: 'production',
+    projectId: process.env.SANITY_PROJECT_ID || 'ouf5coh1', // Your project ID from sanity.config.ts
+    dataset: process.env.SANITY_DATASET || 'production',
     useCdn: false, // Use CDN for faster response times in production
-    apiVersion: '2023-05-03', // Use current date (YYYY-MM-DD) to target the latest API version
+    apiVersion: process.env.SANITY_API_VERSION || '2023-05-03', // Use current date (YYYY-MM-DD) to target the latest API version
 })
 
 // GROQ query to fetch published posts
@@ -191,6 +191,9 @@ function generateFrontmatter(post) {
 async function syncFromSanity() {
     try {
         console.log('🚀 Fetching posts from Sanity...')
+        console.log(`📡 Project: ${process.env.SANITY_PROJECT_ID || 'ouf5coh1'}`)
+        console.log(`📊 Dataset: ${process.env.SANITY_DATASET || 'production'}`)
+
         const posts = await client.fetch(query)
 
         console.log(`📝 Found ${posts.length} published posts`)

@@ -1,219 +1,224 @@
 # Lerian Studio Blog
 
-A technical blog focused on financial technology, software architecture, and engineering best practices. Built with Hugo and featuring a retro terminal theme.
+A technical blog focused on financial technology, software architecture, and engineering best practices. Built with Hugo and powered by Sanity Studio CMS.
 
 ## 🚀 Quick Start
 
-### Option 1: Edit via Decap CMS (No coding required)
-1. Visit `https://your-domain.com/admin/`
-2. Login with your GitHub account
-3. Create, edit, and publish posts through the visual interface
-4. Changes are automatically deployed via AWS Amplify
+### Option 1: Sanity Studio CMS (Recommended)
+1. **Start Studio:** `npm run studio` → http://localhost:3333/
+2. **Create posts** with rich editor, code blocks, and callouts
+3. **Sync content:** `npm run sync` 
+4. **Preview:** `npm run preview` → http://localhost:1313/
+5. **Deploy:** `git push origin main` (auto-deploys via Amplify)
 
-### Option 2: Edit via GitHub (Simple)
-1. Navigate to the `content/posts/` folder on GitHub
-2. Click "Create new file" or edit existing posts
-3. Write in Markdown format
-4. Commit changes to trigger automatic deployment
+### Option 2: Direct Markdown (Advanced)
+1. Create files in `content/posts/`
+2. Write in Hugo markdown format
+3. Commit to trigger deployment
 
-### Option 3: Local Development (Advanced)
+### Option 3: Local Development
 
 #### Prerequisites
-- [Hugo](https://gohugo.io/installation/) (v0.121.1 or later)
-- Git
-- Text editor (VS Code recommended)
+- **Node.js** 18+ (for Sanity sync)
+- **Hugo** v0.147.5+ (auto-installed in builds)  
+- **Git**
 
 #### Setup
 ```bash
 # Clone the repository
-git clone https://github.com/lerianstudio/blog.git
+git clone https://github.com/LerianStudio/blog.git
 cd blog
 
-# Run Hugo development server
-hugo server -D
+# Install dependencies
+npm install
 
-# View at http://localhost:1313
+# Start Sanity Studio (port 3333)
+npm run studio
+
+# In another terminal: sync content and start Hugo
+npm run preview
 ```
 
-## 📝 Creating Content
+## 📝 Content Management
 
-### Via Decap CMS
-1. Go to `/admin/` on your deployed site
-2. Click "New Post" 
-3. Fill in the fields:
-   - Title, Date, Description
-   - Tags and Categories (optional)
-   - Write content in the visual editor
-4. Save as draft or publish immediately
+### 🎨 Sanity Studio Features
+- **Rich text editor** with visual formatting
+- **Code blocks** with syntax highlighting (Go, TypeScript, Python, etc.)
+- **Callouts** (💡 info, ⚠️ warning, ❌ error, ✅ success, 📝 note, 🚀 tip)
+- **Image management** with alt text and captions
+- **Categories & tags** with predefined options
+- **Draft/publish** workflow
+- **Portuguese support** with smart slug generation
 
-### Via Markdown Files
+### 📋 Content Workflow
+1. **Write** in Sanity Studio (localhost:3333)
+2. **Sync** content: `npm run sync`
+3. **Preview** locally: `npm run dev`
+4. **Deploy** via git push
 
-Create a new post in `content/posts/`:
-
-```markdown
----
-title: "My New Post"
-date: 2025-05-27T20:00:00-03:00
-draft: false
-description: "A brief description of the post"
-tags: ["architecture", "golang"]
-categories: ["technical"]
----
-
-Your content here...
+### 🏗️ Content Structure
+```typescript
+{
+  title: string              // Post title
+  slug: slug                 // Auto-generated from title
+  date: datetime             // Publication date
+  draft: boolean             // Draft/Published status
+  featured_image: image      // Hero image with alt/caption
+  categories: string[]       // Predefined categories
+  tags: string[]            // Custom tags
+  series: string            // Series name (optional)
+  body: blockContent        // Rich content
+}
 ```
-
-### Content Structure
-- `content/posts/` - Published blog posts
-- `content/about.md` - About page
-- `content/contact.md` - Contact page  
-- `raw/articles/` - Draft articles and ideas
-
-## 🎨 Features
-
-- **Terminal Theme**: Retro aesthetic with dark background (#000000) and yellow accents (#ffff00)
-- **Mermaid Diagrams**: Support for flowcharts and diagrams with automatic theme detection
-- **Syntax Highlighting**: Beautiful code blocks with copy functionality
-- **Keyboard Shortcuts**: 
-  - `h` - Home
-  - `t` - Tags
-  - `i` - Search
-- **SEO Optimized**: Meta tags, Open Graph, and structured data
-- **Fast Performance**: Static site with AWS CloudFront CDN
 
 ## 🛠️ Technical Stack
 
-- **Static Site Generator**: Hugo (Go-based)
-- **Theme**: hugo-theme-terminal (customized)
-- **CMS**: Decap CMS (formerly Netlify CMS)
+- **Static Site Generator**: Hugo v0.147.5+
+- **CMS**: Sanity Studio v3.68.0
+- **Content Sync**: Custom Node.js script
 - **Hosting**: AWS Amplify
-- **CDN**: AWS CloudFront
-- **CI/CD**: GitHub Actions
+- **CDN**: AWS CloudFront  
+- **CI/CD**: Amplify auto-build
 
 ## 📁 Project Structure
 
 ```
 blog/
-├── content/          # Markdown content files
-│   ├── posts/       # Blog posts
-│   ├── about.md     # About page
-│   └── contact.md   # Contact page
-├── layouts/         # Custom Hugo templates
-├── static/          # Static files (images, CSS, JS)
-│   └── admin/       # Decap CMS files
-├── themes/          # Hugo themes
-├── raw/articles/    # Draft articles
-└── hugo.toml        # Hugo configuration
+├── content/posts/       # Hugo markdown files (auto-generated)
+├── sanity/             # Sanity Studio setup
+│   ├── schemaTypes/    # Content schemas
+│   └── sanity.config.ts
+├── scripts/            # Content sync scripts
+│   └── sync-from-sanity.js
+├── layouts/            # Hugo templates
+├── static/             # Static assets
+├── themes/             # Hugo theme
+├── amplify.yml         # AWS Amplify build config
+└── package.json        # npm scripts
 ```
 
 ## 🚀 Deployment
 
-### Automatic Deployment
-Every push to the `main` branch triggers:
-1. GitHub Actions workflow
-2. Hugo builds the static site
-3. AWS Amplify deploys to production
-4. CloudFront CDN distributes globally
+### AWS Amplify (Production)
+**Fully automated deployment** - see [AMPLIFY_DEPLOYMENT.md](AMPLIFY_DEPLOYMENT.md)
 
-### Manual Build
+1. **Connect** GitHub repo to Amplify
+2. **Configure** build settings (auto-detected from `amplify.yml`)
+3. **Set environment variables** for Sanity
+4. **Deploy** - triggered on every git push
+
+### Build Process
 ```bash
-# Build for production
+# 1. Install dependencies
+npm ci
+
+# 2. Sync content from Sanity  
+npm run sync
+
+# 3. Install Hugo
+wget https://github.com/gohugoio/hugo/releases/...
+
+# 4. Build site
 hugo --minify
 
-# Output in public/ directory
+# 5. Deploy to CDN
 ```
 
 ## ⚙️ Configuration
 
-### Hugo Configuration
-Edit `hugo.toml`:
-- Site title, description, author
-- Theme settings
-- Menu items
-- Social links
+### Environment Variables
+```bash
+SANITY_PROJECT_ID=ouf5coh1
+SANITY_DATASET=production  
+SANITY_API_VERSION=2023-05-03
+```
 
-### CMS Configuration  
-Edit `static/admin/config.yml`:
-- Content collections
-- Field definitions
-- Media settings
-- Preview options
+### Available Scripts
+| Command                 | Description                     |
+| ----------------------- | ------------------------------- |
+| `npm run studio`        | Start Sanity Studio (port 3333) |
+| `npm run sync`          | Sync content from Sanity → Hugo |
+| `npm run preview`       | Sync + start Hugo dev server    |
+| `npm run dev`           | Hugo development server only    |
+| `npm run build`         | Build production Hugo site      |
+| `npm run studio:deploy` | Deploy Studio to Sanity hosting |
+
+## 🎨 Content Features
+
+### Rich Text Editor
+- **Headings** (H1-H4)
+- **Bold**, *italic*, `inline code`
+- **Lists** (bullet & numbered)
+- **Block quotes**
+- **Links** with external target options
+
+### Code Blocks 💻
+```go
+// example.go
+func main() {
+    fmt.Println("Hello, World!")
+}
+```
+
+### Callouts 🚨
+> 💡 **Info**  
+> Use callouts to highlight important information
+
+> ⚠️ **Warning**  
+> Critical warnings for readers
+
+### Categories
+- Development
+- API Design  
+- Architecture
+- Financial Technology
+- Product
+- Data Security
 
 ## 🔐 Access Control
 
-### Decap CMS Authentication
-- Uses GitHub OAuth
-- Only repository contributors can edit
-- Optional: Configure GitHub organization SAML for Google SSO
+### Sanity Studio
+- **Login**: GitHub OAuth (same as repository access)
+- **Permissions**: Repository collaborators auto-have access
+- **Security**: All changes tracked and versioned
 
 ### Team Access
-1. Add team members as GitHub repository collaborators
-2. They can access `/admin/` with their GitHub account
-3. All changes tracked in Git history
-
-## 📊 Writing Tips
-
-### Markdown Features
-- Headers: `# H1`, `## H2`, `### H3`
-- Bold: `**text**`
-- Italic: `*text*`
-- Code blocks: ` ```language `
-- Links: `[text](url)`
-- Images: `![alt](url)`
-
-### Mermaid Diagrams
-````markdown
-```mermaid
-graph TD
-    A[Start] --> B{Decision}
-    B -->|Yes| C[Do This]
-    B -->|No| D[Do That]
-```
-````
-
-### Front Matter Options
-```yaml
-title: "Post Title"          # Required
-date: 2025-05-27            # Required
-draft: false                # false to publish
-description: "Summary"       # For SEO
-tags: ["tag1", "tag2"]      # Categorization
-categories: ["category"]     # Main category
-author: "Your Name"         # Override default
-image: "/images/cover.jpg"  # Featured image
-```
+1. Add collaborators to GitHub repository
+2. They automatically get Sanity Studio access
+3. All content changes tracked in Sanity + Git
 
 ## 🐛 Troubleshooting
 
-### Local Development Issues
-- **Port already in use**: Change port with `hugo server -p 1314`
-- **Theme not loading**: Run `git submodule update --init`
-- **Build errors**: Check Hugo version with `hugo version`
+### Content Sync Issues
+```bash
+# Test Sanity connection
+npm run sync
 
-### CMS Issues
-- **Can't login**: Check GitHub permissions
-- **404 on /admin/**: Ensure deployment includes static files
-- **Preview not working**: Update site URLs in config.yml
+# Check environment variables
+cd sanity && npx sanity exec --with-user-token 'console.log("Connected!")'
+```
+
+### Build Issues
+- **Amplify build fails**: Check build logs in AWS console
+- **Content not appearing**: Verify `draft: false` in Sanity
+- **Sync fails**: Check Sanity environment variables
+
+### Local Development
+```bash
+# Reset and start fresh
+npm install
+npm run studio  # Terminal 1
+npm run sync    # Terminal 2  
+npm run dev     # Terminal 2
+```
 
 ## 📚 Resources
 
-- [Hugo Documentation](https://gohugo.io/documentation/)
-- [Decap CMS Guide](https://decapcms.org/docs/)
-- [Markdown Guide](https://www.markdownguide.org/)
-- [AWS Amplify Docs](https://docs.amplify.aws/)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is proprietary to Lerian Studio. All rights reserved.
+- **Sanity Setup**: [SANITY_SETUP.md](SANITY_SETUP.md)
+- **Amplify Deployment**: [AMPLIFY_DEPLOYMENT.md](AMPLIFY_DEPLOYMENT.md)
+- **Sanity Docs**: https://www.sanity.io/docs
+- **Hugo Docs**: https://gohugo.io/documentation/
 
 ---
 
-Built with ❤️ by [Lerian Studio](https://lerianstudio.com)
+**🎉 Powered by Sanity Studio - because content management should be delightful!** ✨
