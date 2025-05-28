@@ -2,8 +2,6 @@ backend:
   name: github
   repo: LerianStudio/blog
   branch: main
-  base_url: https://decap-oauth-proxy.vercel.app
-  auth_endpoint: auth
 
 # This line should *not* be indented
 publish_mode: editorial_workflow
