@@ -1,0 +1,38 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "A technical blog focused on financial technology, software architecture, and engineering best practices. Built with Hugo and featuring a retro terminal theme.",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "hugo server -D",
+    "build": "hugo --minify",
+    "sync": "node scripts/sync-from-sanity.js",
+    "studio": "cd sanity && npm run dev",
+    "studio:build": "cd sanity && npm run build",
+    "studio:deploy": "cd sanity && npm run deploy",
+    "preview": "npm run sync && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lerianstudio/blog.git"
+  },
+  "keywords": [
+    "hugo",
+    "blog",
+    "sanity",
+    "fintech",
+    "software-engineering"
+  ],
+  "author": "Lerian Studio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lerianstudio/blog/issues"
+  },
+  "homepage": "https://github.com/lerianstudio/blog#readme",
+  "dependencies": {
+    "@sanity/client": "^6.22.5"
+  }
+}
