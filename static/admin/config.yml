@@ -2,7 +2,7 @@ backend:
   name: github
   repo: LerianStudio/blog
   branch: main
-  base_url: https://decap-cms-oauth.netlify.app
+  base_url: https://decap-oauth-provider.vercel.app
   auth_endpoint: auth
 
 # This line should *not* be indented
