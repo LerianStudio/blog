@@ -1,1053 +1,539 @@
-<!DOCTYPE html>
-<html lang="en">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
-  
-    <title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? :: Lerian Studio Blog</title>
-  
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?
-" />
-<meta name="keywords" content="" />
-
-  <meta name="robots" content="noodp" />
-
-<link rel="canonical" href="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/" />
-
-
-
-
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/buttons.min.86f6b4c106b6c6eb690ae5203d36b442c1f66f718ff4e8164fa86cf6c61ad641.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/code.min.d529ea4b2fb8d34328d7d31afc5466d5f7bc2f0bc9abdd98b69385335d7baee4.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/fonts.min.5bb7ed13e1d00d8ff39ea84af26737007eb5051b157b86fc24487c94f3dc8bbe.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/footer.min.eb8dfc2c6a7eafa36cd3ba92d63e69e849e2200e0002a228d137f236b09ecd75.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/header.min.75c7eb0e2872d95ff48109c6647d0223a38db52e2561dd87966eb5fc7c6bdac6.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/main.min.36833afd348409fc6c3d09d0897c5833d9d5bf1ff31f5e60ea3ee42ce2b1268c.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/menu.min.3c17467ebeb3d38663dce68f71f519901124fa5cbb4519b2fb0667a21e9aca39.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/pagination.min.bbb986dbce00a5ce5aca0504b7925fc1c581992a4bf57f163e5d69cc1db7d836.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/post.min.e6dddd258e64c83e05cec0cd49c05216742d42fc8ecbfbe6b67083412b609bd3.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/syntax.min.a0773cce9310cb6d8ed23e50f005448facf29a53001b57e038828daa466b25c0.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/terminal.min.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css">
-
-  
-  <link rel="stylesheet" href="http://localhost:1313/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
-
-
-<link rel="stylesheet" href="http://localhost:1313/terminal.css">
-
-
-
-
-<link rel="shortcut icon" href="http://localhost:1313/favicon.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-
-
-<meta name="twitter:card" content="summary" />
-
-
-
-<meta property="og:locale" content="en" />
-<meta property="og:type" content="article" />
-<meta property="og:title" content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?">
-<meta property="og:description" content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?
-" />
-<meta property="og:url" content="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/" />
-<meta property="og:site_name" content="Lerian Studio Blog" />
-
-  <meta property="og:image" content="http://localhost:1313/og-image.png">
-
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="627">
-
-
-  <meta property="article:published_time" content="2025-05-15 06:41:02 -0300 -03" />
-
-
-
-
-
-
-
-
-
-
-
-
-</head>
-<body>
-
-
-<div class="container center">
-
-  <header class="header">
-  <div class="header__inner">
-    <div class="header__logo">
-      <a href="http://localhost:1313/">
-  <div class="logo">
-    Lerian Studio Blog
-  </div>
-</a>
-
-    </div>
-    
-      <ul class="menu menu--mobile">
-  <li class="menu__trigger">Menu&nbsp;▾</li>
-  <li>
-    <ul class="menu__dropdown">
-      
-        
-          <li><a href="http://localhost:1313/about">About</a></li>
-        
-      
-        
-          <li><a href="http://localhost:1313/posts">Posts</a></li>
-        
-      
-        
-          <li><a href="http://localhost:1313/contact">Contact</a></li>
-        
-      
-      
-    </ul>
-  </li>
-</ul>
-
-    
-    
-  </div>
-  
-    <nav class="navigation-menu">
-  <ul class="navigation-menu__inner menu--desktop">
-    
-      
-        
-          <li><a href="http://localhost:1313/about" >About</a></li>
-        
-      
-        
-          <li><a href="http://localhost:1313/posts" >Posts</a></li>
-        
-      
-        
-          <li><a href="http://localhost:1313/contact" >Contact</a></li>
-        
-      
-      
-    
-  </ul>
-</nav>
-
-  
-</header>
-
-
-  <div class="content">
-    
-<article class="post">
-  <h1 class="post-title">
-    <a href="http://localhost:1313/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/">lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</a>
-  </h1>
-  <div class="post-meta"><time class="post-date">2025-05-15&nbsp;[Updated 2025-05-15]</time><span class="post-reading-time">19 min read (3852 words)</span></div>
-
-  
-  
-
-
-  
-    <div class="table-of-contents">
-      <h2>
-        Table of Contents
-      </h2>
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#fronteiras-de-responsabilidade">fronteiras de responsabilidade</a></li>
-    <li><a href="#por-que-uma-sdk-robusta-importa">por que uma sdk robusta importa?</a></li>
-    <li><a href="#validação-no-cliente-evitando-viagens-desnecessárias">validação no cliente: evitando viagens desnecessárias</a></li>
-    <li><a href="#resiliência-através-de-retry-inteligente">resiliência através de retry inteligente</a></li>
-    <li><a href="#gerenciamento-avançado-de-configurações">gerenciamento avançado de configurações</a></li>
-    <li><a href="#performance-otimizada-para-json">performance otimizada para JSON</a></li>
-    <li><a href="#páginação-inteligente-e-universal">páginação inteligente e universal</a></li>
-    <li><a href="#tratamento-avançado-de-erros-financeiros">tratamento avançado de erros financeiros</a></li>
-    <li><a href="#documentação-direcionada-por-exemplos">documentação direcionada por exemplos</a></li>
-    <li><a href="#trade-offs-e-desafios-de-design-importantes">trade-offs e desafios de design importantes</a></li>
-    <li><a href="#estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz">estratégia de versionamento e compatibilidade planejado para em breve, dado que estamos na V1 do Midaz</a></li>
-    <li><a href="#aprendizados-para-o-futuro">aprendizados para o futuro</a></li>
-    <li><a href="#o-padrão-functional-options-flexibilidade-sem-complexidade">o padrão functional options: flexibilidade sem complexidade</a></li>
-    <li><a href="#conclusão">conclusão</a></li>
-  </ul>
-</nav>
-    </div>
-  
-
-  <div class="post-content"><div>
-        <p>nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?</p>
-<h2 id="fronteiras-de-responsabilidade">fronteiras de responsabilidade<a href="#fronteiras-de-responsabilidade" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>quando começamos a desenvolver a SDK para o Midaz (em Go), a pergunta que constantemente nos perseguia era: até onde a API do backend deve ir e onde começa a responsabilidade de integração/implementação do cliente? ou seja, onde termina o backend e começa o colo do cliente?</p>
-<p>esta pergunta aparentemente simples esconde uma complexidade enorme. tradicionalmente, muitos desenvolvedores consideram que:</p>
-<ul>
-<li><strong>backend</strong>: responsável pela lógica de negócio, persistência, segurança, validações</li>
-<li><strong>cliente/sdk</strong>: responsável apenas por fazer requisições HTTP, serializar/deserializar dados</li>
-</ul>
-<p>mas será que essa divisão simplista funciona bem na prática? especialmente quando falamos de sistemas financeiros com requisitos rigorosos de consistência, performance e resiliência?</p>
-<h2 id="por-que-uma-sdk-robusta-importa">por que uma sdk robusta importa?<a href="#por-que-uma-sdk-robusta-importa" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>durante o desenvolvimento, percebemos que uma sdk financeira precisa ir muito além de simplesmente fazer o wrapping de endpoints REST. ela precisa ser uma camada que:</p>
-<ol>
-<li>protege o servidor contra inputs inválidos (validação do lado cliente)</li>
-<li>torna a integração mais resiliente (retries, rate limiting, circuit breaking)</li>
-<li>oferece performance mesmo em condições adversas (batching, paralelismo)</li>
-<li>simplifica operações complexas (abstraindo detalhes de implementação)</li>
-<li>proporciona uma experiência de desenvolvimento fluida (tipos fortemente definidos, erros descritivos)</li>
-</ol>
-<p>vamos explorar cada um desses aspectos detalhadamente, com exemplos práticos do que implementamos na nossa primeira sdk.</p>
-<h2 id="validação-no-cliente-evitando-viagens-desnecessárias">validação no cliente: evitando viagens desnecessárias<a href="#validação-no-cliente-evitando-viagens-desnecessárias" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>uma das primeiras decisões que tomamos foi implementar validações robustas no lado cliente. por quê? simples: por que enviar ao servidor uma requisição que sabemos que vai falhar?</p>
-
-  <pre><code class="language-go">// exemplo de validação de transação financeira no lado cliente
-func ValidateTransactionDSL(input TransactionDSLValidator) error {
-    if input == nil {
-        return fmt.Errorf(&#34;transaction input cannot be nil&#34;)
-    }
-
-    // valida código do ativo
-    asset := input.GetAsset()
-    if asset == &#34;&#34; {
-        return fmt.Errorf(&#34;asset code is required&#34;)
-    }
-    if !assetCodePattern.MatchString(asset) {
-        return fmt.Errorf(&#34;invalid asset code format: %s (must be 3-4 uppercase letters)&#34;, asset)
-    }
-
-    // valida valor
-    if input.GetValue() &lt;= 0 {
-        return fmt.Errorf(&#34;transaction amount must be greater than zero&#34;)
-    }
-
-    // validações adicionais de contas e consistência...
-}</code></pre>
-
-<p>implementamos validações para:</p>
-<ul>
-<li>formatos de código de ativos (USD, BRL, BTC, Gado, Caixas de Remédio, whatever)</li>
-<li>montantes e escalas de transações</li>
-<li>estrutura de contas e operações</li>
-<li>metadados e payloads auxiliares</li>
-</ul>
-<p>isso traz múltiplos benefícios:</p>
-<ul>
-<li>feedback instantâneo para o desenvolvedor</li>
-<li>redução de latência (evitando roundtrips desnecessários)</li>
-<li>menor carga no servidor</li>
-<li>mensagens de erro mais contextualizadas e úteis</li>
-</ul>
-<p>a validação no cliente não substitui a validação no servidor (que continua essencial por razões de segurança), mas cria uma experiência de desenvolvimento superior e reduz o tráfego de rede.</p>
-<h2 id="resiliência-através-de-retry-inteligente">resiliência através de retry inteligente<a href="#resiliência-através-de-retry-inteligente" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>sistemas distribuídos falham. esta é uma realidade, não uma possibilidade. quando trabalhamos com operações financeiras, essas falhas são ainda mais críticas e podem ter consequências significativas.</p>
-<p>por isso, implementamos mecanismos sofisticados de retry com exponential backoff:</p>
-
-  <pre><code class="language-go">// configuração de retry com backoff exponencial
-client, err := client.New(
-    client.WithAuthToken(&#34;your-auth-token&#34;),
-    client.WithTimeout(30 * time.Second),
-    client.WithRetries(3, 100*time.Millisecond, 1*time.Second),
-    client.UseAllAPIs(), // by the way, isso é um caso a parte aqui: pra que expor o que não precisa ser exposto?
-)</code></pre>
-
-<p>nosso sistema de retry:</p>
-<ul>
-<li>utiliza backoff exponencial para evitar sobrecarregar servidores em problemas</li>
-<li>adiciona jitter (variação aleatória) para prevenir thundering herd</li>
-<li>categoriza erros entre &ldquo;retryable&rdquo; e &ldquo;non-retryable&rdquo;</li>
-<li>respeita limites de timeout especificados pelo usuário</li>
-<li>permite personalização completa de estratégias</li>
-</ul>
-<p>este código parece simples na interface, mas por trás dele há uma implementação robusta que considera diversos cenários de falha:</p>
-
-  <pre><code class="language-go">// trecho da implementação de retry com backoff
-func doWithOptions(ctx context.Context, fn func() error, options *Options) error {
-    var err error
-    for attempt := 0; attempt &lt;= options.MaxRetries; attempt&#43;&#43; {
-        // Check if context is done before executing
-        if ctx.Err() != nil {
-            return fmt.Errorf(&#34;operation cancelled: %w&#34;, ctx.Err())
-        }
-
-        // Execute the function
-        err = fn()
-        if err == nil {
-            // Success, return immediately
-            return nil
-        }
-
-        // Check if this is the last attempt
-        if attempt == options.MaxRetries {
-            break
-        }
-
-        // Check if the error is retryable
-        if !IsRetryableError(err, options) {
-            return err
-        }
-
-        // Calculate delay with jitter
-        delay := calculateBackoff(attempt, options)
-        delayWithJitter := addJitter(delay, options.JitterFactor)
-
-        // Wait for the calculated delay or until context is done
-        timer := time.NewTimer(delayWithJitter)
-        select {
-        case &lt;-ctx.Done():
-            timer.Stop()
-            return fmt.Errorf(&#34;operation cancelled during retry: %w&#34;, ctx.Err())
-        case &lt;-timer.C:
-            // Continue to next retry attempt
-        }
-    }
-
-    return fmt.Errorf(&#34;operation failed after %d retries: %w&#34;, options.MaxRetries, err)
-}</code></pre>
-
-<p>Um dos aprendizados mais interessantes foi identificar quais erros deveriam ser tentados novamente e quais não. Por exemplo, erros de validação nunca devem ter retry, enquanto problemas de rede temporários são candidatos ideais. Este modelo de listing by exception é um conceito que foi estudado bastante, e foi aplicado em outras enterprise-grade APIs (exemplo interessante é a da AWS).</p>
-
-  <pre><code class="language-go">// definição de erros retryable padrão
-var DefaultRetryableErrors = []string{
-    &#34;connection reset by peer&#34;,
-    &#34;connection refused&#34;,
-    &#34;timeout&#34;,
-    &#34;deadline exceeded&#34;,
-    &#34;too many requests&#34;,
-    &#34;rate limit&#34;,
-    &#34;service unavailable&#34;,
-}
-
-// códigos HTTP que merecem retry
-var DefaultRetryableHTTPCodes = []int{
-    http.StatusRequestTimeout,      // 408
-    http.StatusTooManyRequests,     // 429
-    http.StatusInternalServerError, // 500
-    http.StatusBadGateway,          // 502
-    http.StatusServiceUnavailable,  // 503
-    http.StatusGatewayTimeout,      // 504
-}</code></pre>
-
-<h2 id="gerenciamento-avançado-de-configurações">gerenciamento avançado de configurações<a href="#gerenciamento-avançado-de-configurações" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>a modularidade da configuração foi um ponto crítico do design. utilizamos o padrão de opções funcionais (não são 100% fluentes como pede o figurin) para permitir uma configuração limpa e extensível:</p>
-
-  <pre><code class="language-go">// padrão de options funcionais para configuração flexível
-client, err := client.New(
-    // configurações básicas
-    client.WithAuthToken(&#34;your-auth-token&#34;),
-    client.WithEnvironment(config.EnvironmentProduction),
-
-    // opções avançadas de performance
-    client.WithTimeout(30 * time.Second),
-    client.WithRetries(3, 200*time.Millisecond, 2*time.Second),
-
-    // observabilidade
-    client.WithObservability(true, true, true),
-
-    // quais APIs utilizar
-    client.UseAllAPIs(),
-)</code></pre>
-
-<p>este padrão permite:</p>
-<ul>
-<li>configuração incremental com defaults sensatos</li>
-<li>melhor legibilidade e manutenção</li>
-<li>extensibilidade futura sem quebrar compatibilidade</li>
-<li>configurações específicas por domínio</li>
-</ul>
-<p>Além disso, implementamos suporte para configuração via variáveis de ambiente:</p>
-
-  <pre><code class="language-go">// variáveis de ambiente que o cliente reconhece
-MIDAZ_AUTH_TOKEN=seu-token // implementaremos a sdk de access management lançada ontem logo logo
-MIDAZ_ENVIRONMENT=production
-MIDAZ_ONBOARDING_URL=https://api.exemplo.com/v1
-MIDAZ_TRANSACTION_URL=https://transactions.exemplo.com/v1
-MIDAZ_DEBUG=true
-MIDAZ_MAX_RETRIES=5</code></pre>
-
-<p>isso permite uma integração mais suave com diferentes ambientes de deploy, especialmente em contextos de containers e kubernetes.</p>
-<h2 id="performance-otimizada-para-json">performance otimizada para JSON<a href="#performance-otimizada-para-json" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Em sistemas financeiros, performance não é luxo, é requisito. Um dos pontos de maior otimização foi o processamento JSON, que pode rapidamente se tornar um gargalo:</p>
-
-  <pre><code class="language-go">// exemplo de nossa implementação de pooling de buffers para JSON
-type JSONPerformance struct {
-    encoderPool sync.Pool
-    decoderPool sync.Pool
-    bufferPool  sync.Pool
-}
-
-func NewJSONPerformance() *JSONPerformance {
-    return &amp;JSONPerformance{
-        encoderPool: sync.Pool{
-            New: func() interface{} {
-                return json.NewEncoder(io.Discard)
-            },
-        },
-        decoderPool: sync.Pool{
-            New: func() interface{} {
-                return json.NewDecoder(strings.NewReader(&#34;&#34;))
-            },
-        },
-        bufferPool: sync.Pool{
-            New: func() interface{} {
-                return new(bytes.Buffer)
-            },
-        },
-    }
-}
-
-func (jp *JSONPerformance) Marshal(v interface{}) ([]byte, error) {
-    buf := jp.bufferPool.Get().(*bytes.Buffer)
-    buf.Reset()
-    defer jp.bufferPool.Put(buf)
-
-    enc := jp.encoderPool.Get().(*json.Encoder)
-    enc.SetEscapeHTML(false)
-    oldWriter := enc.Linter
-    enc.SetWriter(buf)
-    defer func() {
-        enc.SetWriter(oldWriter)
-        jp.encoderPool.Put(enc)
-    }()
-
-    if err := enc.Encode(v); err != nil {
-        return nil, err
-    }
-
-    // Copy to avoid returning a reference to the pooled buffer
-    result := make([]byte, buf.Len())
-    copy(result, buf.Bytes())
-    return result, nil
-}</code></pre>
-
-<p>Esta abordagem reduziu alocações de memória em nossos benchmarks, principalmente quando fazíamos em conjunto com o pooling de buffers, o que é crucial para sistemas financeiros de alto volume que processam milhões de transações.</p>
-<h2 id="páginação-inteligente-e-universal">páginação inteligente e universal<a href="#páginação-inteligente-e-universal" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Lidar com grandes conjuntos de dados é um desafio comum em operações financeiras. Por isso, desenvolvemos um sistema de paginação universal que funciona com diferentes endpoints e paradigmas:</p>
-
-  <pre><code class="language-go">// interface genérica para qualquer tipo de paginador
-type Paginator[T any] interface {
-    HasNext() bool
-    Next() (*ListResponse[T], error)
-    Reset()
-}
-
-// exemplo de uso para listar transações com paginação automática
-paginator := client.Entity.Transactions.GetTransactionPaginator(
-    ctx, &#34;org-id&#34;, &#34;ledger-id&#34;, &amp;models.ListOptions{Limit: 100},
-)
-
-totalTransactions := 0
-for paginator.HasNext() {
-    page, err := paginator.Next()
-    if err != nil {
-        return err
-    }
-
-    for _, tx := range page.Items {
-        // processar cada transação
-        processTransaction(tx)
-        totalTransactions&#43;&#43;
-    }
-}
-fmt.Printf(&#34;Processadas %d transações no total\n&#34;, totalTransactions)</code></pre>
-
-<p>Nossa implementação suporta:</p>
-<ul>
-<li>páginação por offset/limit (mais comum)</li>
-<li>páginação por cursor (mais eficiente para grandes datasets)</li>
-<li>prefetching para melhor performance</li>
-<li>preservação de filtros e ordenação entre páginas</li>
-<li>adaptação automática ao tipo de paginação do endpoint</li>
-<li>concorrência controlada para alto volume</li>
-</ul>
-<p>Para lidar com os requisitos de alta performance, investimos pesadamente em modelos de concorrência bem controlados:</p>
-
-  <pre><code class="language-go">// worker pool genérico com controle fino de concorrência
-func WorkerPool[T, R any](
-    ctx context.Context,
-    items []T,
-    workFn func(context.Context, T) (R, error),
-    opts ...PoolOption,
-) []Result[T, R] {
-    // Config default
-    options := defaultPoolOptions()
-    for _, opt := range opts {
-        opt(options)
-    }
-
-    resultCh := make(chan Result[T, R], len(items))
-    var wg sync.WaitGroup
-
-    // semáforo para controlar concorrência
-    sem := make(chan struct{}, options.workers)
-
-    // Rate limiter se especificado
-    var limiter &lt;-chan time.Time
-    if options.rateLimit &gt; 0 {
-        ticker := time.NewTicker(time.Second / time.Duration(options.rateLimit))
-        defer ticker.Stop()
-        limiter = ticker.C
-    }
-
-    for i, item := range items {
-        // Respeita cancelamento pelo context
-        if ctx.Err() != nil {
-            break
-        }
-
-        // Rate limiting se ativo
-        if limiter != nil {
-            select {
-            case &lt;-ctx.Done():
-                break
-            case &lt;-limiter:
-                // Continue quando o rate limiter permitir
-            }
-        }
-
-        // Adquire slot no semáforo
-        sem &lt;- struct{}{}
-
-        wg.Add(1)
-        go func(idx int, item T) {
-            defer wg.Done()
-            defer func() { &lt;-sem }() // Libera o semáforo ao final
-
-            // Cria um timeout interno se necessário
-            execCtx := ctx
-            if options.timeout &gt; 0 {
-                var cancel context.CancelFunc
-                execCtx, cancel = context.WithTimeout(ctx, options.timeout)
-                defer cancel()
-            }
-
-            // Executa a função de trabalho
-            result, err := workFn(execCtx, item)
-
-            // Envia o resultado
-            resultCh &lt;- Result[T, R]{
-                Index: idx,
-                Item:  item,
-                Value: result,
-                Error: err,
-            }
-        }(i, item)
-    }
-
-    // Fecha o canal de resultados quando todo trabalho estiver concluído
-    go func() {
-        wg.Wait()
-        close(resultCh)
-    }()
-
-    // Coleta resultados
-    var results []Result[T, R]
-    for result := range resultCh {
-        results = append(results, result)
-    }
-
-    // Ordena resultados se necessário
-    if options.ordered {
-        sort.Slice(results, func(i, j int) bool {
-            return results[i].Index &lt; results[j].Index
-        })
-    }
-
-    return results
-}</code></pre>
-
-<p>Esta implementação permite:</p>
-<ul>
-<li>Controle preciso de concorrência para evitar sobrecarregar a API</li>
-<li>Rate limiting para respeitar limites da API</li>
-<li>Ordenação opcional de resultados</li>
-<li>Cancelamento gracioso de operações em andamento</li>
-<li>Timeouts individuais para tarefas</li>
-</ul>
-<h2 id="tratamento-avançado-de-erros-financeiros">tratamento avançado de erros financeiros<a href="#tratamento-avançado-de-erros-financeiros" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Em um sistema financeiro, os erros são parte crítica da experiência do desenvolvedor. Investimos em um sistema sofisticado de tratamento de erros:</p>
-
-  <pre><code class="language-go">// exemplo de uso de erros especializados
-switch {
-case errors.IsValidationError(err):
-    // Trata erro de validação
-    fmt.Println(&#34;Erro de validação:&#34;, err)
-
-    // Extrai erros por campo
-    fieldErrors := errors.GetFieldErrors(err)
-    for _, fieldErr := range fieldErrors {
-        fmt.Printf(&#34;Campo %s: %s\n&#34;, fieldErr.Field, fieldErr.Message)
-    }
-
-case errors.IsInsufficientBalanceError(err):
-    // Trata erro específico financeiro
-    fmt.Println(&#34;Saldo insuficiente:&#34;, err)
-
-case errors.IsRateLimitExceededError(err):
-    // Implementa backoff e retry
-    fmt.Println(&#34;Limite de requisições excedido, aguardando:&#34;, err)
-    time.Sleep(exponentialBackoff(attempt))
-
-case errors.IsAuthenticationError(err):
-    // Problema com autenticação
-    fmt.Println(&#34;Erro de autenticação, renovando token:&#34;, err)
-    renewToken()
-}</code></pre>
-
-<p>Adicionalmente, nossos erros incluem:</p>
-<ul>
-<li>Categorização clara (validação, autenticação, rede, etc)</li>
-<li>Detalhes específicos por domínio financeiro (saldo insuficiente, limites, etc)</li>
-<li>Códigos de erro e status HTTP associados</li>
-<li>Sugestões de correção para o desenvolvedor</li>
-<li>Integração com observabilidade (geração de span de erro)</li>
-<li>Testes de stress e verificação de escalabilidade</li>
-</ul>
-<p>Uma característica distintiva da nossa SDK foi o desenvolvimento de uma suite robusta de testes de stress:</p>
-
-  <pre><code class="language-go">// trecho do código da suite de stress testing
-func (st *StressTest) Run(ctx context.Context) error {
-    logger := st.observability.GetLogger()
-    logger.Info(&#34;Iniciando teste de stress&#34;, &#34;workers&#34;, st.config.ConcurrentWorkers)
-
-    // Preparar ambiente de teste
-    if err := st.SetupTestEnvironment(ctx); err != nil {
-        return fmt.Errorf(&#34;falha ao configurar ambiente: %w&#34;, err)
-    }
-
-    // Executar até interrupção ou duração configurada
-    var wg sync.WaitGroup
-    ctx, cancel := context.WithCancel(ctx)
-    defer cancel()
-
-    // Inicia monitoramento de métricas
-    st.metrics = NewMetricsCollector(st.observability)
-    go st.metrics.Start(ctx)
-
-    // Inicia workers para gerar carga
-    for i := 0; i &lt; st.config.ConcurrentWorkers; i&#43;&#43; {
-        wg.Add(1)
-        go func(workerID int) {
-            defer wg.Done()
-            st.runWorker(ctx, workerID)
-        }(i)
-    }
-
-    // Aguarda conclusão
-    wg.Wait()
-    logger.Info(&#34;Teste de stress concluído&#34;, &#34;transações&#34;, st.metrics.TotalTransactions())
-
-    return nil
-}</code></pre>
-
-<p>Esta suite nos permitiu:</p>
-<ul>
-<li>Validar o comportamento sob carga extrema (50.000+ tx/s ou modelos de 1:1 em conta com 10000+ tx/s)</li>
-<li>Identificar e corrigir bottlenecks antes do lançamento</li>
-<li>Verificar o comportamento de mecanismos de retry e resiliência</li>
-<li>Testar a degradação graceful sob falhas parciais</li>
-<li>Validar limites de recursos (memória, CPU, conexões, e o próprio sistema distribuído)</li>
-</ul>
-<p>No ponto específico de validar limites de recursos e do sistema distribuído, utilizamos o pumba para simular cenários de caos (em docker), e isso nos ajudou a identificar pontos interessantes na implementação do próprio backend.</p>
-<h2 id="documentação-direcionada-por-exemplos">documentação direcionada por exemplos<a href="#documentação-direcionada-por-exemplos" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Percebemos que bons exemplos são mais valiosos que documentação abstrata. Por isso, demos ênfase especial a exemplos práticos:</p>
-
-  <pre><code class="language-go">// exemplo completo de transferência entre contas
-func ExampleTransferBetweenAccounts() {
-    // Inicializar cliente
-    c, err := client.New(
-        client.WithAuthToken(os.Getenv(&#34;MIDAZ_TOKEN&#34;)),
-        client.UseAllAPIs(),
-    )
-    if err != nil {
-        log.Fatalf(&#34;Erro inicializando cliente: %v&#34;, err)
-    }
-
-    // Definir detalhes da transação
-    input := &amp;models.TransactionDSLInput{
-        Description: &#34;Transferência para pagamento de aluguel&#34;,
-        Send: &amp;models.DSLSend{
-            Asset: &#34;BRL&#34;,
-            Value: 150000, // R$ 1.500,00
-            Scale: 2,
-            Source: &amp;models.DSLSource{
-                From: []models.DSLFromTo{
-                    {
-                        Account: &#34;conta-origem-123&#34;,
-                        Amount: &amp;models.DSLAmount{
-                            Asset: &#34;BRL&#34;,
-                            Value: 150000,
-                            Scale: 2,
-                        },
-                    },
-                },
-            },
-            Distribute: &amp;models.DSLDistribute{
-                To: []models.DSLFromTo{
-                    {
-                        Account: &#34;conta-destino-456&#34;,
-                        Amount: &amp;models.DSLAmount{
-                            Asset: &#34;BRL&#34;,
-                            Value: 150000,
-                            Scale: 2,
-                        },
-                    },
-                },
-            },
-        },
-        Metadata: map[string]any{
-            &#34;referencia&#34;: &#34;aluguel-julho-2025&#34;,
-            &#34;categoria&#34;: &#34;moradia&#34;,
-        },
-    }
-
-    // Executar a transação
-    tx, err := c.Entity.Transactions.CreateTransactionWithDSL(
-        context.Background(),
-        &#34;org-exemplo&#34;,
-        &#34;ledger-principal&#34;,
-        input,
-    )
-    if err != nil {
-        log.Fatalf(&#34;Erro na transferência: %v&#34;, err)
-    }
-
-    fmt.Printf(&#34;Transferência realizada com sucesso! ID: %s\n&#34;, tx.ID)
-}</code></pre>
-
-<p>Cada exemplo está acompanhado de comentários detalhados e cobrimos todos os cenários principais:</p>
-<ul>
-<li>Criação de entidades (organizações, contas, etc)</li>
-<li>Operações financeiras (transferências, depósitos, saques)</li>
-<li>Consultas e relatórios (balanços, extratos, histórico)</li>
-<li>Workflows completos (onboarding, transações)</li>
-</ul>
-<p>A vantagem da unificação de interface
-Falando um pouco sobre a vantagem de unificar múltiplas APIs de backend sob uma interface coerente: no mundo financeiro, frequentemente temos APIs separadas para diferentes domínios:</p>
-<ul>
-<li>API de onboarding (organizações, contas)</li>
-<li>API de transactions (transferências, saldos)</li>
-<li>API de compliance (KYC, AML)</li>
-<li>API de reporting (relatórios, extratos)</li>
-<li>etc etc etc</li>
-</ul>
-<p>Cada uma com suas peculiaridades e convenções. Nossa SDK unifica todas sob uma única interface consistente:</p>
-
-  <pre><code class="language-go">// Mesmo padrão para todas as APIs, independente do backend
-// API de onboarding
-organization, err := client.Entity.Organizations.CreateOrganization(ctx, input)
-
-// API de transactions
-transaction, err := client.Entity.Transactions.CreateTransaction(ctx, orgID, ledgerID, input)
-
-// API de balanços
-balance, err := client.Entity.Accounts.GetBalance(ctx, orgID, ledgerID, accountID)</code></pre>
-
-<p>Esta unificação traz benefícios significativos para o desenvolvedor em si:</p>
-<ul>
-<li>Reduz a curva de aprendizado para novos desenvolvedores</li>
-<li>Abstrai as diferenças de implementação entre serviços</li>
-<li>Permite evolução independente do backend e frontend</li>
-<li>Facilita migração entre diferentes versões de APIs</li>
-</ul>
-<p>A discussão sobre fronteiras: o que aprendemos
-Voltando à questão inicial sobre as fronteiras de responsabilidade entre servidor e cliente, concluímos que a resposta não é binária. Em vez disso, é um espectro que depende do contexto:</p>
-<ul>
-<li>Validação: tanto cliente quanto servidor devem validar - cliente para UX e DevEx, servidor para segurança</li>
-<li>Resiliência: principalmente responsabilidade do cliente, com suporte do servidor (idempotência, o que nossa API também trata com uma option específica de WithIdempotency())</li>
-<li>Performance: responsabilidade compartilhada, com otimizações específicas em cada lado</li>
-<li>Domínio: o servidor define o modelo, mas o cliente pode enriquecê-lo com abstrações úteis</li>
-</ul>
-<p>O que ficou claro é que SDKs não são meros wrappers de API - elas são produtos completos que precisam considerar toda a experiência do desenvolvedor e os requisitos específicos do domínio.</p>
-<h2 id="trade-offs-e-desafios-de-design-importantes">trade-offs e desafios de design importantes<a href="#trade-offs-e-desafios-de-design-importantes" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Durante o desenvolvimento da SDK, nos confrontamos com vários trade-offs importantes que impactam diretamente desenvolvedores e usuários:</p>
-<ul>
-<li>Validação no cliente vs. sincronização com o servidor</li>
-<li>A implementação de validações robustas no cliente traz benefícios claros de performance e experiência do desenvolvedor, mas também introduz um desafio:</li>
-</ul>
-
-  <pre><code class="language-go">// Se estas regras de validação mudam no servidor...
-if !assetCodePattern.MatchString(asset) {
-    return fmt.Errorf(&#34;invalid asset code format: %s (must be 3-4 uppercase letters)&#34;, asset)
-}</code></pre>
-
-<p>Este é um trade-off significativo:</p>
-<ul>
-<li>Vantagem: redução de latência e feedback instantâneo</li>
-<li>Desvantagem: potencial divergência entre regras cliente/servidor se os clientes não atualizarem a SDK</li>
-</ul>
-<p>Nossa solução foi documentar claramente a necessidade de atualizações regulares e fornecer testes que ajudam a detectar divergências de validação, além de fazer um robusto linking entre models do cliente e do servidor.</p>
-<ul>
-<li>Filosofia de tratamento de erros: o que tratar automaticamente?</li>
-<li>Uma decisão crítica foi determinar quais erros a SDK deveria tratar automaticamente versus quais deveriam ser expostos para o backend:</li>
-</ul>
-
-  <pre><code class="language-go">// Erros tratados automaticamente pela SDK
-if errors.IsTemporaryNetworkError(err) || errors.IsRateLimitExceeded(err) {
-    // Aplicar retry automaticamente
-    return retry.Do(ctx, operation)
-}
-
-// Erros que são propagados ao aplicativo
-if errors.IsBusinessRuleViolation(err) || errors.IsValidationError(err) {
-    // O desenvolvedor precisa tratar estes casos explicitamente
-    return err
-}</code></pre>
-
-<p>Adotamos a filosofia de que:</p>
-<ul>
-<li>
-<p>Erros transientes de infraestrutura/rede são tratados pela SDK</p>
-</li>
-<li>
-<p>Erros de domínio financeiro ou validação são propagados para permitir tratamento adequado pelo backend</p>
-</li>
-<li>
-<p>Erros críticos (autenticação, permissões) são propagados com contexto enriquecido para facilitar diagnóstico</p>
-</li>
-<li>
-<p>Integração de observabilidade: o equilíbrio entre intrusão e visibilidade</p>
-</li>
-<li>
-<p>A observabilidade é crítica em sistemas financeiros, mas quanto a SDK deve impor versus oferecer como opcional? Aqui é um caso a parte. Remodelamos toda a stack de observabilidade (usando opentelemetry) para que o desenvolvedor possa escolher o que ele quer e o que ele não quer, sem sermos &ldquo;opinionated&rdquo; com relação ao tema &ndash; bem diferente do contexto do midaz open-source, que é mais &ldquo;opinionated&rdquo;.</p>
-</li>
-</ul>
-
-  <pre><code class="language-go">// Abordagem não-intrusiva que adotamos:
-client, err := client.New(
-    // Configuração básica
-    client.WithAuthToken(&#34;token&#34;),
-
-    // Observabilidade totalmente opcional
-    client.WithObservability(
-        observability.WithTracing(userDefinedTraceProvider),  // opcional
-        observability.WithMetrics(userDefinedMeterProvider),  // opcional
-        observability.WithLogging(userDefinedLogger),         // opcional
-    ),
-)</code></pre>
-
-<p>Decidimos por uma abordagem modular onde:</p>
-<ul>
-<li>
-<p>A SDK funciona perfeitamente sem observabilidade configurada</p>
-</li>
-<li>
-<p>Desenvolvedores podem injetar seus próprios providers de observabilidade</p>
-</li>
-<li>
-<p>Fornecemos implementações default para casos simples</p>
-</li>
-<li>
-<p>Instrumentamos pontos críticos nas operações financeiras para máxima visibilidade</p>
-</li>
-<li>
-<p>Operações Assíncronas e Notificações</p>
-</li>
-<li>
-<p>Transações financeiras frequentemente envolvem processos assíncronos. Como a SDK deve lidar com isso?</p>
-</li>
-</ul>
-
-  <pre><code class="language-go">// Opção 1: Polling (implementamos inicialmente)
-status, err := client.Entity.Transactions.GetTransactionStatus(ctx, txID)
-
-// Opção 2: Webhooks (planejado para futuro)
-client.Entity.Transactions.RegisterWebhookHandler(webhookHandler)
-
-// Opção 3: Response streaming (planejado para futuro)
-stream, err := client.Entity.Transactions.WatchTransaction(ctx, txID)
-for update := range stream.Updates() {
-    // Processar atualizações em tempo real
-}</code></pre>
-
-<p>Nossa abordagem foi evolutiva. Tomamos uma decisão de implementar o básico agora, mas permitindo uma modelagem como a acima exposta:</p>
-<p>Começamos com polling simples para compatibilidade ampla
+<!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.147.5"><link rel=apple-touch-icon sizes=180x180 href=https://example.org/favicons/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://example.org/favicons/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://example.org/favicons/favicon-16x16.png><link rel=manifest href=https://example.org/favicons/site.webmanifest><link rel=mask-icon href=https://example.org/favicons/safari-pinned-tab.svg color=#004750><link rel="shortcut icon" href=https://example.org/favicons/favicon.ico><meta name=msapplication-config content='https://example.org/favicons/browserconfig.xml'><title>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente? | Lerian Studio Blog</title><meta property="og:url" content="https://example.org/posts/licoes-aprendidas-na-construcao-de-uma-sdk-financeira/"><meta property="og:site_name" content="Lerian Studio Blog"><meta property="og:title" content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?"><meta property="og:description" content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples – afinal, openapi documentation e uma infinidade de ferramentas para generation –, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-05-15T06:41:02-03:00"><meta property="article:modified_time" content="2025-05-15T06:52:19-03:00"><meta itemprop=name content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?"><meta itemprop=description content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples – afinal, openapi documentation e uma infinidade de ferramentas para generation –, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?"><meta itemprop=datePublished content="2025-05-15T06:41:02-03:00"><meta itemprop=dateModified content="2025-05-15T06:52:19-03:00"><meta itemprop=wordCount content="3852"><meta name=twitter:card content="summary"><meta name=twitter:title content="lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?"><meta name=twitter:description content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples – afinal, openapi documentation e uma infinidade de ferramentas para generation –, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?"><meta name=twitter:site content="@https://twitter.com/lerianstudio"><link rel=stylesheet href=https://example.org/css/styles.863531333c2feffdb8cf3ff08674d0fd8c7bf526ee584722b5ac7e2801751d0472c109b00d5ee889dab27a2e333944040710309ad54190a3bbd18cd6545cfddd.css integrity="sha512-hjUxMzwv7/24zz/whnTQ/Yx79SbuWEcitax+KAF1HQRywQmwDV7oidqyei4zOUQEBxAwmtVBkKO70YzWVFz93Q=="><meta name=description content="nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?
+"></head><body class=page-page id=pagetop><header class=nav_header><nav class="wrap nav menu"><a href=https://example.org/ class=nav_brand><picture data-lit=https://example.org/favicon.png data-dark=https://example.org/favicon.png><img src=https://example.org/favicon.png alt="Lerian Studio Blog Logo"></picture><div class="nav_toggle toggle" title='Site Menu'><svg class="icon icon_harmburger"><use href="#harmburger"/></svg></div></a><ul class=nav_body><li class=nav-item><div class=search><label for=find class=search_label><svg class="icon icon_search"><use href="#search"/></svg>
+</label><input type=search class="search_field standardize-input" placeholder="Search site" id=find autocomplete=off data-scope=posts><div class="search_results results"></div></div></li><li class=nav-item><a class=nav-link href=https://example.org/><span>Home</span></a></li><li class=nav-item><a class=nav-link href=https://example.org/posts/><span>Posts</span></a></li><li class=nav-item><a class=nav-link href=https://example.org/about/><span>About</span></a></li><li class=nav-item><a class=nav-link href=https://example.org/contact/><span>Contact</span></a></li><li class=nav-item><div class=color_mode><label for=mode></label><input type=checkbox class="color_choice standardize-input" id=mode title="Toggle Dark Mode"></div></li></ul></nav></header><div class="main wrap pt-4"><div class=content><div class=content><h1>lições aprendidas na construção de uma sdk financeira: onde termina o backend e começa o cliente?</h1><p>nas últimas semanas, embarcamos em um desafio por aqui: construir a primeira SDK para o Midaz, nosso ledger para core banking (disponível open-source aqui). o que parecia ser um projeto simples &ndash; afinal, openapi documentation e uma infinidade de ferramentas para generation &ndash;, rapidamente se transformou em um rabbit hole técnico bem profundo. colocar a primeira versão em produção trouxe à tona uma discussão fundamental: qual é a fronteira entre as responsabilidades do servidor e do cliente?</p><h2 id=fronteiras-de-responsabilidade class=link_owner>fronteiras de responsabilidade
+<a href=#fronteiras-de-responsabilidade class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>quando começamos a desenvolver a SDK para o Midaz (em Go), a pergunta que constantemente nos perseguia era: até onde a API do backend deve ir e onde começa a responsabilidade de integração/implementação do cliente? ou seja, onde termina o backend e começa o colo do cliente?</p><p>esta pergunta aparentemente simples esconde uma complexidade enorme. tradicionalmente, muitos desenvolvedores consideram que:</p><ul><li><strong>backend</strong>: responsável pela lógica de negócio, persistência, segurança, validações</li><li><strong>cliente/sdk</strong>: responsável apenas por fazer requisições HTTP, serializar/deserializar dados</li></ul><p>mas será que essa divisão simplista funciona bem na prática? especialmente quando falamos de sistemas financeiros com requisitos rigorosos de consistência, performance e resiliência?</p><h2 id=por-que-uma-sdk-robusta-importa class=link_owner>por que uma sdk robusta importa?
+<a href=#por-que-uma-sdk-robusta-importa class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>durante o desenvolvimento, percebemos que uma sdk financeira precisa ir muito além de simplesmente fazer o wrapping de endpoints REST. ela precisa ser uma camada que:</p><ol><li>protege o servidor contra inputs inválidos (validação do lado cliente)</li><li>torna a integração mais resiliente (retries, rate limiting, circuit breaking)</li><li>oferece performance mesmo em condições adversas (batching, paralelismo)</li><li>simplifica operações complexas (abstraindo detalhes de implementação)</li><li>proporciona uma experiência de desenvolvimento fluida (tipos fortemente definidos, erros descritivos)</li></ol><p>vamos explorar cada um desses aspectos detalhadamente, com exemplos práticos do que implementamos na nossa primeira sdk.</p><h2 id=validação-no-cliente-evitando-viagens-desnecessárias class=link_owner>validação no cliente: evitando viagens desnecessárias
+<a href=#valida%c3%a7%c3%a3o-no-cliente-evitando-viagens-desnecess%c3%a1rias class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>uma das primeiras decisões que tomamos foi implementar validações robustas no lado cliente. por quê? simples: por que enviar ao servidor uma requisição que sabemos que vai falhar?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// exemplo de validação de transação financeira no lado cliente</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ValidateTransactionDSL</span>(<span style=color:#a6e22e>input</span> <span style=color:#a6e22e>TransactionDSLValidator</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>input</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;transaction input cannot be nil&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// valida código do ativo</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>asset</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>input</span>.<span style=color:#a6e22e>GetAsset</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>asset</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;asset code is required&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>assetCodePattern</span>.<span style=color:#a6e22e>MatchString</span>(<span style=color:#a6e22e>asset</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;invalid asset code format: %s (must be 3-4 uppercase letters)&#34;</span>, <span style=color:#a6e22e>asset</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// valida valor</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>input</span>.<span style=color:#a6e22e>GetValue</span>() <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;transaction amount must be greater than zero&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// validações adicionais de contas e consistência...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>implementamos validações para:</p><ul><li>formatos de código de ativos (USD, BRL, BTC, Gado, Caixas de Remédio, whatever)</li><li>montantes e escalas de transações</li><li>estrutura de contas e operações</li><li>metadados e payloads auxiliares</li></ul><p>isso traz múltiplos benefícios:</p><ul><li>feedback instantâneo para o desenvolvedor</li><li>redução de latência (evitando roundtrips desnecessários)</li><li>menor carga no servidor</li><li>mensagens de erro mais contextualizadas e úteis</li></ul><p>a validação no cliente não substitui a validação no servidor (que continua essencial por razões de segurança), mas cria uma experiência de desenvolvimento superior e reduz o tráfego de rede.</p><h2 id=resiliência-através-de-retry-inteligente class=link_owner>resiliência através de retry inteligente
+<a href=#resili%c3%aancia-atrav%c3%a9s-de-retry-inteligente class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>sistemas distribuídos falham. esta é uma realidade, não uma possibilidade. quando trabalhamos com operações financeiras, essas falhas são ainda mais críticas e podem ter consequências significativas.</p><p>por isso, implementamos mecanismos sofisticados de retry com exponential backoff:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// configuração de retry com backoff exponencial</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAuthToken</span>(<span style=color:#e6db74>&#34;your-auth-token&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithTimeout</span>(<span style=color:#ae81ff>30</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithRetries</span>(<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>100</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Millisecond</span>, <span style=color:#ae81ff>1</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>UseAllAPIs</span>(), <span style=color:#75715e>// by the way, isso é um caso a parte aqui: pra que expor o que não precisa ser exposto?</span>
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>nosso sistema de retry:</p><ul><li>utiliza backoff exponencial para evitar sobrecarregar servidores em problemas</li><li>adiciona jitter (variação aleatória) para prevenir thundering herd</li><li>categoriza erros entre &ldquo;retryable&rdquo; e &ldquo;non-retryable&rdquo;</li><li>respeita limites de timeout especificados pelo usuário</li><li>permite personalização completa de estratégias</li></ul><p>este código parece simples na interface, mas por trás dele há uma implementação robusta que considera diversos cenários de falha:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// trecho da implementação de retry com backoff</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>doWithOptions</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>fn</span> <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span>, <span style=color:#a6e22e>options</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Options</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>err</span> <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>attempt</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>attempt</span> <span style=color:#f92672>&lt;=</span> <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>MaxRetries</span>; <span style=color:#a6e22e>attempt</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Check if context is done before executing</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Err</span>() <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;operation cancelled: %w&#34;</span>, <span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Err</span>())
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Execute the function</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>fn</span>()
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Success, return immediately</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Check if this is the last attempt</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>attempt</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>MaxRetries</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Check if the error is retryable</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>IsRetryableError</span>(<span style=color:#a6e22e>err</span>, <span style=color:#a6e22e>options</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Calculate delay with jitter</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>delay</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>calculateBackoff</span>(<span style=color:#a6e22e>attempt</span>, <span style=color:#a6e22e>options</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>delayWithJitter</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>addJitter</span>(<span style=color:#a6e22e>delay</span>, <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>JitterFactor</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Wait for the calculated delay or until context is done</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>timer</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>NewTimer</span>(<span style=color:#a6e22e>delayWithJitter</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>select</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Done</span>():
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>timer</span>.<span style=color:#a6e22e>Stop</span>()
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;operation cancelled during retry: %w&#34;</span>, <span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Err</span>())
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>timer</span>.<span style=color:#a6e22e>C</span>:
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Continue to next retry attempt</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;operation failed after %d retries: %w&#34;</span>, <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>MaxRetries</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Um dos aprendizados mais interessantes foi identificar quais erros deveriam ser tentados novamente e quais não. Por exemplo, erros de validação nunca devem ter retry, enquanto problemas de rede temporários são candidatos ideais. Este modelo de listing by exception é um conceito que foi estudado bastante, e foi aplicado em outras enterprise-grade APIs (exemplo interessante é a da AWS).</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// definição de erros retryable padrão</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>DefaultRetryableErrors</span> = []<span style=color:#66d9ef>string</span>{
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;connection reset by peer&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;connection refused&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;timeout&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;deadline exceeded&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;too many requests&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;rate limit&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;service unavailable&#34;</span>,
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// códigos HTTP que merecem retry</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>DefaultRetryableHTTPCodes</span> = []<span style=color:#66d9ef>int</span>{
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusRequestTimeout</span>,      <span style=color:#75715e>// 408</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusTooManyRequests</span>,     <span style=color:#75715e>// 429</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#75715e>// 500</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadGateway</span>,          <span style=color:#75715e>// 502</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusServiceUnavailable</span>,  <span style=color:#75715e>// 503</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusGatewayTimeout</span>,      <span style=color:#75715e>// 504</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=gerenciamento-avançado-de-configurações class=link_owner>gerenciamento avançado de configurações
+<a href=#gerenciamento-avan%c3%a7ado-de-configura%c3%a7%c3%b5es class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>a modularidade da configuração foi um ponto crítico do design. utilizamos o padrão de opções funcionais (não são 100% fluentes como pede o figurin) para permitir uma configuração limpa e extensível:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// padrão de options funcionais para configuração flexível</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// configurações básicas</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAuthToken</span>(<span style=color:#e6db74>&#34;your-auth-token&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithEnvironment</span>(<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>EnvironmentProduction</span>),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// opções avançadas de performance</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithTimeout</span>(<span style=color:#ae81ff>30</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithRetries</span>(<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>200</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Millisecond</span>, <span style=color:#ae81ff>2</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// observabilidade</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithObservability</span>(<span style=color:#66d9ef>true</span>, <span style=color:#66d9ef>true</span>, <span style=color:#66d9ef>true</span>),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// quais APIs utilizar</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>UseAllAPIs</span>(),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>este padrão permite:</p><ul><li>configuração incremental com defaults sensatos</li><li>melhor legibilidade e manutenção</li><li>extensibilidade futura sem quebrar compatibilidade</li><li>configurações específicas por domínio</li></ul><p>Além disso, implementamos suporte para configuração via variáveis de ambiente:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// variáveis de ambiente que o cliente reconhece</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_AUTH_TOKEN</span>=<span style=color:#a6e22e>seu</span><span style=color:#f92672>-</span><span style=color:#a6e22e>token</span> <span style=color:#75715e>// implementaremos a sdk de access management lançada ontem logo logo</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_ENVIRONMENT</span>=<span style=color:#a6e22e>production</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_ONBOARDING_URL</span>=<span style=color:#a6e22e>https</span>:<span style=color:#75715e>//api.exemplo.com/v1</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_TRANSACTION_URL</span>=<span style=color:#a6e22e>https</span>:<span style=color:#75715e>//transactions.exemplo.com/v1</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_DEBUG</span>=<span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>MIDAZ_MAX_RETRIES</span>=<span style=color:#ae81ff>5</span>
+</span></span></code></pre></div><p>isso permite uma integração mais suave com diferentes ambientes de deploy, especialmente em contextos de containers e kubernetes.</p><h2 id=performance-otimizada-para-json class=link_owner>performance otimizada para JSON
+<a href=#performance-otimizada-para-json class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Em sistemas financeiros, performance não é luxo, é requisito. Um dos pontos de maior otimização foi o processamento JSON, que pode rapidamente se tornar um gargalo:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// exemplo de nossa implementação de pooling de buffers para JSON</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>JSONPerformance</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>encoderPool</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>decoderPool</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>bufferPool</span>  <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewJSONPerformance</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>JSONPerformance</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>JSONPerformance</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>encoderPool</span>: <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>{
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>New</span>: <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>interface</span>{} {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>NewEncoder</span>(<span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Discard</span>)
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>decoderPool</span>: <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>{
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>New</span>: <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>interface</span>{} {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>NewDecoder</span>(<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>NewReader</span>(<span style=color:#e6db74>&#34;&#34;</span>))
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>bufferPool</span>: <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Pool</span>{
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>New</span>: <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>interface</span>{} {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> new(<span style=color:#a6e22e>bytes</span>.<span style=color:#a6e22e>Buffer</span>)
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>jp</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>JSONPerformance</span>) <span style=color:#a6e22e>Marshal</span>(<span style=color:#a6e22e>v</span> <span style=color:#66d9ef>interface</span>{}) ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>buf</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>jp</span>.<span style=color:#a6e22e>bufferPool</span>.<span style=color:#a6e22e>Get</span>().(<span style=color:#f92672>*</span><span style=color:#a6e22e>bytes</span>.<span style=color:#a6e22e>Buffer</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>buf</span>.<span style=color:#a6e22e>Reset</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>jp</span>.<span style=color:#a6e22e>bufferPool</span>.<span style=color:#a6e22e>Put</span>(<span style=color:#a6e22e>buf</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>enc</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>jp</span>.<span style=color:#a6e22e>encoderPool</span>.<span style=color:#a6e22e>Get</span>().(<span style=color:#f92672>*</span><span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>Encoder</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>enc</span>.<span style=color:#a6e22e>SetEscapeHTML</span>(<span style=color:#66d9ef>false</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>oldWriter</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>enc</span>.<span style=color:#a6e22e>Linter</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>enc</span>.<span style=color:#a6e22e>SetWriter</span>(<span style=color:#a6e22e>buf</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#66d9ef>func</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>enc</span>.<span style=color:#a6e22e>SetWriter</span>(<span style=color:#a6e22e>oldWriter</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>jp</span>.<span style=color:#a6e22e>encoderPool</span>.<span style=color:#a6e22e>Put</span>(<span style=color:#a6e22e>enc</span>)
+</span></span><span style=display:flex><span>    }()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>enc</span>.<span style=color:#a6e22e>Encode</span>(<span style=color:#a6e22e>v</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Copy to avoid returning a reference to the pooled buffer</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#a6e22e>buf</span>.<span style=color:#a6e22e>Len</span>())
+</span></span><span style=display:flex><span>    copy(<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>buf</span>.<span style=color:#a6e22e>Bytes</span>())
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>result</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Esta abordagem reduziu alocações de memória em nossos benchmarks, principalmente quando fazíamos em conjunto com o pooling de buffers, o que é crucial para sistemas financeiros de alto volume que processam milhões de transações.</p><h2 id=páginação-inteligente-e-universal class=link_owner>páginação inteligente e universal
+<a href=#p%c3%a1gina%c3%a7%c3%a3o-inteligente-e-universal class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Lidar com grandes conjuntos de dados é um desafio comum em operações financeiras. Por isso, desenvolvemos um sistema de paginação universal que funciona com diferentes endpoints e paradigmas:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// interface genérica para qualquer tipo de paginador</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Paginator</span>[<span style=color:#a6e22e>T</span> <span style=color:#66d9ef>any</span>] <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>HasNext</span>() <span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Next</span>() (<span style=color:#f92672>*</span><span style=color:#a6e22e>ListResponse</span>[<span style=color:#a6e22e>T</span>], <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Reset</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// exemplo de uso para listar transações com paginação automática</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>paginator</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>GetTransactionPaginator</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ctx</span>, <span style=color:#e6db74>&#34;org-id&#34;</span>, <span style=color:#e6db74>&#34;ledger-id&#34;</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>ListOptions</span>{<span style=color:#a6e22e>Limit</span>: <span style=color:#ae81ff>100</span>},
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>totalTransactions</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> <span style=color:#a6e22e>paginator</span>.<span style=color:#a6e22e>HasNext</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>page</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>paginator</span>.<span style=color:#a6e22e>Next</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>tx</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>page</span>.<span style=color:#a6e22e>Items</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// processar cada transação</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>processTransaction</span>(<span style=color:#a6e22e>tx</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>totalTransactions</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Processadas %d transações no total\n&#34;</span>, <span style=color:#a6e22e>totalTransactions</span>)
+</span></span></code></pre></div><p>Nossa implementação suporta:</p><ul><li>páginação por offset/limit (mais comum)</li><li>páginação por cursor (mais eficiente para grandes datasets)</li><li>prefetching para melhor performance</li><li>preservação de filtros e ordenação entre páginas</li><li>adaptação automática ao tipo de paginação do endpoint</li><li>concorrência controlada para alto volume</li></ul><p>Para lidar com os requisitos de alta performance, investimos pesadamente em modelos de concorrência bem controlados:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// worker pool genérico com controle fino de concorrência</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>WorkerPool</span>[<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>R</span> <span style=color:#66d9ef>any</span>](
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>items</span> []<span style=color:#a6e22e>T</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>workFn</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>T</span>) (<span style=color:#a6e22e>R</span>, <span style=color:#66d9ef>error</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>opts</span> <span style=color:#f92672>...</span><span style=color:#a6e22e>PoolOption</span>,
+</span></span><span style=display:flex><span>) []<span style=color:#a6e22e>Result</span>[<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>R</span>] {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Config default</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>options</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>defaultPoolOptions</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>opt</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>opts</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>opt</span>(<span style=color:#a6e22e>options</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>resultCh</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>Result</span>[<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>R</span>], len(<span style=color:#a6e22e>items</span>))
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>wg</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>WaitGroup</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// semáforo para controlar concorrência</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>sem</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>struct</span>{}, <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>workers</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Rate limiter se especificado</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>limiter</span> <span style=color:#f92672>&lt;-</span><span style=color:#66d9ef>chan</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>rateLimit</span> &gt; <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ticker</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>NewTicker</span>(<span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span> <span style=color:#f92672>/</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Duration</span>(<span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>rateLimit</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>ticker</span>.<span style=color:#a6e22e>Stop</span>()
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>limiter</span> = <span style=color:#a6e22e>ticker</span>.<span style=color:#a6e22e>C</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>item</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>items</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Respeita cancelamento pelo context</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Err</span>() <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Rate limiting se ativo</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>limiter</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>select</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>ctx</span>.<span style=color:#a6e22e>Done</span>():
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>limiter</span>:
+</span></span><span style=display:flex><span>                <span style=color:#75715e>// Continue quando o rate limiter permitir</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Adquire slot no semáforo</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>sem</span> <span style=color:#f92672>&lt;-</span> <span style=color:#66d9ef>struct</span>{}{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>idx</span> <span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>item</span> <span style=color:#a6e22e>T</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>defer</span> <span style=color:#66d9ef>func</span>() { <span style=color:#f92672>&lt;-</span><span style=color:#a6e22e>sem</span> }() <span style=color:#75715e>// Libera o semáforo ao final</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Cria um timeout interno se necessário</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>execCtx</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ctx</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>timeout</span> &gt; <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>cancel</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>CancelFunc</span>
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>execCtx</span>, <span style=color:#a6e22e>cancel</span> = <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>WithTimeout</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>timeout</span>)
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>cancel</span>()
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Executa a função de trabalho</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>workFn</span>(<span style=color:#a6e22e>execCtx</span>, <span style=color:#a6e22e>item</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Envia o resultado</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>resultCh</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>Result</span>[<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>R</span>]{
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>Index</span>: <span style=color:#a6e22e>idx</span>,
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>Item</span>:  <span style=color:#a6e22e>item</span>,
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>result</span>,
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>Error</span>: <span style=color:#a6e22e>err</span>,
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>item</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Fecha o canal de resultados quando todo trabalho estiver concluído</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Wait</span>()
+</span></span><span style=display:flex><span>        close(<span style=color:#a6e22e>resultCh</span>)
+</span></span><span style=display:flex><span>    }()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Coleta resultados</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>results</span> []<span style=color:#a6e22e>Result</span>[<span style=color:#a6e22e>T</span>, <span style=color:#a6e22e>R</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>resultCh</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>results</span> = append(<span style=color:#a6e22e>results</span>, <span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Ordena resultados se necessário</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>options</span>.<span style=color:#a6e22e>ordered</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>sort</span>.<span style=color:#a6e22e>Slice</span>(<span style=color:#a6e22e>results</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>results</span>[<span style=color:#a6e22e>i</span>].<span style=color:#a6e22e>Index</span> &lt; <span style=color:#a6e22e>results</span>[<span style=color:#a6e22e>j</span>].<span style=color:#a6e22e>Index</span>
+</span></span><span style=display:flex><span>        })
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>results</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Esta implementação permite:</p><ul><li>Controle preciso de concorrência para evitar sobrecarregar a API</li><li>Rate limiting para respeitar limites da API</li><li>Ordenação opcional de resultados</li><li>Cancelamento gracioso de operações em andamento</li><li>Timeouts individuais para tarefas</li></ul><h2 id=tratamento-avançado-de-erros-financeiros class=link_owner>tratamento avançado de erros financeiros
+<a href=#tratamento-avan%c3%a7ado-de-erros-financeiros class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Em um sistema financeiro, os erros são parte crítica da experiência do desenvolvedor. Investimos em um sistema sofisticado de tratamento de erros:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// exemplo de uso de erros especializados</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>switch</span> {
+</span></span><span style=display:flex><span><span style=color:#66d9ef>case</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsValidationError</span>(<span style=color:#a6e22e>err</span>):
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Trata erro de validação</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Erro de validação:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Extrai erros por campo</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fieldErrors</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>GetFieldErrors</span>(<span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>fieldErr</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>fieldErrors</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Campo %s: %s\n&#34;</span>, <span style=color:#a6e22e>fieldErr</span>.<span style=color:#a6e22e>Field</span>, <span style=color:#a6e22e>fieldErr</span>.<span style=color:#a6e22e>Message</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>case</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsInsufficientBalanceError</span>(<span style=color:#a6e22e>err</span>):
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Trata erro específico financeiro</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Saldo insuficiente:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>case</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsRateLimitExceededError</span>(<span style=color:#a6e22e>err</span>):
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Implementa backoff e retry</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Limite de requisições excedido, aguardando:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Sleep</span>(<span style=color:#a6e22e>exponentialBackoff</span>(<span style=color:#a6e22e>attempt</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>case</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsAuthenticationError</span>(<span style=color:#a6e22e>err</span>):
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Problema com autenticação</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Erro de autenticação, renovando token:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>renewToken</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Adicionalmente, nossos erros incluem:</p><ul><li>Categorização clara (validação, autenticação, rede, etc)</li><li>Detalhes específicos por domínio financeiro (saldo insuficiente, limites, etc)</li><li>Códigos de erro e status HTTP associados</li><li>Sugestões de correção para o desenvolvedor</li><li>Integração com observabilidade (geração de span de erro)</li><li>Testes de stress e verificação de escalabilidade</li></ul><p>Uma característica distintiva da nossa SDK foi o desenvolvimento de uma suite robusta de testes de stress:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// trecho do código da suite de stress testing</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>st</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StressTest</span>) <span style=color:#a6e22e>Run</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>observability</span>.<span style=color:#a6e22e>GetLogger</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Info</span>(<span style=color:#e6db74>&#34;Iniciando teste de stress&#34;</span>, <span style=color:#e6db74>&#34;workers&#34;</span>, <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>ConcurrentWorkers</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Preparar ambiente de teste</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>SetupTestEnvironment</span>(<span style=color:#a6e22e>ctx</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;falha ao configurar ambiente: %w&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Executar até interrupção ou duração configurada</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>wg</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>WaitGroup</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>cancel</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>WithCancel</span>(<span style=color:#a6e22e>ctx</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>cancel</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Inicia monitoramento de métricas</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>metrics</span> = <span style=color:#a6e22e>NewMetricsCollector</span>(<span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>observability</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>go</span> <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>metrics</span>.<span style=color:#a6e22e>Start</span>(<span style=color:#a6e22e>ctx</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Inicia workers para gerar carga</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>ConcurrentWorkers</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>workerID</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>runWorker</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>workerID</span>)
+</span></span><span style=display:flex><span>        }(<span style=color:#a6e22e>i</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Aguarda conclusão</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Wait</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Info</span>(<span style=color:#e6db74>&#34;Teste de stress concluído&#34;</span>, <span style=color:#e6db74>&#34;transações&#34;</span>, <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>metrics</span>.<span style=color:#a6e22e>TotalTransactions</span>())
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Esta suite nos permitiu:</p><ul><li>Validar o comportamento sob carga extrema (50.000+ tx/s ou modelos de 1:1 em conta com 10000+ tx/s)</li><li>Identificar e corrigir bottlenecks antes do lançamento</li><li>Verificar o comportamento de mecanismos de retry e resiliência</li><li>Testar a degradação graceful sob falhas parciais</li><li>Validar limites de recursos (memória, CPU, conexões, e o próprio sistema distribuído)</li></ul><p>No ponto específico de validar limites de recursos e do sistema distribuído, utilizamos o pumba para simular cenários de caos (em docker), e isso nos ajudou a identificar pontos interessantes na implementação do próprio backend.</p><h2 id=documentação-direcionada-por-exemplos class=link_owner>documentação direcionada por exemplos
+<a href=#documenta%c3%a7%c3%a3o-direcionada-por-exemplos class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Percebemos que bons exemplos são mais valiosos que documentação abstrata. Por isso, demos ênfase especial a exemplos práticos:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// exemplo completo de transferência entre contas</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ExampleTransferBetweenAccounts</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Inicializar cliente</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>c</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAuthToken</span>(<span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>Getenv</span>(<span style=color:#e6db74>&#34;MIDAZ_TOKEN&#34;</span>)),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>UseAllAPIs</span>(),
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Erro inicializando cliente: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Definir detalhes da transação</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>input</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>TransactionDSLInput</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Description</span>: <span style=color:#e6db74>&#34;Transferência para pagamento de aluguel&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Send</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLSend</span>{
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Asset</span>: <span style=color:#e6db74>&#34;BRL&#34;</span>,
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Value</span>: <span style=color:#ae81ff>150000</span>, <span style=color:#75715e>// R$ 1.500,00</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Scale</span>: <span style=color:#ae81ff>2</span>,
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Source</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLSource</span>{
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>From</span>: []<span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLFromTo</span>{
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>Account</span>: <span style=color:#e6db74>&#34;conta-origem-123&#34;</span>,
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>Amount</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLAmount</span>{
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Asset</span>: <span style=color:#e6db74>&#34;BRL&#34;</span>,
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Value</span>: <span style=color:#ae81ff>150000</span>,
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Scale</span>: <span style=color:#ae81ff>2</span>,
+</span></span><span style=display:flex><span>                        },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                },
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Distribute</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLDistribute</span>{
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>To</span>: []<span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLFromTo</span>{
+</span></span><span style=display:flex><span>                    {
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>Account</span>: <span style=color:#e6db74>&#34;conta-destino-456&#34;</span>,
+</span></span><span style=display:flex><span>                        <span style=color:#a6e22e>Amount</span>: <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>DSLAmount</span>{
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Asset</span>: <span style=color:#e6db74>&#34;BRL&#34;</span>,
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Value</span>: <span style=color:#ae81ff>150000</span>,
+</span></span><span style=display:flex><span>                            <span style=color:#a6e22e>Scale</span>: <span style=color:#ae81ff>2</span>,
+</span></span><span style=display:flex><span>                        },
+</span></span><span style=display:flex><span>                    },
+</span></span><span style=display:flex><span>                },
+</span></span><span style=display:flex><span>            },
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Metadata</span>: <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>any</span>{
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;referencia&#34;</span>: <span style=color:#e6db74>&#34;aluguel-julho-2025&#34;</span>,
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;categoria&#34;</span>: <span style=color:#e6db74>&#34;moradia&#34;</span>,
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Executar a transação</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tx</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>CreateTransactionWithDSL</span>(
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Background</span>(),
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;org-exemplo&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;ledger-principal&#34;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>input</span>,
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Erro na transferência: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Transferência realizada com sucesso! ID: %s\n&#34;</span>, <span style=color:#a6e22e>tx</span>.<span style=color:#a6e22e>ID</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Cada exemplo está acompanhado de comentários detalhados e cobrimos todos os cenários principais:</p><ul><li>Criação de entidades (organizações, contas, etc)</li><li>Operações financeiras (transferências, depósitos, saques)</li><li>Consultas e relatórios (balanços, extratos, histórico)</li><li>Workflows completos (onboarding, transações)</li></ul><p>A vantagem da unificação de interface
+Falando um pouco sobre a vantagem de unificar múltiplas APIs de backend sob uma interface coerente: no mundo financeiro, frequentemente temos APIs separadas para diferentes domínios:</p><ul><li>API de onboarding (organizações, contas)</li><li>API de transactions (transferências, saldos)</li><li>API de compliance (KYC, AML)</li><li>API de reporting (relatórios, extratos)</li><li>etc etc etc</li></ul><p>Cada uma com suas peculiaridades e convenções. Nossa SDK unifica todas sob uma única interface consistente:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Mesmo padrão para todas as APIs, independente do backend</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// API de onboarding</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organization</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Organizations</span>.<span style=color:#a6e22e>CreateOrganization</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>input</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// API de transactions</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>transaction</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>CreateTransaction</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>orgID</span>, <span style=color:#a6e22e>ledgerID</span>, <span style=color:#a6e22e>input</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// API de balanços</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>balance</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Accounts</span>.<span style=color:#a6e22e>GetBalance</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>orgID</span>, <span style=color:#a6e22e>ledgerID</span>, <span style=color:#a6e22e>accountID</span>)
+</span></span></code></pre></div><p>Esta unificação traz benefícios significativos para o desenvolvedor em si:</p><ul><li>Reduz a curva de aprendizado para novos desenvolvedores</li><li>Abstrai as diferenças de implementação entre serviços</li><li>Permite evolução independente do backend e frontend</li><li>Facilita migração entre diferentes versões de APIs</li></ul><p>A discussão sobre fronteiras: o que aprendemos
+Voltando à questão inicial sobre as fronteiras de responsabilidade entre servidor e cliente, concluímos que a resposta não é binária. Em vez disso, é um espectro que depende do contexto:</p><ul><li>Validação: tanto cliente quanto servidor devem validar - cliente para UX e DevEx, servidor para segurança</li><li>Resiliência: principalmente responsabilidade do cliente, com suporte do servidor (idempotência, o que nossa API também trata com uma option específica de WithIdempotency())</li><li>Performance: responsabilidade compartilhada, com otimizações específicas em cada lado</li><li>Domínio: o servidor define o modelo, mas o cliente pode enriquecê-lo com abstrações úteis</li></ul><p>O que ficou claro é que SDKs não são meros wrappers de API - elas são produtos completos que precisam considerar toda a experiência do desenvolvedor e os requisitos específicos do domínio.</p><h2 id=trade-offs-e-desafios-de-design-importantes class=link_owner>trade-offs e desafios de design importantes
+<a href=#trade-offs-e-desafios-de-design-importantes class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Durante o desenvolvimento da SDK, nos confrontamos com vários trade-offs importantes que impactam diretamente desenvolvedores e usuários:</p><ul><li>Validação no cliente vs. sincronização com o servidor</li><li>A implementação de validações robustas no cliente traz benefícios claros de performance e experiência do desenvolvedor, mas também introduz um desafio:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Se estas regras de validação mudam no servidor...</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>assetCodePattern</span>.<span style=color:#a6e22e>MatchString</span>(<span style=color:#a6e22e>asset</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;invalid asset code format: %s (must be 3-4 uppercase letters)&#34;</span>, <span style=color:#a6e22e>asset</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Este é um trade-off significativo:</p><ul><li>Vantagem: redução de latência e feedback instantâneo</li><li>Desvantagem: potencial divergência entre regras cliente/servidor se os clientes não atualizarem a SDK</li></ul><p>Nossa solução foi documentar claramente a necessidade de atualizações regulares e fornecer testes que ajudam a detectar divergências de validação, além de fazer um robusto linking entre models do cliente e do servidor.</p><ul><li>Filosofia de tratamento de erros: o que tratar automaticamente?</li><li>Uma decisão crítica foi determinar quais erros a SDK deveria tratar automaticamente versus quais deveriam ser expostos para o backend:</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Erros tratados automaticamente pela SDK</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsTemporaryNetworkError</span>(<span style=color:#a6e22e>err</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsRateLimitExceeded</span>(<span style=color:#a6e22e>err</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Aplicar retry automaticamente</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>retry</span>.<span style=color:#a6e22e>Do</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>operation</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Erros que são propagados ao aplicativo</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsBusinessRuleViolation</span>(<span style=color:#a6e22e>err</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>IsValidationError</span>(<span style=color:#a6e22e>err</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// O desenvolvedor precisa tratar estes casos explicitamente</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Adotamos a filosofia de que:</p><ul><li><p>Erros transientes de infraestrutura/rede são tratados pela SDK</p></li><li><p>Erros de domínio financeiro ou validação são propagados para permitir tratamento adequado pelo backend</p></li><li><p>Erros críticos (autenticação, permissões) são propagados com contexto enriquecido para facilitar diagnóstico</p></li><li><p>Integração de observabilidade: o equilíbrio entre intrusão e visibilidade</p></li><li><p>A observabilidade é crítica em sistemas financeiros, mas quanto a SDK deve impor versus oferecer como opcional? Aqui é um caso a parte. Remodelamos toda a stack de observabilidade (usando opentelemetry) para que o desenvolvedor possa escolher o que ele quer e o que ele não quer, sem sermos &ldquo;opinionated&rdquo; com relação ao tema &ndash; bem diferente do contexto do midaz open-source, que é mais &ldquo;opinionated&rdquo;.</p></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Abordagem não-intrusiva que adotamos:</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Configuração básica</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAuthToken</span>(<span style=color:#e6db74>&#34;token&#34;</span>),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Observabilidade totalmente opcional</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithObservability</span>(
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>observability</span>.<span style=color:#a6e22e>WithTracing</span>(<span style=color:#a6e22e>userDefinedTraceProvider</span>),  <span style=color:#75715e>// opcional</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>observability</span>.<span style=color:#a6e22e>WithMetrics</span>(<span style=color:#a6e22e>userDefinedMeterProvider</span>),  <span style=color:#75715e>// opcional</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>observability</span>.<span style=color:#a6e22e>WithLogging</span>(<span style=color:#a6e22e>userDefinedLogger</span>),         <span style=color:#75715e>// opcional</span>
+</span></span><span style=display:flex><span>    ),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>Decidimos por uma abordagem modular onde:</p><ul><li><p>A SDK funciona perfeitamente sem observabilidade configurada</p></li><li><p>Desenvolvedores podem injetar seus próprios providers de observabilidade</p></li><li><p>Fornecemos implementações default para casos simples</p></li><li><p>Instrumentamos pontos críticos nas operações financeiras para máxima visibilidade</p></li><li><p>Operações Assíncronas e Notificações</p></li><li><p>Transações financeiras frequentemente envolvem processos assíncronos. Como a SDK deve lidar com isso?</p></li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Opção 1: Polling (implementamos inicialmente)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>status</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>GetTransactionStatus</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>txID</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Opção 2: Webhooks (planejado para futuro)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>RegisterWebhookHandler</span>(<span style=color:#a6e22e>webhookHandler</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Opção 3: Response streaming (planejado para futuro)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stream</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>WatchTransaction</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>txID</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> <span style=color:#a6e22e>update</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>stream</span>.<span style=color:#a6e22e>Updates</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Processar atualizações em tempo real</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Nossa abordagem foi evolutiva. Tomamos uma decisão de implementar o básico agora, mas permitindo uma modelagem como a acima exposta:</p><p>Começamos com polling simples para compatibilidade ampla
 Adicionaremos suporte a webhooks para notificações em tempo real
-E planejamos, por fim, streaming de atualizações para casos de uso mais complexos</p>
-<h2 id="estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz">estratégia de versionamento e compatibilidade planejado para em breve, dado que estamos na V1 do Midaz<a href="#estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>O versionamento é um desafio significativo em APIs financeiras que evoluem constantemente:</p>
-
-  <pre><code class="language-go">// Suporte a múltiplas versões de API
-client, err := client.New(
-    client.WithAPIVersion(&#34;v1&#34;),  // default
-    // ou
-    client.WithAPIVersion(&#34;v2&#34;),  // novas funcionalidades
-)
-
-// Usando feature flags para recursos em preview
-client.Entity.Transactions.CreateTransaction(
-    ctx, orgID, ledgerID, input,
-    transactions.WithFeatureEnabled(&#34;instant-settlement&#34;),
-)</code></pre>
-
-<p>Adotaremos uma estratégia de versionamento com múltiplas camadas:</p>
-<ul>
-<li>Versionamento semântico tradicional para a SDK</li>
-<li>Compatibilidade com múltiplas versões de API em uma única versão da SDK</li>
-<li>Feature flags para recursos experimentais</li>
-<li>Aliases de métodos deprecados com warnings para facilitar migrações</li>
-</ul>
-<h2 id="aprendizados-para-o-futuro">aprendizados para o futuro<a href="#aprendizados-para-o-futuro" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>Lançar a primeira versão de uma SDK não é o fim da jornada, mas apenas o começo. Já identificamos diversas áreas para evolução:</p>
-<ul>
-<li>Estratégia evolutiva: como evoluir a API sem quebrar compatibilidade? como evoluir o backend sem quebrar compatibilidade? como fazer tudo isso e mantermos o decoupling super necessário entre midaz e midaz-sdk-golang versioning</li>
-<li>Abstrações de domínio: quais abstrações de nível superior devemos oferecer para simplificar fluxos comuns? que tal evoluirmos para DoWithdrawal, DoDeposit, DoTransfer, etc, fazendo a abstração entre a conta @external/asset e o domínio de transações. que tal evoluirmos para sdk apis 100% fluentes?</li>
-<li>Balanceamento de responsabilidades: conforme o produto evolui, qual o equilíbrio ideal entre lógica no servidor e no cliente? afinal, não queremos obrigar nossos clientes a usarem a sdk, até pq não conseguiremos manter sdks em um número grande de linguagens</li>
-<li>Extensibilidade: como permitir que usuários estendam a SDK para seus casos específicos? o fato de sermos open-source facilita isso e chama o público para nos ajudar, mas sabemos da nossa responsabilidade como principais mantenedores do midaz e sua stack</li>
-</ul>
-<p>Particularmente interessante é a questão dos modelos de domínio. Por exemplo, em vez de apenas oferecer a API para criar uma transação, devemos evoluir para oferecer construções de mais alto nível:</p>
-
-  <pre><code class="language-go">// Potencial evolução futura - Abstrações de domínio mais ricas
-// Em vez de apenas criar transações
-tx, err := client.Entity.Transactions.CreateTransaction(ctx, orgID, ledgerID, createTxInput)
-
-// Oferecer fluxos de domínio completos
-transferResult, err := client.Workflows.DoTransfer(ctx, transferOptions)
-paymentResult, err := client.Workflows.DoPayment(ctx, paymentOptions)
-fxResult, err := client.Workflows.DoForeignExchangeTransfer(ctx, fxOptions)</code></pre>
-
-<h2 id="o-padrão-functional-options-flexibilidade-sem-complexidade">o padrão functional options: flexibilidade sem complexidade<a href="#o-padrão-functional-options-flexibilidade-sem-complexidade" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>um padrão de design que merece destaque especial na nossa sdk é o uso extensivo de functional options (ou a implementação parcial de fluent apis). este padrão permite configuração flexível sem comprometer a legibilidade ou simplicidade:</p>
-
-  <pre><code class="language-go">// definição básica do padrão
-type ClientOption func(*Client) error
-
-func WithTimeout(timeout time.Duration) ClientOption {
-    return func(c *Client) error {
-        if timeout &lt;= 0 {
-            return errors.New(&#34;timeout must be positive&#34;)
-        }
-        c.httpClient.Timeout = timeout
-        return nil
-    }
-}
-
-// uso elegante e extensível
-client, err := client.New(
-    client.WithAuthToken(&#34;seu-token&#34;),
-    client.WithTimeout(30 * time.Second),
-    client.WithRetries(3),
-    client.WithObservability(true),
-)</code></pre>
-
-<p>este padrão oferece múltiplas vantagens:</p>
-<ul>
-<li>evita a explosão de construtores para diferentes combinações de opções</li>
-<li>permite adicionar novos parâmetros sem quebrar código existente</li>
-<li>facilita testes e configurações condicionais</li>
-<li>proporciona validação no momento da configuração</li>
-<li>permite opções compostas que aplicam múltiplas configurações</li>
-</ul>
-<p>aplicamos o mesmo padrão em diversos níveis da sdk, não apenas na inicialização do cliente:</p>
-
-  <pre><code class="language-go">// nível de operação - opções específicas por operação
-tx, err := client.Entity.Transactions.CreateTransaction(
-    ctx, orgID, ledgerID, input,
-    transactions.WithIdempotencyKey(&#34;unique-key-123&#34;),
-    transactions.WithPriority(transactions.PriorityHigh),
-)
-
-// nível de entidade - configurações por domínio
-accountSvc := client.Entity.Accounts.WithOptions(
-    accounts.WithCaching(true),
-    accounts.WithValidation(accounts.ValidationStrict),
-)</code></pre>
-
-<h2 id="conclusão">conclusão<a href="#conclusão" class="hanchor" ariaLabel="Anchor">#</a> </h2>
-<p>construir a sdk do midaz foi uma jornada de aprendizado e de um estado de flow absurdo. as complexidades de sistemas distribuídos, especialmente no domínio financeiro, e as decisões que tomamos - desde validação robusta no cliente até mecanismos avançados de resiliência e performance - foram todas guiadas pela pergunta: &ldquo;o que tornaria a vida do desenvolvedor mais fácil e o sistema mais confiável?&rdquo;</p>
-<p>no final, a fronteira entre cliente e servidor é mais sobre colaboração do que separação. uma boa sdk não apenas encapsula uma api, mas amplia suas capacidades e protege contra suas limitações.</p>
-<p>a gestão cuidadosa dos trade-offs que destacamos - validação no cliente versus sincronização com o servidor, tratamento automático versus exposição de erros, modularidade de observabilidade, e estratégias para operações assíncronas - moldou uma sdk que equilibra simplicidade e poder.</p>
-<p>se você estiver construindo uma sdk, especialmente para sistemas críticos como o financeiro, sugiro considerar cuidadosamente onde colocar essas fronteiras de responsabilidade. sua resposta pode não ser a mesma que a nossa, mas fazer a pergunta já é um excelente começo.</p>
-<p>bora?</p>
-<p>para quem quiser explorar mais, a midaz sdk está disponível em nosso github e inclui extensos exemplos de uso. os exemplos de código e implementações de referência fornecem insights valiosos sobre como implementar padrões robustos em sdks financeiras.</p>
-<p>o que você acha? onde você traçaria a linha entre responsabilidades de cliente e servidor em uma sdk? aproveita e dá uma estrelinha pra gente! o midaz está aqui, nosso frontend console está aqui, e nossa sdk está aqui.</p>
-<p>next steps?
-port para js. quite a challenge!</p>
-<p>beijos,
-fred.</p>
-
-      </div></div>
-
-  
-    
-<div class="pagination">
-  <div class="pagination__title">
-    <span class="pagination__title-h"></span>
-    <hr />
-  </div>
-  <div class="pagination__buttons">
-    
-      <a href="http://localhost:1313/posts/gerenciando-dados-de-clientes-com-o-plugin-crm-do-midaz/" class="button inline prev">
-        &lt; [<span class="button__text">gerenciando dados de clientes com o plugin crm do midaz: segurança e flexibilidade em primeiro lugar</span>]
-      </a>
-    
-    
-    
-  </div>
-</div>
-
-
-  
-
-  
-    
-
-  
-</article>
-
-  </div>
-
-  
-    <footer class="footer">
-  <div class="footer__inner">
-    
-      <div class="copyright">
-        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
-    
-      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
-      </div>
-  </div>
-</footer>
-
-
-
-
-
-
-<script type="text/javascript" src="http://localhost:1313/bundle.min.js"></script>
-
-
-
-
-
-  
-</div>
-
-</body>
-</html>
+E planejamos, por fim, streaming de atualizações para casos de uso mais complexos</p><h2 id=estratégia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz class=link_owner>estratégia de versionamento e compatibilidade planejado para em breve, dado que estamos na V1 do Midaz
+<a href=#estrat%c3%a9gia-de-versionamento-e-compatibilidade-planejado-para-em-breve-dado-que-estamos-na-v1-do-midaz class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>O versionamento é um desafio significativo em APIs financeiras que evoluem constantemente:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Suporte a múltiplas versões de API</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAPIVersion</span>(<span style=color:#e6db74>&#34;v1&#34;</span>),  <span style=color:#75715e>// default</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// ou</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAPIVersion</span>(<span style=color:#e6db74>&#34;v2&#34;</span>),  <span style=color:#75715e>// novas funcionalidades</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Usando feature flags para recursos em preview</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>CreateTransaction</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>orgID</span>, <span style=color:#a6e22e>ledgerID</span>, <span style=color:#a6e22e>input</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>transactions</span>.<span style=color:#a6e22e>WithFeatureEnabled</span>(<span style=color:#e6db74>&#34;instant-settlement&#34;</span>),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>Adotaremos uma estratégia de versionamento com múltiplas camadas:</p><ul><li>Versionamento semântico tradicional para a SDK</li><li>Compatibilidade com múltiplas versões de API em uma única versão da SDK</li><li>Feature flags para recursos experimentais</li><li>Aliases de métodos deprecados com warnings para facilitar migrações</li></ul><h2 id=aprendizados-para-o-futuro class=link_owner>aprendizados para o futuro
+<a href=#aprendizados-para-o-futuro class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>Lançar a primeira versão de uma SDK não é o fim da jornada, mas apenas o começo. Já identificamos diversas áreas para evolução:</p><ul><li>Estratégia evolutiva: como evoluir a API sem quebrar compatibilidade? como evoluir o backend sem quebrar compatibilidade? como fazer tudo isso e mantermos o decoupling super necessário entre midaz e midaz-sdk-golang versioning</li><li>Abstrações de domínio: quais abstrações de nível superior devemos oferecer para simplificar fluxos comuns? que tal evoluirmos para DoWithdrawal, DoDeposit, DoTransfer, etc, fazendo a abstração entre a conta @external/asset e o domínio de transações. que tal evoluirmos para sdk apis 100% fluentes?</li><li>Balanceamento de responsabilidades: conforme o produto evolui, qual o equilíbrio ideal entre lógica no servidor e no cliente? afinal, não queremos obrigar nossos clientes a usarem a sdk, até pq não conseguiremos manter sdks em um número grande de linguagens</li><li>Extensibilidade: como permitir que usuários estendam a SDK para seus casos específicos? o fato de sermos open-source facilita isso e chama o público para nos ajudar, mas sabemos da nossa responsabilidade como principais mantenedores do midaz e sua stack</li></ul><p>Particularmente interessante é a questão dos modelos de domínio. Por exemplo, em vez de apenas oferecer a API para criar uma transação, devemos evoluir para oferecer construções de mais alto nível:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Potencial evolução futura - Abstrações de domínio mais ricas</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Em vez de apenas criar transações</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>tx</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>CreateTransaction</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>orgID</span>, <span style=color:#a6e22e>ledgerID</span>, <span style=color:#a6e22e>createTxInput</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Oferecer fluxos de domínio completos</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>transferResult</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Workflows</span>.<span style=color:#a6e22e>DoTransfer</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>transferOptions</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>paymentResult</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Workflows</span>.<span style=color:#a6e22e>DoPayment</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>paymentOptions</span>)
+</span></span><span style=display:flex><span><span style=color:#a6e22e>fxResult</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Workflows</span>.<span style=color:#a6e22e>DoForeignExchangeTransfer</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>fxOptions</span>)
+</span></span></code></pre></div><h2 id=o-padrão-functional-options-flexibilidade-sem-complexidade class=link_owner>o padrão functional options: flexibilidade sem complexidade
+<a href=#o-padr%c3%a3o-functional-options-flexibilidade-sem-complexidade class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>um padrão de design que merece destaque especial na nossa sdk é o uso extensivo de functional options (ou a implementação parcial de fluent apis). este padrão permite configuração flexível sem comprometer a legibilidade ou simplicidade:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// definição básica do padrão</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ClientOption</span> <span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>Client</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>WithTimeout</span>(<span style=color:#a6e22e>timeout</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Duration</span>) <span style=color:#a6e22e>ClientOption</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Client</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>timeout</span> <span style=color:#f92672>&lt;=</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;timeout must be positive&#34;</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>httpClient</span>.<span style=color:#a6e22e>Timeout</span> = <span style=color:#a6e22e>timeout</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// uso elegante e extensível</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>New</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithAuthToken</span>(<span style=color:#e6db74>&#34;seu-token&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithTimeout</span>(<span style=color:#ae81ff>30</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Second</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithRetries</span>(<span style=color:#ae81ff>3</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>WithObservability</span>(<span style=color:#66d9ef>true</span>),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>este padrão oferece múltiplas vantagens:</p><ul><li>evita a explosão de construtores para diferentes combinações de opções</li><li>permite adicionar novos parâmetros sem quebrar código existente</li><li>facilita testes e configurações condicionais</li><li>proporciona validação no momento da configuração</li><li>permite opções compostas que aplicam múltiplas configurações</li></ul><p>aplicamos o mesmo padrão em diversos níveis da sdk, não apenas na inicialização do cliente:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// nível de operação - opções específicas por operação</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>tx</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Transactions</span>.<span style=color:#a6e22e>CreateTransaction</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>orgID</span>, <span style=color:#a6e22e>ledgerID</span>, <span style=color:#a6e22e>input</span>,
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>transactions</span>.<span style=color:#a6e22e>WithIdempotencyKey</span>(<span style=color:#e6db74>&#34;unique-key-123&#34;</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>transactions</span>.<span style=color:#a6e22e>WithPriority</span>(<span style=color:#a6e22e>transactions</span>.<span style=color:#a6e22e>PriorityHigh</span>),
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// nível de entidade - configurações por domínio</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>accountSvc</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Entity</span>.<span style=color:#a6e22e>Accounts</span>.<span style=color:#a6e22e>WithOptions</span>(
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>accounts</span>.<span style=color:#a6e22e>WithCaching</span>(<span style=color:#66d9ef>true</span>),
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>accounts</span>.<span style=color:#a6e22e>WithValidation</span>(<span style=color:#a6e22e>accounts</span>.<span style=color:#a6e22e>ValidationStrict</span>),
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><h2 id=conclusão class=link_owner>conclusão
+<a href=#conclus%c3%a3o class="link icon"><svg><use xlink:href="#anchor-link"/></svg></a></h2><p>construir a sdk do midaz foi uma jornada de aprendizado e de um estado de flow absurdo. as complexidades de sistemas distribuídos, especialmente no domínio financeiro, e as decisões que tomamos - desde validação robusta no cliente até mecanismos avançados de resiliência e performance - foram todas guiadas pela pergunta: &ldquo;o que tornaria a vida do desenvolvedor mais fácil e o sistema mais confiável?&rdquo;</p><p>no final, a fronteira entre cliente e servidor é mais sobre colaboração do que separação. uma boa sdk não apenas encapsula uma api, mas amplia suas capacidades e protege contra suas limitações.</p><p>a gestão cuidadosa dos trade-offs que destacamos - validação no cliente versus sincronização com o servidor, tratamento automático versus exposição de erros, modularidade de observabilidade, e estratégias para operações assíncronas - moldou uma sdk que equilibra simplicidade e poder.</p><p>se você estiver construindo uma sdk, especialmente para sistemas críticos como o financeiro, sugiro considerar cuidadosamente onde colocar essas fronteiras de responsabilidade. sua resposta pode não ser a mesma que a nossa, mas fazer a pergunta já é um excelente começo.</p><p>bora?</p><p>para quem quiser explorar mais, a midaz sdk está disponível em nosso github e inclui extensos exemplos de uso. os exemplos de código e implementações de referência fornecem insights valiosos sobre como implementar padrões robustos em sdks financeiras.</p><p>o que você acha? onde você traçaria a linha entre responsabilidades de cliente e servidor em uma sdk? aproveita e dá uma estrelinha pra gente! o midaz está aqui, nosso frontend console está aqui, e nossa sdk está aqui.</p><p>next steps?
+port para js. quite a challenge!</p><p>beijos,
+fred.</p></div></div></div><script>const copy_text="Copy",copied_text="Copied",toggle_line_numbers_text="Toggle line numbers",toggle_line_wrap_text="Toggle line wrap",resize_snippet="Resize snippet height",not_set="not set",quick_links="Quick links",search_results_label="Search Results",short_search_query="Query is too short",type_to_search="Type to search",no_matches_found="No matches found"</script><footer class="pt-2 pb-2"><div class=wrap><p>&copy; <span class=year>2025</span></p><a href=#pagetop id=toTop title="Back to top"></a></div></footer><svg width="0" height="0" class="hidden"><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492.004 492.004" id="next"><path d="M484.14 226.886 306.46 49.202c-5.072-5.072-11.832-7.856-19.04-7.856-7.216.0-13.972 2.788-19.044 7.856l-16.132 16.136c-5.068 5.064-7.86 11.828-7.86 19.04.0 7.208 2.792 14.2 7.86 19.264L355.9 207.526H26.58C11.732 207.526.0 219.15.0 234.002v22.812c0 14.852 11.732 27.648 26.58 27.648h330.496L252.248 388.926c-5.068 5.072-7.86 11.652-7.86 18.864.0 7.204 2.792 13.88 7.86 18.948l16.132 16.084c5.072 5.072 11.828 7.836 19.044 7.836 7.208.0 13.968-2.8 19.04-7.872l177.68-177.68c5.084-5.088 7.88-11.88 7.86-19.1.016-7.244-2.776-14.04-7.864-19.12z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.999 511.999" id="search"><path d="M508.874 478.708 360.142 329.976c28.21-34.827 45.191-79.103 45.191-127.309C405.333 90.917 314.416.0 202.666.0S0 90.917.0 202.667s90.917 202.667 202.667 202.667c48.206.0 92.482-16.982 127.309-45.191l148.732 148.732c4.167 4.165 10.919 4.165 15.086.0l15.081-15.082c4.165-4.166 4.165-10.92-.001-15.085zM202.667 362.667c-88.229.0-160-71.771-160-160s71.771-160 160-160 160 71.771 160 160-71.771 160-160 160z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 241 179" id="harmburger"><path d="M1 10C1 4.477 5.477.0 11 0h220c5.523.0 10 4.477 10 10s-4.477 10-10 10H11C5.477 20 1 15.523 1 10zm0 80c0-5.523 4.477-10 10-10h220c5.523.0 10 4.477 10 10s-4.477 10-10 10H11c-5.523.0-10-4.477-10-10zm9 69c-5.523.0-10 4.477-10 10s4.477 10 10 10h220c5.523.0 10-4.477 10-10s-4.477-10-10-10H10z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 401.998 401.998" id="sort"><path d="M73.092 164.452h255.813c4.949.0 9.233-1.807 12.848-5.424 3.613-3.616 5.427-7.898 5.427-12.847s-1.813-9.229-5.427-12.85L213.846 5.424C210.232 1.812 205.951.0 200.999.0s-9.233 1.812-12.85 5.424L60.242 133.331c-3.617 3.617-5.424 7.901-5.424 12.85.0 4.948 1.807 9.231 5.424 12.847 3.621 3.617 7.902 5.424 12.85 5.424zm255.813 73.097H73.092c-4.952.0-9.233 1.808-12.85 5.421-3.617 3.617-5.424 7.898-5.424 12.847s1.807 9.233 5.424 12.848L188.149 396.57c3.621 3.617 7.902 5.428 12.85 5.428s9.233-1.811 12.847-5.428l127.907-127.906c3.613-3.614 5.427-7.898 5.427-12.848.0-4.948-1.813-9.229-5.427-12.847-3.614-3.616-7.899-5.42-12.848-5.42z"/></symbol></svg>
+<svg width="0" height="0" class="hidden"><symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="facebook"><path d="M437 0H75C33.648.0.0 33.648.0 75v362c0 41.352 33.648 75 75 75h151V331h-60v-90h60v-61c0-49.629 40.371-90 90-90h91v90h-91v61h91l-15 90h-76v181h121c41.352.0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zm0 0"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.001 18.001" id="twitter"><path d="M15.891 4.013c.808-.496 1.343-1.173 1.605-2.034a8.68 8.68.0 01-2.351.861c-.703-.756-1.593-1.14-2.66-1.14-1.043.0-1.924.366-2.643 1.078A3.56 3.56.0 008.766 5.383c0 .309.039.585.117.819-3.076-.105-5.622-1.381-7.628-3.837-.34.601-.51 1.213-.51 1.846.0 1.301.549 2.332 1.645 3.089-.625-.053-1.176-.211-1.645-.47.0.929.273 1.705.82 2.388a3.623 3.623.0 002.115 1.291c-.312.08-.641.118-.979.118-.312.0-.533-.026-.664-.083.23.757.664 1.371 1.291 1.841a3.652 3.652.0 002.152.743C4.148 14.173 2.625 14.69.902 14.69c-.422.0-.721-.006-.902-.038 1.697 1.102 3.586 1.649 5.676 1.649 2.139.0 4.029-.542 5.674-1.626 1.645-1.078 2.859-2.408 3.639-3.974a10.77 10.77.0 001.172-4.892v-.468a7.788 7.788.0 001.84-1.921 8.142 8.142.0 01-2.11.593z"/></symbol><symbol aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="mail"><path d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V4e2c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5.0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="calendar"><path d="M452 40h-24V0h-40v40H124V0H84v40H60C26.916 40 0 66.916.0 1e2v352c0 33.084 26.916 60 60 60h392c33.084.0 60-26.916 60-60V1e2c0-33.084-26.916-60-60-60zm20 412c0 11.028-8.972 20-20 20H60c-11.028.0-20-8.972-20-20V188h432v264zm0-304H40v-48c0-11.028 8.972-20 20-20h24v40h40V80h264v40h40V80h24c11.028.0 20 8.972 20 20v48z"/><path d="M76 230h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 310h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zM76 390h40v40H76zm80 0h40v40h-40zm80 0h40v40h-40zm80 0h40v40h-40zm80-80h40v40h-40z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="github"><path d="M255.968 5.329C114.624 5.329.0 120.401.0 262.353c0 113.536 73.344 209.856 175.104 243.872 12.8 2.368 17.472-5.568 17.472-12.384.0-6.112-.224-22.272-.352-43.712-71.2 15.52-86.24-34.464-86.24-34.464-11.616-29.696-28.416-37.6-28.416-37.6-23.264-15.936 1.728-15.616 1.728-15.616 25.696 1.824 39.2 26.496 39.2 26.496 22.848 39.264 59.936 27.936 74.528 21.344 2.304-16.608 8.928-27.936 16.256-34.368-56.832-6.496-116.608-28.544-116.608-127.008.0-28.064 9.984-51.008 26.368-68.992-2.656-6.496-11.424-32.64 2.496-68 0 0 21.504-6.912 70.4 26.336 20.416-5.696 42.304-8.544 64.096-8.64 21.728.128 43.648 2.944 64.096 8.672 48.864-33.248 70.336-26.336 70.336-26.336 13.952 35.392 5.184 61.504 2.56 68 16.416 17.984 26.304 40.928 26.304 68.992.0 98.72-59.84 120.448-116.864 126.816 9.184 7.936 17.376 23.616 17.376 47.584.0 34.368-.32 62.08-.32 70.496.0 6.88 4.608 14.88 17.6 12.352C438.72 472.145 512 375.857 512 262.353 512 120.401 397.376 5.329 255.968 5.329z"/></symbol><symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="rss"><circle cx="3.429" cy="20.571" r="3.429"/><path d="M11.429 24h4.57C15.999 15.179 8.821 8.001.0 8v4.572c6.302.001 11.429 5.126 11.429 11.428z"/><path d="M24 24C24 10.766 13.234.0.0.0v4.571c10.714.0 19.43 8.714 19.43 19.429z"/></symbol><symbol enable-background="new 0 0 64 64" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" id="anchor-link"><g fill="var(--theme)"><path d="m19 40c1.104.0 2-.896 2-2s-.896-2-2-2c-3.86.0-7-3.14-7-7 0-1.873.728-3.628 2.059-4.95C15.372 22.728 17.127 22 19 22h10c3.86.0 7 3.14 7 7 0 .258-.015.509-.048.78-.174 1.574-.885 3.052-2.017 4.176-.532.54-1.137.974-1.797 1.289-.997.476-1.419 1.669-.944 2.666.476.996 1.669 1.419 2.667.943 1.08-.516 2.063-1.219 2.908-2.075 1.763-1.75 2.885-4.08 3.156-6.539.051-.413.075-.819.075-1.24.0-6.065-4.935-11-11-11H19c-2.947.0-5.709 1.147-7.77 3.221C9.147 23.291 8 26.053 8 29c0 6.065 4.935 11 11 11z"/><path d="m45 28c-1.104.0-2 .896-2 2s.896 2 2 2c3.86.0 7 3.141 7 7 0 1.873-.728 3.628-2.059 4.95C48.628 45.272 46.873 46 45 46H35c-3.86.0-7-3.141-7-7 0-.258.015-.509.048-.78.174-1.574.885-3.052 2.017-4.176.532-.54 1.136-.974 1.796-1.289.997-.476 1.419-1.67.944-2.667s-1.669-1.418-2.667-.944c-1.081.516-2.064 1.22-2.908 2.076-1.763 1.75-2.885 4.08-3.156 6.538-.05.415-.074.821-.074 1.242.0 6.065 4.935 11 11 11h10c2.946.0 5.709-1.147 7.77-3.221C54.853 44.709 56 41.946 56 39c0-6.065-4.935-11-11-11z"/></g></symbol><symbol viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" id="linkedin"><path d="M437 0H75C33.648.0.0 33.648.0 75v362c0 41.352 33.648 75 75 75h362c41.352.0 75-33.648 75-75V75c0-41.352-33.648-75-75-75zM181 406h-60V196h60zm0-240h-60v-60h60zm210 240h-60V286c0-16.54-13.46-30-30-30s-30 13.46-30 30v120h-60V196h60v11.309C286.719 202.422 296.93 196 316 196c40.691.043 75 36.547 75 79.688zm0 0"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612" id="arrow"><path d="M604.501 440.509 325.398 134.956c-5.331-5.357-12.423-7.627-19.386-7.27-6.989-.357-14.056 1.913-19.387 7.27L7.499 440.509c-9.999 10.024-9.999 26.298.0 36.323s26.223 10.024 36.222.0l262.293-287.164L568.28 476.832c9.999 10.024 26.222 10.024 36.221.0 9.999-10.023 9.999-26.298.0-36.323z"/></symbol><symbol aria-hidden="true" viewBox="0 0 24 24" id="carly"><path fill="currentColor" d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1.0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21.0 4-1.79 4-4s-1.79-4-4-4z"/></symbol><symbol enable-background="new 0 0 512 512" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="copy"><path d="m366.905 108.016h-141.91c-11.048.0-20.003 8.955-20.003 20.003s8.955 20.003 20.003 20.003h141.91c11.048.0 20.003-8.955 20.003-20.003s-8.956-20.003-20.003-20.003z"/><path d="m366.905 188.027h-141.91c-11.048.0-20.003 8.955-20.003 20.003s8.955 20.003 20.003 20.003h141.91c11.047.0 20.003-8.955 20.003-20.003s-8.955-20.003-20.003-20.003z"/><path d="m286.004 268.039h-61.009c-11.048.0-20.003 8.955-20.003 20.003s8.955 20.003 20.003 20.003h61.009c11.048.0 20.003-8.955 20.003-20.003s-8.955-20.003-20.003-20.003z"/><path d="m448.028 272.039c11.048.0 20.003-8.955 20.003-20.003V80.012C468.031 35.893 432.137.0 388.019.0H203.992c-44.094.0-79.971 35.853-80.012 79.938-44.118.0-80.012 35.893-80.012 80.012v272.039c0 44.118 35.893 80.012 80.012 80.012h194.028c44.118.0 80.012-35.893 80.012-80.012v-.608c39.414-4.938 70.01-38.662 70.01-79.389.0-11.048-8.955-20.003-20.003-20.003s-20.003 8.955-20.003 20.003c0 22.054-17.942 40.001-39.996 40.006l-184.027.045h-.009c-10.685.0-20.73-4.16-28.285-11.715-7.558-7.556-11.721-17.604-11.721-28.291V80.012c0-22.059 17.947-40.006 40.006-40.006H388.02c22.059.0 40.006 17.947 40.006 40.006v172.025c-.001 11.047 8.954 20.002 20.002 20.002zM203.992 432.047h.02l154.002-.038c-.012 22.049-17.954 39.984-40.006 39.984H123.981c-22.059.0-40.006-17.947-40.006-40.006V159.948c0-22.059 17.947-40.006 40.006-40.006v232.094c0 21.375 8.325 41.471 23.441 56.583 15.113 15.11 35.2 23.428 56.57 23.428z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.001 512.001" id="closeme"><path d="M284.286 256.002 506.143 34.144c7.811-7.811 7.811-20.475.0-28.285-7.811-7.81-20.475-7.811-28.285.0L256 227.717 34.143 5.859c-7.811-7.811-20.475-7.811-28.285.0-7.81 7.811-7.811 20.475.0 28.285l221.857 221.857L5.858 477.859c-7.811 7.811-7.811 20.475.0 28.285a19.938 19.938.0 0014.143 5.857 19.94 19.94.0 0014.143-5.857L256 284.287l221.857 221.857c3.905 3.905 9.024 5.857 14.143 5.857s10.237-1.952 14.143-5.857c7.811-7.811 7.811-20.475.0-28.285L284.286 256.002z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="open-menu"><path d="M492 236H20c-11.046.0-20 8.954-20 20s8.954 20 20 20h472c11.046.0 20-8.954 20-20s-8.954-20-20-20zm0-160H20C8.954 76 0 84.954.0 96s8.954 20 20 20h472c11.046.0 20-8.954 20-20s-8.954-20-20-20zm0 320H20c-11.046.0-20 8.954-20 20s8.954 20 20 20h472c11.046.0 20-8.954 20-20s-8.954-20-20-20z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="instagram"><path d="M12 2.163c3.204.0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849.0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204.0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849.0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741.0 8.333.014 7.053.072c-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.668.072 4.948c.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403.0-6.162 2.759-6.162 6.162S8.597 18.163 12 18.163s6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zM12 16c-2.209.0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796.0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795.0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="youtube"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23.0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23.0C23.512 20.55 23.971 18.196 24 12c-.029-6.185-.484-8.549-4.385-8.816zM9 16V8l8 3.993L9 16z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="stackoverflow"><path d="M21 27v-8h3v11H0V19h3v8h18z"/><path d="M17.1.2 15 1.8l7.9 10.6 2.1-1.6L17.1.2zm3.7 14.7L10.6 6.4l1.7-2 10.2 8.5-1.7 2zM7.2 12.3l12 5.6 1.1-2.4-12-5.6-1.1 2.4zm-1.8 6.8 13.56 1.96.17-2.38-13.26-2.55-.47 2.97zM19 25H5v-3h14v3z"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.016 512" id="expand"><path d="m240 426.675781H58.667969C26.304688 426.675781.0 400.371094.0 368.007812V58.675781c0-32.363281 26.304688-58.6679685 58.667969-58.6679685H368c32.363281.0 58.667969 26.3046875 58.667969 58.6679685v181.332031c0 8.832032-7.167969 16-16 16s-16-7.167968-16-16v-181.332031c0-14.699219-11.96875-26.667969-26.667969-26.667969H58.667969c-14.699219.0-26.667969 11.96875-26.667969 26.667969v309.332031c0 14.699219 11.96875 26.667969 26.667969 26.667969H240c8.832031.0 16 7.167969 16 16s-7.167969 16-16 16zm0 0"/><path d="m496 512.007812H357.332031c-8.832031.0-16-7.167968-16-16 0-8.832031 7.167969-16 16-16H480V357.339844c0-8.832032 7.167969-16 16-16s16 7.167968 16 16v138.667968c0 8.832032-7.167969 16-16 16zm0 0"/><path d="m496 512.007812c-4.097656.0-8.191406-1.558593-11.308594-4.691406L303.359375 325.980469c-6.25-6.25-6.25-16.382813.0-22.632813s16.382813-6.25 22.636719.0l181.332031 181.332032c6.25 6.25 6.25 16.382812.0 22.636718-3.136719 3.132813-7.230469 4.691406-11.328125 4.691406zm0 0"/></symbol><symbol enable-background="new 0 0 512 512" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" id="order"><path d="m492 236H144.262c-11.046.0-20 8.954-20 20s8.954 20 20 20H492c11.046.0 20-8.954 20-20s-8.954-20-20-20z"/><path d="m492 86H144.262c-11.046.0-20 8.954-20 20s8.954 20 20 20H492c11.046.0 20-8.954 20-20s-8.954-20-20-20z"/><path d="m492 386H144.262c-11.046.0-20 8.954-20 20s8.954 20 20 20H492c11.046.0 20-8.954 20-20s-8.954-20-20-20z"/><circle cx="27" cy="106" r="27"/><circle cx="27" cy="256" r="27"/><circle cx="27" cy="406" r="27"/></symbol><symbol xmlns="http://www.w3.org/2000/svg" fill="#666" viewBox="0 0 512 512" id="check"><path d="M99.941 293.748a21.78 21.78.0 01-7.175-16.153c0-11.938 9.823-21.765 21.764-21.765a21.772 21.772.0 0115.737 6.733l85.958 83.825 164.42-194.504c18.463-21.833 51.574 6.326 33.213 28.125L234.276 392.324l-1.032 1.135c-8.327 8.55-22.218 8.74-30.773.412L99.941 293.748z"/></symbol></svg>
+<script>"use strict";const doc=document.documentElement,toggle_id="toggle",show_id="show",menu="menu",active="active";let site_title=`lerian-studio-blog`,root_url="https://example.org/";root_url=root_url.startsWith("http")?root_url:window.location.origin;const go_back_class="button_back",line_class=".line",code_block_config=JSON.parse('{"maximum":100,"show":false}'),iconsPath=`icons/`,shell_based=["sh","shell","zsh","bash"],body=elem("body"),max_lines=code_block_config.maximum,show_lines=code_block_config.show,copy_id="panel_copy",wrap_id="panel_wrap",lines_id="panel_lines",panel_expand="panel_expand",panel_expanded="panel_expanded",panel_box="panel_box",panel_hide="panel_hide",panel_from="panel_from",full_height="initial",highlight="highlight",highlight_wrap="highlight_wrap",hash="#",light="light",dark="dark",storageKey=`${site_title}-color-mode`,mermaidThemeKey=`${site_title}-mermaid`,key="--color-mode",mode_data="data-mode",bank=window.localStorage;function isObj(e){return!!(e&&typeof e=="object"&&e!==null)}function createEl(e="div"){return document.createElement(e)}function emptyEl(e){for(;e.firstChild;)e.removeChild(e.firstChild)}function elem(e,t=document){let n=!!isObj(t)&&t.querySelector(e);return n||!1}function elems(e,t=document){return isObj(t)?t.querySelectorAll(e):[]}function pushClass(e,t){if(isObj(e)&&t){let n=e.classList;!n.contains(t)&&n.add(t)}}function deleteClass(e,t){if(isObj(e)&&t){let n=e.classList;!!n.contains(t)&&n.remove(t)}}function modifyClass(e,t){if(isObj(e)&&t){const n=e.classList;n.contains(t)?n.remove(t):n.add(t)}}function containsClass(e,t){if(isObj(e)&&t&&e!==document)return!!e.classList.contains(t)}function isChild(e,t){let n=isObj(e)&&t&&typeof t=="string";return!!(n&&e.closest(t))}function elemAttribute(e,t,n=null){if(n)e.setAttribute(t,n);else return n=e.getAttribute(t),n||!1}function deleteChars(e,t){let n=e;if(Array.isArray(t))for(let e=0;e<t.length;e++)n=n.replace(t[e],"");else n=n.replace(t,"");return n}function isBlank(e){return!e||e.trim().length===0}function isMatch(e,t){if(isObj(e)){if(t.isArray){let n=t.map(function(t){return e.matches(t)});return n.includes(!0)}return e.matches(t)}}function closestInt(e,t){return t.reduce(function(t,n){return Math.abs(n-e)<Math.abs(t-e)?n:t})}function hasClasses(e){if(isObj(e)){const t=e.classList;return t.length}}function wrapEl(e,t){e.parentNode.insertBefore(t,e),t.appendChild(e)}function wrapText(e,t,n="mark"){let s=`<${n}>`,o=`</${n}>`,r=`%3C${n}%3E`,c=`%3C/${n}%3E`;function i(t){let n=t.innerHTML,a=new RegExp(e,"gi"),i=e.length?n.match(a):null;if(i){i.forEach(function(e){n=n.replaceAll(e,`${s}${e}${o}`),t.innerHTML=n});const e=elems("img",t);e&&e.forEach(e=>{e.src=e.src.replaceAll(s,"").replaceAll(o,"").replaceAll(r,"").replaceAll(c,"")})}}const l=["h1","h2","h3","h4","h5","h6","p","code","td"];l.forEach(function(e){const n=elems(e,t);n.length&&n.forEach(function(e){e.children.length>=1?(Array.from(e.children).forEach(function(e){i(e)}),i(e)):i(e)})});const a=elems("a");a&&a.forEach(function(e){e.href=e.href.replaceAll(encodeURI(s),"").replaceAll(encodeURI(o),"")})}function parseBoolean(e=""){switch(e=e.trim().toLowerCase(),e){case"true":return!0;case"false":return!1;default:return 0[0]}}function loadSvg(e,t){t.innerHTML=`
+  <svg class="icon_${e}">
+    <use xlink:href="#${e}"></use>
+  </svg>`}function copyToClipboard(e){let t,n,s;t=createEl("textarea"),t.value=e,t.setAttribute("readonly",""),t.style.position="absolute",t.style.left="-9999px",n=document.getSelection(),doc.appendChild(t),s=n.rangeCount>0&&n.getRangeAt(0),t.select(),document.execCommand("copy"),doc.removeChild(t),s&&(n.removeAllRanges(),n.addRange(s))}const snippet_actions=[{icon:"copy",id:"copy",title:copy_text,show:!0},{icon:"order",id:"lines",title:toggle_line_numbers_text,show:!0},{icon:"carly",id:"wrap",title:toggle_line_wrap_text,show:!1},{icon:"expand",id:"expand",title:resize_snippet,show:!1}];function addLines(e){let t=e.textContent;const n=[];t.includes(`
+`)&&e.closest("pre")&&!e.children.length&&(t=t.split(`
+`),t.forEach((t,s)=>{if(t.trim().length){const o=`
+        <span class="line line-flex">
+          <span class="ln">${s+1}</span>
+          <span class="cl">${t.trim()}</span>
+        </span>`.trim();n.push(o),e.closest("pre").className="chroma",pushClass(e,"language-unknown"),e.dataset.lang=not_set}}),e.innerHTML=n.join("").trim(" "))}function wrapOrphanedPreElements(){const e=elems("pre");Array.from(e).forEach(function(e){const t=e.parentNode,n=!containsClass(t,highlight);if(n){const t=createEl();t.className=highlight;const n=createEl();n.className=highlight_wrap,wrapEl(e,t),wrapEl(t,n)}})}wrapOrphanedPreElements();function codeBlocks(){const e=elems("code"),t=Array.from(e).filter(function(e){return addLines(e),e.closest("pre")&&!Array.from(e.classList).includes("noClass")}).map(function(e){return e});return t}function codeBlockFits(e){const t=e.offsetWidth,n=e.closest(`.${highlight}`).offsetWidth;return t<=n}function maxHeightIsSet(e){let t=e.style.maxHeight;return t.includes("px")}function restrainCodeBlockHeight(e){const n=e[max_lines-1];let t=full_height;if(n){const s=n.offsetTop;if(s!==0){t=`${s}px`;const n=e[0].parentNode,o=n.closest(`.${highlight}`),i=containsClass(o,panel_expanded);i||(n.dataset.height=t,n.style.maxHeight=t)}}}const blocks=codeBlocks();function collapseCodeBlock(e){const t=elems(line_class,e),n=t.length;if(n>max_lines){const n=createEl();pushClass(n,panel_expand),pushClass(n,panel_from),n.title="Toggle snippet",n.textContent="...";const s=e.closest(".highlight");window.setTimeout(function(){const e=s.nextElementSibling.lastElementChild;deleteClass(e,panel_hide)},150),restrainCodeBlockHeight(t);const o=e.parentNode.parentNode;o.appendChild(n)}}blocks.forEach(function(e){collapseCodeBlock(e)});function actionPanel(){const e=createEl();return e.className=panel_box,snippet_actions.forEach(function(t){const n=createEl("a");n.href="#",n.title=t.title,n.className=`icon panel_icon panel_${t.id}`,!t.show&&pushClass(n,panel_hide),loadSvg(t.icon,n),e.appendChild(n)}),e}function toggleLineNumbers(e){e&&(e.forEach(e=>modifyClass(e,"pre_nolines")),restrainCodeBlockHeight(e))}function toggleLineWrap(e){modifyClass(e,"pre_wrap");const t=elems(".ln",e);restrainCodeBlockHeight(t)}function copyCode(e){const t=e.parentNode.parentNode.querySelector(`.${copy_id}`),s=t.title;loadSvg("check",t),t.title=copied_text,e=e.cloneNode(!0);const n=elems(".ln",e);!!n.length&&n.forEach(e=>e.remove());let o=elems("span",e);o.forEach(e=>{const t=e.textContent.trim(" ");t.indexOf("$")===0&&(e.textContent=e.textContent.replace("$ ",""))});const i=e.textContent.trim(" ");copyToClipboard(i),setTimeout(function(){t.title=s,loadSvg("copy",t)},2250)}(function(){const t=highlight_wrap;blocks.forEach(function(e){show_lines===!1&&toggleLineNumbers(elems(".ln",e));const o=e.parentNode.parentNode,n=createEl();n.className=t,wrapEl(o,n);const s=actionPanel(),i=elem(`.${wrap_id}`,s);!codeBlockFits(e)&&deleteClass(i,panel_hide),n.appendChild(s)});function e(e,t){return e.matches(`.${t}`)||e.closest(`.${t}`)}function n(e,t){const n=e.matches(`.${t}`)?e:e.closest(`.${t}`);deleteClass(n,active),setTimeout(function(){modifyClass(n,active)},50)}doc.addEventListener("click",function(s){const o=s.target,i=e(o,copy_id),a=e(o,wrap_id),r=e(o,lines_id),c=e(o,panel_expand),l=i||a||r||c;if(l){s.preventDefault(),n(o,"icon");const e=o.closest(`.${t}`).firstElementChild.firstElementChild;let l=elems(".ln",e);if(!!a&&toggleLineWrap(e),!!r&&toggleLineNumbers(l),c){let t=e.firstElementChild;const n=t.closest(".highlight");maxHeightIsSet(t)?(t.style.maxHeight=full_height,pushClass(n,panel_expanded)):(t.style.maxHeight=t.dataset.height,deleteClass(n,panel_expanded))}!!i&&copyCode(e)}}),function(){blocks.forEach(e=>{let t=e.dataset.lang;const n=shell_based.includes(t);if(n){const t=elems(line_class,e);Array.from(t).forEach(e=>{e=e.lastElementChild;let t=e.textContent.trim(" ");!!(t.indexOf("$")!==0&&t.trim(" ").length)&&pushClass(e,"shell")})}if(t=t==="sh"?"shell":t,t!=="fallback"){const n=createEl();n.textContent=t,pushClass(n,"lang"),e.closest(`.${highlight_wrap}`).appendChild(n)}})}()})();function prefersColor(e){return`(prefers-color-scheme: ${e})`}function systemMode(){return window.matchMedia&&window.matchMedia(prefersColor(dark)).matches?dark:light}function currentMode(){let e=light+dark;e=[...e];let t=getComputedStyle(doc).getPropertyValue(key).replace(/"/g,"").trim();return[...t].filter(t=>e.includes(t)).join("")}function changeMode(e){e?(bank.setItem(storageKey,light),elemAttribute(doc,mode_data,light)):(bank.setItem(storageKey,dark),elemAttribute(doc,mode_data,dark))}function pickModePicture(e){elems("picture").forEach(function(t){let o=t.firstElementChild;const n=t.dataset,s=[n.lit,n.dark];o.src=e=="dark"?s[1]:s[0]})}function setMermaidTheme(e){bank.setItem(mermaidThemeKey,e);let t=elem(".color_choice");t.value=e}function setUserColorMode(e=!1){const n=currentMode()==dark,s=bank.getItem(storageKey),o=systemMode();s?e?changeMode(n):elemAttribute(doc,mode_data,s):changeMode(e===!0?n:o!==dark);const t=doc.dataset.mode;doc.dataset.systemmode=o,!!t&&pickModePicture(t),setMermaidTheme(t)}setUserColorMode(),function(){return elem(".nav_header").offsetHeight+25}();function toggleMenu(e){const t=e.target,o=t.matches(`.${toggle_id}`),n=t.closest(`.${toggle_id}`),i=elems(`.${show_id}`)?Array.from(elems(`.${show_id}`)):[],a=t.closest(`.${menu}`);function s(e,t=!1){i.forEach(function(n){!t&&deleteClass(n,show_id),n!==e.closest(`.${menu}`)&&deleteClass(n,show_id)})}if(o||n){const s=n?n.parentNode.parentNode:t.parentNode.parentNode;e.preventDefault(),modifyClass(s,show_id)}else a?s(t,!0):s(t)}(function(){const e=elems("code");e&&e.forEach(function(e){hasClasses(e)||!e.children.length&&pushClass(e,"noClass")})})();function featureHeading(){const t="section_link",n="section_title",e=elem(".aside");if(e){let s=elem(`.${t}.${active}`);s=s||elem(`.${n}.${active}`),e.scroll({top:s.offsetTop,left:0})}}function activeHeading(e,t){let n=Object.create(null);n.active=t.filter(function(e){return containsClass(e,active)})[0],n.new=t[e],n.active!=n.new&&(!!n.active&&deleteClass(n.active,active),pushClass(n.new,active))}setTimeout(()=>{featureHeading()},50);function updateDate(){const t=new Date,e=t.getFullYear().toString,n=elem(".year");!!n&&(e.textContent=e)}function customizeSidebar(){const e="toc_active",n=elem("aside"),t=elems("nav",n);if(t){t.forEach(function(t){if(t.id="",pushClass(t,"toc"),t.children.length>=1){const n=Array.from(t.children[0].children),s=t.previousElementSibling;!!s.matches(`.${active}`)&&pushClass(t,e),n.forEach(function(e){pushClass(e,"toc_item"),pushClass(e.firstElementChild,"toc_link")})}});const n=elem(`.${e}`);if(n){const e=Array.from(elems("a",n)),t=e.map(function(e){return document.getElementById(decodeURIComponent(e.hash.replace("#","")))});window.addEventListener("scroll",function(){let s=window.scrollY+window.innerHeight/2,n=0;for(const[o,e]of t.entries())e.offsetTop<s&&e.offsetTop>t[n].offsetTop&&(n=o);activeHeading(n,e)})}}elems("p").forEach(function(e){const t=elems(".button",e);t.length>1&&pushClass(e,"button_grid")})}function markExternalLinks(){let e=elems("a");e&&Array.from(e).forEach(function(e){let n,o,i,s,a,r,t,c;t=new URL(e.href),c=t.host!==location.host||t.protocol!==location.protocol||t.port!==location.port,c&&(n="target",o="rel",i="_blank",s="noopener",a=elemAttribute(e,n),r=elemAttribute(e,s),!a&&elemAttribute(e,n,i),!r&&elemAttribute(e,o,s))})}function sanitizeURL(e){const t=e.indexOf(hash);if(t>-1){const n=e.substr(t,e.length-1);e=e.replace(n,"")}return e}function copyFeedback(e){const t=document.createElement("div"),n="link_yanked";if(t.classList.add(n),t.innerText=copied_text,!elem(`.${n}`,e)){const n=e.getElementsByTagName("svg")[0],s=n.src;n.src="https://example.org/icons/check.svg",e.appendChild(t),setTimeout(function(){e.removeChild(t),n.src=s},2250)}}function copyHeadingLink(){let t,n,s,o,e;t="link",n=elems(`.${t}`),n&&document.addEventListener("click",function(n){e=n.target,o=e.parentNode,(e&&containsClass(e,t)||containsClass(o,t))&&(n.preventDefault(),s=e.href!=0[0]?e.href:e.parentNode.href,copyToClipboard(s),copyFeedback(e.href!=0[0]?e:e.parentNode))})}function makeTablesResponsive(){const e=elems("table");e&&e.forEach(function(e){const t=createEl();pushClass(t,"scrollable"),wrapEl(e,t)})}function backToTop(){const e=elem("#toTop");window.addEventListener("scroll",()=>{const t=window.scrollY;t>=200?(e.style.display="flex",pushClass(e,active)):deleteClass(e,active)})}function lazyLoadMedia(e=[]){e.forEach(e=>{let t=elems(e);t&&Array.from(t).forEach(function(e){e.loading="lazy"})})}function loadActions(){updateDate(),customizeSidebar(),markExternalLinks(),copyHeadingLink(),makeTablesResponsive(),backToTop(),lazyLoadMedia(["iframe","img"]),doc.addEventListener("click",e=>{let t=e.target,n="color_choice",s=containsClass(t,n);!!s&&setUserColorMode(!0),toggleMenu(e)})}window.addEventListener("load",loadActions())</script><script src=https://example.org/js/search.min.ced9096e00d5ed374b805a5ba6ac7c85f5269f7ba65c8b35482af33128ccdb3d890f44edf7ce462465dc94225c182b77086a3fdabb0f211947a23e32fd4bb82d.js async></script></body></html>
