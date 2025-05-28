@@ -1,0 +1,89 @@
+backend:
+  name: github
+  repo: lerianstudio/blog
+  branch: main
+  # For Google SSO, you'll need to set up a GitHub OAuth App
+  # that restricts to your organization
+
+# This line should *not* be indented
+publish_mode: editorial_workflow
+
+# Use Decap CMS's local backend for development
+local_backend: true
+
+# Media files will be stored in the repo
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+# Site URL for preview
+site_url: https://yourdomain.amplifyapp.com
+display_url: https://yourdomain.amplifyapp.com
+
+# Logo for admin UI
+logo_url: /favicon.png
+
+# Collections define the content types
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    label_singular: "Post"
+    folder: "content/posts"
+    create: true
+    slug: "{{slug}}"
+    preview_path: "posts/{{slug}}"
+    editor:
+      preview: true
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Draft", name: "draft", widget: "boolean", default: false}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Categories", name: "categories", widget: "list", required: false}
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "Lerian Studio"
+      - label: "Featured Image"
+        name: "image"
+        widget: "image"
+        required: false
+        choose_url: true
+        media_library:
+          config:
+            multiple: false
+      - {label: "Body", name: "body", widget: "markdown"}
+      
+  - name: "pages"
+    label: "Pages"
+    files:
+      - file: "content/about.md"
+        label: "About"
+        name: "about"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Date", name: "date", widget: "datetime"}
+          - {label: "Body", name: "body", widget: "markdown"}
+      - file: "content/contact.md"
+        label: "Contact"
+        name: "contact"
+        fields:
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Date", name: "date", widget: "datetime"}
+          - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "drafts"
+    label: "Draft Articles"
+    label_singular: "Draft"
+    folder: "raw/articles"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: "md"
+    editor:
+      preview: false
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Status", name: "status", widget: "select", options: ["draft", "review", "ready"], default: "draft"}
+      - {label: "Language", name: "language", widget: "select", options: ["pt", "en"], default: "pt"}
+      - {label: "Body", name: "body", widget: "markdown"}

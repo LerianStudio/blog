@@ -1,0 +1,81 @@
+name: Deploy to AWS Amplify
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: true  # Fetch Hugo themes
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build Hugo site
+        run: |
+          hugo --minify --buildDrafts=false
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to Amplify
+        env:
+          AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          # Create deployment
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs, create a preview branch
+            aws amplify create-branch --app-id $AMPLIFY_APP_ID --branch-name pr-${{ github.event.pull_request.number }} || true
+            DEPLOY_BRANCH="pr-${{ github.event.pull_request.number }}"
+          else
+            # For main branch
+            DEPLOY_BRANCH="main"
+          fi
+          
+          # Upload build artifacts
+          zip -r deploy.zip public/
+          
+          # Create deployment
+          DEPLOYMENT_ID=$(aws amplify create-deployment \
+            --app-id $AMPLIFY_APP_ID \
+            --branch-name $DEPLOY_BRANCH \
+            --query 'jobSummary.jobId' \
+            --output text)
+          
+          # Upload to deployment
+          aws amplify get-deployment \
+            --app-id $AMPLIFY_APP_ID \
+            --branch-name $DEPLOY_BRANCH \
+            --job-id $DEPLOYMENT_ID \
+            --query 'jobSummary.jobArn' \
+            --output text | xargs -I {} aws s3 cp deploy.zip {}
+          
+          # Start deployment
+          aws amplify start-deployment \
+            --app-id $AMPLIFY_APP_ID \
+            --branch-name $DEPLOY_BRANCH \
+            --job-id $DEPLOYMENT_ID
+          
+          echo "Deployment started! Check AWS Amplify console for status."
