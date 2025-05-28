@@ -1,13 +1,13 @@
 backend:
   name: github
-  repo: LerianStudio/blog  # Use correct capitalization
+  repo: LerianStudio/blog
   branch: main
 
 # This line should *not* be indented
 publish_mode: editorial_workflow
 
-# Use Decap CMS's local backend for development
-local_backend: true
+# Remove local_backend for production use
+# local_backend: true
 
 # Media files will be stored in the repo
 media_folder: "static/images/uploads"
@@ -18,7 +18,7 @@ site_url: https://blog.lerian.studio
 display_url: https://blog.lerian.studio
 
 # Logo for admin UI
-logo_url: /favicon.png
+logo_url: /images/lerian-logo.svg
 
 # Collections define the content types
 collections:
@@ -32,12 +32,22 @@ collections:
     editor:
       preview: true
     fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Date", name: "date", widget: "datetime"}
-      - {label: "Draft", name: "draft", widget: "boolean", default: false}
-      - {label: "Description", name: "description", widget: "text", required: false}
-      - {label: "Tags", name: "tags", widget: "list", required: false}
-      - {label: "Categories", name: "categories", widget: "list", required: false}
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "text",
+          required: false,
+        }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - {
+          label: "Categories",
+          name: "categories",
+          widget: "list",
+          required: false,
+        }
       - label: "Author"
         name: "author"
         widget: "string"
@@ -50,8 +60,8 @@ collections:
         media_library:
           config:
             multiple: false
-      - {label: "Body", name: "body", widget: "markdown"}
-      
+      - { label: "Body", name: "body", widget: "markdown" }
+
   - name: "pages"
     label: "Pages"
     files:
@@ -59,16 +69,16 @@ collections:
         label: "About"
         name: "about"
         fields:
-          - {label: "Title", name: "title", widget: "string"}
-          - {label: "Date", name: "date", widget: "datetime"}
-          - {label: "Body", name: "body", widget: "markdown"}
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Date", name: "date", widget: "datetime" }
+          - { label: "Body", name: "body", widget: "markdown" }
       - file: "content/contact.md"
         label: "Contact"
         name: "contact"
         fields:
-          - {label: "Title", name: "title", widget: "string"}
-          - {label: "Date", name: "date", widget: "datetime"}
-          - {label: "Body", name: "body", widget: "markdown"}
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Date", name: "date", widget: "datetime" }
+          - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "drafts"
     label: "Draft Articles"
@@ -80,8 +90,20 @@ collections:
     editor:
       preview: false
     fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Date", name: "date", widget: "datetime"}
-      - {label: "Status", name: "status", widget: "select", options: ["draft", "review", "ready"], default: "draft"}
-      - {label: "Language", name: "language", widget: "select", options: ["pt", "en"], default: "pt"}
-      - {label: "Body", name: "body", widget: "markdown"}
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - {
+          label: "Status",
+          name: "status",
+          widget: "select",
+          options: ["draft", "review", "ready"],
+          default: "draft",
+        }
+      - {
+          label: "Language",
+          name: "language",
+          widget: "select",
+          options: ["pt", "en"],
+          default: "pt",
+        }
+      - { label: "Body", name: "body", widget: "markdown" }
