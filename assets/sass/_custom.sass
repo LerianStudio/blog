@@ -1,0 +1,54 @@
+// Custom styles for Lerian Studio Blog
+// Dark theme with yellow accents
+
+// Base colors
+\:root
+  --bg-color: #000000
+  --text-color: #ffffff
+  --accent-color: #ffff00
+  --link-color: #ffff00
+  --link-hover: #cccc00
+  --code-bg: #1a1a1a
+  --border-color: #333333
+
+// Override theme defaults
+body
+  background-color: var(--bg-color) !important
+  color: var(--text-color) !important
+
+// Dark mode by default
+[data-mode]
+  background-color: var(--bg-color) !important
+  color: var(--text-color) !important
+
+// Navigation
+.nav
+  background-color: var(--bg-color) !important
+  border-bottom: 1px solid var(--border-color)
+
+// Links
+a
+  color: var(--link-color) !important
+  &:hover
+    color: var(--link-hover) !important
+
+// Code blocks
+pre, code
+  background-color: var(--code-bg) !important
+  color: var(--text-color)
+
+// Cards and surfaces
+.card, .surface
+  background-color: var(--code-bg) !important
+  border: 1px solid var(--border-color)
+
+// Headers
+h1, h2, h3, h4, h5, h6
+  color: var(--text-color) !important
+
+// Buttons
+.button, button
+  background-color: var(--accent-color) !important
+  color: var(--bg-color) !important
+  &:hover
+    background-color: var(--link-hover) !important

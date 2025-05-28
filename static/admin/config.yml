@@ -1,9 +1,7 @@
 backend:
   name: github
-  repo: lerianstudio/blog
+  repo: LerianStudio/blog  # Use correct capitalization
   branch: main
-  # For Google SSO, you'll need to set up a GitHub OAuth App
-  # that restricts to your organization
 
 # This line should *not* be indented
 publish_mode: editorial_workflow
@@ -16,8 +14,8 @@ media_folder: "static/images/uploads"
 public_folder: "/images/uploads"
 
 # Site URL for preview
-site_url: https://yourdomain.amplifyapp.com
-display_url: https://yourdomain.amplifyapp.com
+site_url: https://blog.lerian.studio
+display_url: https://blog.lerian.studio
 
 # Logo for admin UI
 logo_url: /favicon.png
