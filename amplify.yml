@@ -3,19 +3,16 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Install Node.js dependencies for Sanity sync
         - npm ci
-        # Sync content from Sanity to Hugo markdown files
         - npm run sync
-        # Install Hugo
         - wget https://github.com/gohugoio/hugo/releases/download/v0.147.5/hugo_extended_0.147.5_linux-amd64.tar.gz
         - tar -xzf hugo_extended_0.147.5_linux-amd64.tar.gz
-        - mv hugo /usr/local/bin/
-        - hugo version
+        - chmod +x hugo
+        - mv hugo ./hugo-bin
+        - ./hugo-bin version
     build:
       commands:
-        # Build Hugo site with minification
-        - hugo --minify
+        - ./hugo-bin --minify
     postBuild:
       commands:
         - echo "✅ Build completed successfully!"
