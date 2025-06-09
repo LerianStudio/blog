@@ -5,10 +5,7 @@ import { setupAuth, isAuthenticated } from "./googleAuth";
 import { z } from "zod";
 import express from "express";
 import { join } from "path";
-import { exec } from "child_process";
-import { promisify } from "util";
-
-const execAsync = promisify(exec);
+import { hugoBuilder } from "./hugoBuilder";
 
 // Validation schemas for file-based posts
 const createPostSchema = z.object({
@@ -34,47 +31,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      res.status(500).json({ message: "Authentication error" });
     }
   });
 
-  // Public blog routes
-  app.get('/api/posts', async (req, res) => {
-    try {
-      const posts = await fileStorage.getPublishedPosts();
-      res.json(posts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      res.status(500).json({ message: "Failed to fetch posts" });
-    }
-  });
-
-  app.get('/api/posts/search', async (req, res) => {
-    try {
-      const query = req.query.q as string;
-      if (!query) {
-        return res.status(400).json({ message: "Query parameter 'q' is required" });
-      }
-      const posts = await fileStorage.searchPosts(query);
-      res.json(posts);
-    } catch (error) {
-      console.error("Error searching posts:", error);
-      res.status(500).json({ message: "Failed to search posts" });
-    }
-  });
-
-  app.get('/api/posts/:slug', async (req, res) => {
-    try {
-      const post = await fileStorage.getPostBySlug(req.params.slug);
-      if (!post) {
-        return res.status(404).json({ message: "Post not found" });
-      }
-      res.json(post);
-    } catch (error) {
-      console.error("Error fetching post:", error);
-      res.status(500).json({ message: "Failed to fetch post" });
-    }
-  });
+  // Public blog routes are now served by Hugo static files
+  // These API endpoints are deprecated - use Hugo-generated content instead
 
   // Protected admin routes
   app.get('/api/admin/posts', isAuthenticated, async (req, res) => {
@@ -97,13 +59,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         authorId: userId,
       });
       
+      // Auto-rebuild Hugo site when content is published
+      if (postData.status === 'published') {
+        const result = await hugoBuilder.buildSite();
+        if (!result.success) {
+          console.error("Hugo rebuild failed:", result.error);
+          // Don't fail the post creation if Hugo build fails
+        } else {
+          console.log("Hugo site rebuilt after post creation");
+        }
+      }
+      
       res.status(201).json(post);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid post data", errors: error.errors });
       }
       console.error("Error creating post:", error);
-      res.status(500).json({ message: "Failed to create post" });
+      res.status(500).json({ message: "Unable to create post" });
     }
   });
 
@@ -117,23 +90,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
         authorId: userId,
       });
       
+      // Auto-rebuild Hugo site when content is published
+      if (postData.status === 'published') {
+        const result = await hugoBuilder.buildSite();
+        if (!result.success) {
+          console.error("Hugo rebuild failed:", result.error);
+          // Don't fail the post update if Hugo build fails
+        } else {
+          console.log("Hugo site rebuilt after post update");
+        }
+      }
+      
       res.json(updatedPost);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid post data", errors: error.errors });
       }
       console.error("Error updating post:", error);
-      res.status(500).json({ message: "Failed to update post" });
+      res.status(500).json({ message: "Unable to update post" });
     }
   });
 
   app.delete('/api/admin/posts/:slug', isAuthenticated, async (req, res) => {
     try {
       await fileStorage.deletePost(req.params.slug);
+      
+      // Rebuild Hugo site after deleting post
+      const result = await hugoBuilder.buildSite();
+      if (!result.success) {
+        console.error("Hugo rebuild failed:", result.error);
+        // Don't fail the deletion if Hugo build fails
+      } else {
+        console.log("Hugo site rebuilt after post deletion");
+      }
+      
       res.json({ message: "Post deleted successfully" });
     } catch (error) {
       console.error("Error deleting post:", error);
-      res.status(500).json({ message: "Failed to delete post" });
+      res.status(500).json({ message: "Unable to delete post" });
     }
   });
 
@@ -160,19 +154,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Hugo site build endpoint
   app.post('/api/admin/build', isAuthenticated, async (req, res) => {
     try {
-      console.log("Building Hugo site...");
-      const { stdout, stderr } = await execAsync('cd hugo-site && hugo');
+      const result = await hugoBuilder.buildSite();
       
-      if (stderr && !stderr.includes('WARN')) {
-        console.error("Hugo build error:", stderr);
-        return res.status(500).json({ message: "Hugo build failed", error: stderr });
+      if (!result.success) {
+        return res.status(500).json({ 
+          message: "Hugo build failed", 
+          error: result.error 
+        });
       }
       
-      console.log("Hugo build completed:", stdout);
       res.json({ 
         message: "Site built successfully",
-        output: stdout,
-        warnings: stderr || null
+        output: result.output
       });
     } catch (error) {
       console.error("Error building Hugo site:", error);

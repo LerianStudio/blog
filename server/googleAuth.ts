@@ -2,30 +2,33 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
-import connectPg from "connect-pg-simple";
+import MemoryStore from "memorystore";
 import { fileStorage } from "./fileStorage";
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   throw new Error("Google OAuth credentials (GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET) are required");
 }
 
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET environment variable is required for secure sessions");
+}
+
 export function getSession() {
-  const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
-  const pgStore = connectPg(session);
-  const sessionStore = new pgStore({
-    conString: process.env.DATABASE_URL,
-    createTableIfMissing: false,
-    ttl: sessionTtl,
-    tableName: "sessions",
+  const sessionTtl = 24 * 60 * 60 * 1000; // 24 hours (shorter for serverless)
+  const MemoryStoreSession = MemoryStore(session);
+  
+  const sessionStore = new MemoryStoreSession({
+    checkPeriod: sessionTtl, // Prune expired entries every 24h
   });
+
   return session({
-    secret: process.env.SESSION_SECRET || "fallback-secret-for-dev",
+    secret: process.env.SESSION_SECRET!,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true, // Always secure since we're on HTTPS
+      secure: process.env.NODE_ENV === 'production', // HTTPS in production
       sameSite: 'lax',
       maxAge: sessionTtl,
     },
@@ -43,15 +46,12 @@ export async function setupAuth(app: Express) {
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: `https://${process.env.REPLIT_DOMAINS}/api/auth/google/callback`,
+      callbackURL: `${process.env.AMPLIFY_APP_URL || 'http://localhost:5000'}/api/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("Google OAuth profile received:", {
-          id: profile.id,
-          email: profile.emails?.[0]?.value,
-          name: profile.displayName
-        });
+        // Log OAuth success without sensitive data
+        console.log("Google OAuth authentication successful for user ID:", profile.id);
         
         // Upsert user in file storage
         const user = await fileStorage.upsertUser({
@@ -62,7 +62,7 @@ export async function setupAuth(app: Express) {
           profileImageUrl: profile.photos?.[0]?.value || null,
         });
 
-        console.log("User saved successfully:", user);
+        console.log("User profile updated successfully");
         return done(null, user);
       } catch (error) {
         console.error("OAuth strategy error:", error);
@@ -75,7 +75,6 @@ export async function setupAuth(app: Express) {
 
   // Serialize/deserialize user for session
   passport.serializeUser((user: any, done) => {
-    console.log("Serializing user:", user);
     done(null, user.id);
   });
 
@@ -95,7 +94,7 @@ export async function setupAuth(app: Express) {
   // Auth routes
   app.get("/api/login", (req, res, next) => {
     console.log("=== STARTING GOOGLE OAUTH ===");
-    console.log("Redirect URI will be:", `https://${process.env.REPLIT_DOMAINS}/api/auth/google/callback`);
+    console.log("Redirect URI will be:", `${process.env.AMPLIFY_APP_URL || 'http://localhost:5000'}/api/auth/google/callback`);
     
     passport.authenticate("google", {
       scope: ["openid", "profile", "email"],
@@ -142,8 +141,7 @@ export async function setupAuth(app: Express) {
           return res.redirect("/admin/login?error=login_failed");
         }
         
-        console.log("Authentication successful! User logged in:", user.id);
-        console.log("Session ID:", req.sessionID);
+        console.log("User authentication successful");
         res.redirect("/admin");
       });
     })(req, res, next);

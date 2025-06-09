@@ -4,14 +4,11 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
-import Blog from "@/pages/Blog";
-import BlogPost from "@/pages/BlogPost";
 import Admin from "@/pages/Admin";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminPosts from "@/pages/AdminPosts";
 import AdminMedia from "@/pages/AdminMedia";
 import AdminSettings from "@/pages/AdminSettings";
-import PostEditor from "@/components/PostEditor";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -19,8 +16,7 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/" component={Blog} />
-      <Route path="/posts/:slug" component={BlogPost} />
+      {/* Admin routes only - public routes are served by Hugo */}
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin">
         {isLoading ? (
@@ -77,6 +73,7 @@ function Router() {
           <AdminLogin />
         )}
       </Route>
+      {/* Fallback for any unmatched admin routes */}
       <Route component={NotFound} />
     </Switch>
   );

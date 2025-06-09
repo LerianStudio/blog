@@ -40,8 +40,16 @@ export async function setupVite(app: Express, server: Server) {
     appType: "custom",
   });
 
+  // Serve Hugo static files for public routes in development
+  const hugoPath = path.resolve(import.meta.dirname, "..", "hugo-site", "public");
+  if (fs.existsSync(hugoPath)) {
+    app.use(express.static(hugoPath));
+  }
+
   app.use(vite.middlewares);
-  app.use("*", async (req, res, next) => {
+  
+  // Only serve React app for /admin routes in development
+  app.use("/admin*", async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
@@ -69,6 +77,7 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(import.meta.dirname, "public");
+  const hugoPath = path.resolve(import.meta.dirname, "..", "hugo-site", "public");
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
@@ -76,10 +85,30 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  if (!fs.existsSync(hugoPath)) {
+    throw new Error(
+      `Could not find Hugo build directory: ${hugoPath}, make sure to build Hugo first`,
+    );
+  }
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  // Serve React admin app for /admin routes
+  app.use("/admin", express.static(distPath));
+  
+  // Serve Hugo static site for all other routes
+  app.use(express.static(hugoPath));
+
+  // Admin fallback to React SPA
+  app.use("/admin*", (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
+  });
+
+  // Public fallback to Hugo 404
+  app.use("*", (_req, res) => {
+    const hugo404 = path.resolve(hugoPath, "404.html");
+    if (fs.existsSync(hugo404)) {
+      res.status(404).sendFile(hugo404);
+    } else {
+      res.status(404).sendFile(path.resolve(hugoPath, "index.html"));
+    }
   });
 }

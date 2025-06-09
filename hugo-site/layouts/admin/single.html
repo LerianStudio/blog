@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ .Title }} - {{ .Site.Title }} Admin</title>
+    <meta name="description" content="Admin interface for {{ .Site.Title }}">
+    
+    <!-- Prevent indexing of admin pages -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Admin app will be injected here during build -->
+    <script type="module" src="/admin/assets/index.js"></script>
+    <link rel="stylesheet" href="/admin/assets/index.css">
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
