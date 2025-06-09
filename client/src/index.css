@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(210, 12%, 16%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215, 16%, 47%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(210, 12%, 16%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(210, 12%, 16%);
+  --border: hsl(214, 32%, 91%);
+  --input: hsl(214, 32%, 91%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(215, 25%, 27%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(215, 25%, 27%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(210, 12%, 16%);
+  --radius: 0.5rem;
+  --github-blue: hsl(207, 90%, 54%);
+  --github-green: hsl(134, 61%, 41%);
+  --github-bg: hsl(210, 40%, 96%);
+  --github-text: hsl(210, 12%, 16%);
+  --github-accent: hsl(263, 52%, 54%);
+  --github-border: hsl(214, 32%, 91%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --github-blue: hsl(207, 90%, 54%);
+  --github-green: hsl(134, 61%, 41%);
+  --github-bg: hsl(240, 3.7%, 15.9%);
+  --github-text: hsl(0, 0%, 98%);
+  --github-accent: hsl(263, 52%, 54%);
+  --github-border: hsl(240, 3.7%, 15.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom GitHub-inspired styles */
+.gh-blue {
+  color: var(--github-blue);
+}
+
+.gh-green {
+  color: var(--github-green);
+}
+
+.gh-bg {
+  background-color: var(--github-bg);
+}
+
+.gh-text {
+  color: var(--github-text);
+}
+
+.gh-accent {
+  color: var(--github-accent);
+}
+
+.gh-border {
+  border-color: var(--github-border);
+}
+
+/* Markdown content styles */
+.markdown-content {
+  @apply prose prose-gray max-w-none;
+}
+
+.markdown-content h1 {
+  @apply text-3xl font-bold mb-6 text-gray-900;
+}
+
+.markdown-content h2 {
+  @apply text-2xl font-semibold mb-4 text-gray-900;
+}
+
+.markdown-content h3 {
+  @apply text-xl font-semibold mb-3 text-gray-900;
+}
+
+.markdown-content p {
+  @apply mb-4 text-gray-700 leading-relaxed;
+}
+
+.markdown-content ul, .markdown-content ol {
+  @apply mb-4 pl-6;
+}
+
+.markdown-content li {
+  @apply mb-2;
+}
+
+.markdown-content code {
+  @apply bg-gray-100 px-1 py-0.5 rounded text-sm font-mono;
+}
+
+.markdown-content pre {
+  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4;
+}
+
+.markdown-content a {
+  @apply text-blue-600 hover:text-blue-800 underline;
+}

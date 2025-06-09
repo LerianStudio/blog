@@ -1,8 +1,0 @@
-# Redirect /admin to /admin/ (with trailing slash)
-/admin /admin/ 301
-
-# Handle /admin/ route properly
-/admin/* /admin/index.html 200
-
-# Handle all other routes (SPA fallback for Hugo)
-/* /index.html 200 

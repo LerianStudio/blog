@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Getting Started with Hugo Static Site Generation | TechBlog</title>
+    <meta name="description" content="A modern blog platform built with Hugo and powered by a custom CMS">
+    
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'github-blue': '#0366d6',
+                        'github-green': '#28a745',
+                        'github-bg': '#f6f8fa',
+                        'github-text': '#24292e',
+                        'github-accent': '#6f42c1',
+                        'github-border': '#e1e4e8'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body class="bg-gray-50 text-github-text">
+    <header class="bg-white border-b border-github-border shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="/" class="text-2xl font-bold text-github-text hover:text-github-blue transition-colors">
+                    TechBlog
+                </a>
+                <nav class="hidden md:flex space-x-6">
+                    
+                    <a href="/" class="text-gray-700 hover:text-github-blue transition-colors">Home</a>
+                    
+                    <a href="/posts/" class="text-gray-700 hover:text-github-blue transition-colors">Posts</a>
+                    
+                    <a href="/about/" class="text-gray-700 hover:text-github-blue transition-colors">About</a>
+                    
+                    <a href="/contact/" class="text-gray-700 hover:text-github-blue transition-colors">Contact</a>
+                    
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/admin" class="bg-github-blue hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+    
+    <main>
+        
+<article class="max-w-4xl mx-auto px-4 py-16">
+    
+    <div class="mb-8">
+        <a href="/posts/" class="inline-flex items-center text-sm text-gray-600 hover:text-github-blue transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Posts
+        </a>
+    </div>
+
+    
+    <header class="mb-12">
+        <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+            
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                tutorial
+            </span>
+            
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span>January 8, 2025</span>
+            </div>
+            <div class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>1 min read</span>
+            </div>
+        </div>
+        
+        <h1 class="text-4xl md:text-5xl font-bold text-github-text mb-6">
+            Getting Started with Hugo Static Site Generation
+        </h1>
+        
+        
+        <p class="text-xl text-gray-600 leading-relaxed">
+            Learn how to get started with Hugo static site generation and why it&#39;s perfect for modern web development.
+        </p>
+        
+    </header>
+
+    
+    <div class="bg-white rounded-lg shadow-sm border border-github-border p-8 mb-12">
+        <div class="prose prose-gray max-w-none">
+            <h1 id="getting-started-with-hugo">Getting Started with Hugo</h1>
+<p>Hugo is one of the most popular open-source static site generators. It&rsquo;s built with Go and is known for its speed and flexibility.</p>
+<h2 id="why-choose-hugo">Why Choose Hugo?</h2>
+<ol>
+<li><strong>Speed</strong> - Hugo is incredibly fast, building most sites in under a second</li>
+<li><strong>Flexibility</strong> - Supports multiple content formats and themes</li>
+<li><strong>No Dependencies</strong> - Single binary with no external dependencies</li>
+</ol>
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li>Lightning-fast build times</li>
+<li>Powerful theming system</li>
+<li>Built-in server for development</li>
+<li>Multilingual support</li>
+<li>Custom output formats</li>
+</ul>
+<h2 id="getting-started">Getting Started</h2>
+<p>To create a new Hugo site:</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hugo new site my-blog
+</span></span><span style="display:flex;"><span><span style="color:#0086b3">cd</span> my-blog
+</span></span><span style="display:flex;"><span>hugo new posts/my-first-post.md
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="content-organization">Content Organization</h2>
+<p>Hugo organizes content in a structured way:</p>
+<ul>
+<li><code>content/</code> - Your markdown files</li>
+<li><code>layouts/</code> - HTML templates</li>
+<li><code>static/</code> - Static assets</li>
+<li><code>config.toml</code> - Site configuration</li>
+</ul>
+<p>This makes it easy to maintain and scale your website as it grows.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Hugo provides an excellent foundation for building fast, modern websites. Combined with a custom CMS, it offers the best of both worlds: easy content management and lightning-fast static sites.</p>
+
+        </div>
+    </div>
+
+    
+    
+    <div class="mb-8">
+        <h3 class="text-sm font-medium text-gray-700 mb-3">Tags:</h3>
+        <div class="flex flex-wrap gap-2">
+            
+            <a href="/tags/hugo/" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors">
+                hugo
+            </a>
+            
+            <a href="/tags/static-site/" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors">
+                static-site
+            </a>
+            
+            <a href="/tags/web-development/" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors">
+                web-development
+            </a>
+            
+            <a href="/tags/jamstack/" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors">
+                jamstack
+            </a>
+            
+        </div>
+    </div>
+    
+
+    
+    <div class="bg-white rounded-lg border border-github-border p-6">
+        <div class="flex items-center">
+            <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="font-medium text-github-text">TechBlog Team</p>
+                <p class="text-sm text-gray-600">Published on January 8, 2025</p>
+            </div>
+        </div>
+    </div>
+</article>
+
+    </main>
+    
+    <footer class="bg-white border-t border-github-border py-12 mt-16">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="md:col-span-2">
+                <h5 class="text-lg font-semibold text-github-text mb-4">TechBlog</h5>
+                <p class="text-gray-600 mb-4">A modern blog platform built with Hugo and powered by a custom CMS</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-github-blue transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-github-blue transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h6 class="font-semibold text-github-text mb-4">Quick Links</h6>
+                <ul class="space-y-2 text-gray-600">
+                    
+                    <li><a href="/" class="hover:text-github-blue transition-colors">Home</a></li>
+                    
+                    <li><a href="/posts/" class="hover:text-github-blue transition-colors">Posts</a></li>
+                    
+                    <li><a href="/about/" class="hover:text-github-blue transition-colors">About</a></li>
+                    
+                    <li><a href="/contact/" class="hover:text-github-blue transition-colors">Contact</a></li>
+                    
+                </ul>
+            </div>
+            <div>
+                <h6 class="font-semibold text-github-text mb-4">Categories</h6>
+                <ul class="space-y-2 text-gray-600">
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-github-border mt-8 pt-8 text-center text-gray-600">
+            <p>&copy; 2025 TechBlog. All rights reserved. Built with Hugo + Custom CMS.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
