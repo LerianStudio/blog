@@ -13,12 +13,16 @@
             theme: {
                 extend: {
                     colors: {
-                        'github-blue': '#0366d6',
-                        'github-green': '#28a745',
-                        'github-bg': '#f6f8fa',
-                        'github-text': '#24292e',
-                        'github-accent': '#6f42c1',
-                        'github-border': '#e1e4e8'
+                        'lerian-green': '#44f56b',
+                        'lerian-coral': '#fc6359',
+                        'lerian-dark': '#363430',
+                        'lerian-white': '#ffffff',
+                        'lerian-light': '#f8f9fa',
+                        'lerian-border': '#e5e7eb'
+                    },
+                    fontFamily: {
+                        'lerian': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['IBM Plex Mono', 'monospace']
                     }
                 }
             }
@@ -30,7 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
-<body class="bg-gray-50 text-github-text">
+<body class="bg-lerian-light text-lerian-dark font-lerian">
     {{ partial "header.html" . }}
     
     <main>

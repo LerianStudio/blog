@@ -1,22 +1,22 @@
-<header class="bg-white border-b border-github-border shadow-sm">
+<header class="bg-lerian-white border-b border-lerian-border shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <a href="{{ .Site.BaseURL }}" class="text-2xl font-bold text-github-text hover:text-github-blue transition-colors">
+                <a href="{{ .Site.BaseURL }}" class="text-2xl font-bold text-lerian-dark hover:text-lerian-green transition-colors uppercase tracking-tight">
                     {{ .Site.Title }}
                 </a>
                 <nav class="hidden md:flex space-x-6">
                     {{ range .Site.Menus.main }}
-                    <a href="{{ .URL }}" class="text-gray-700 hover:text-github-blue transition-colors">{{ .Name }}</a>
+                    <a href="{{ .URL }}" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">{{ .Name }}</a>
                     {{ end }}
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="/admin" class="bg-github-blue hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                <a href="/admin" class="bg-lerian-green hover:bg-green-400 text-lerian-dark px-4 py-2 rounded-lg text-sm font-bold transition-colors uppercase tracking-wide">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                    Admin
+                    Lab
                 </a>
             </div>
         </div>

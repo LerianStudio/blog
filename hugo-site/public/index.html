@@ -4,8 +4,8 @@
 	<meta name="generator" content="Hugo 0.147.8">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TechBlog</title>
-    <meta name="description" content="A modern blog platform built with Hugo and powered by a custom CMS">
+    <title>Lerian Labs</title>
+    <meta name="description" content="Innovation lab exploring cutting-edge technology, product experiments, and the future of digital experiences">
     
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,12 +14,16 @@
             theme: {
                 extend: {
                     colors: {
-                        'github-blue': '#0366d6',
-                        'github-green': '#28a745',
-                        'github-bg': '#f6f8fa',
-                        'github-text': '#24292e',
-                        'github-accent': '#6f42c1',
-                        'github-border': '#e1e4e8'
+                        'lerian-green': '#44f56b',
+                        'lerian-coral': '#fc6359',
+                        'lerian-dark': '#363430',
+                        'lerian-white': '#ffffff',
+                        'lerian-light': '#f8f9fa',
+                        'lerian-border': '#e5e7eb'
+                    },
+                    fontFamily: {
+                        'lerian': ['Inter', 'system-ui', 'sans-serif'],
+                        'mono': ['IBM Plex Mono', 'monospace']
                     }
                 }
             }
@@ -31,32 +35,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </head>
-<body class="bg-gray-50 text-github-text">
-    <header class="bg-white border-b border-github-border shadow-sm">
+<body class="bg-lerian-light text-lerian-dark font-lerian">
+    <header class="bg-lerian-white border-b border-lerian-border shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <a href="/" class="text-2xl font-bold text-github-text hover:text-github-blue transition-colors">
-                    TechBlog
+                <a href="/" class="text-2xl font-bold text-lerian-dark hover:text-lerian-green transition-colors uppercase tracking-tight">
+                    Lerian Labs
                 </a>
                 <nav class="hidden md:flex space-x-6">
                     
-                    <a href="/" class="text-gray-700 hover:text-github-blue transition-colors">Home</a>
+                    <a href="/" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">Home</a>
                     
-                    <a href="/posts/" class="text-gray-700 hover:text-github-blue transition-colors">Posts</a>
+                    <a href="/posts/" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">Experiments</a>
                     
-                    <a href="/about/" class="text-gray-700 hover:text-github-blue transition-colors">About</a>
+                    <a href="/categories/research/" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">Research</a>
                     
-                    <a href="/contact/" class="text-gray-700 hover:text-github-blue transition-colors">Contact</a>
+                    <a href="/about/" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">About</a>
+                    
+                    <a href="/contact/" class="text-gray-700 hover:text-lerian-coral transition-colors font-medium">Contact</a>
                     
                 </nav>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="/admin" class="bg-github-blue hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                <a href="/admin" class="bg-lerian-green hover:bg-green-400 text-lerian-dark px-4 py-2 rounded-lg text-sm font-bold transition-colors uppercase tracking-wide">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                    Admin
+                    Lab
                 </a>
             </div>
         </div>
@@ -66,39 +72,39 @@
     <main>
         
 
-<section class="bg-white py-16">
+<section class="bg-lerian-white py-20">
     <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold text-github-text mb-6">
-            Welcome to TechBlog
+        <h2 class="text-5xl md:text-6xl font-bold text-lerian-dark mb-6 uppercase tracking-tight">
+            Welcome to Lerian Labs
         </h2>
-        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            A modern blog platform built with Hugo and powered by a custom CMS
+        <p class="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+            Innovation lab exploring cutting-edge technology, product experiments, and the future of digital experiences
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/posts/" class="bg-github-blue hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors inline-flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
+            <a href="/posts/" class="bg-lerian-green hover:bg-green-400 text-lerian-dark px-8 py-4 rounded-lg font-bold transition-colors inline-flex items-center uppercase tracking-wide text-sm">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                 </svg>
-                Read Latest Posts
+                View Experiments
             </a>
-            <a href="/categories/" class="border border-github-border hover:border-github-blue text-github-text hover:text-github-blue px-6 py-3 rounded-md font-medium transition-colors inline-flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            <a href="/categories/" class="border-2 border-lerian-coral hover:bg-lerian-coral text-lerian-dark hover:text-lerian-white px-8 py-4 rounded-lg font-bold transition-colors inline-flex items-center uppercase tracking-wide text-sm">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                 </svg>
-                Browse Categories
+                Browse Research
             </a>
         </div>
     </div>
 </section>
 
 
-<section class="py-16 bg-gray-50">
+<section class="py-20 bg-lerian-light">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-8">
-            <h3 class="text-3xl font-bold text-github-text">Latest Posts</h3>
-            <a href="/posts/" class="text-github-blue hover:text-blue-700 font-medium inline-flex items-center">
-                View all posts 
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center justify-between mb-12">
+            <h3 class="text-4xl font-bold text-lerian-dark uppercase tracking-tight">Latest Experiments</h3>
+            <a href="/posts/" class="text-lerian-coral hover:text-red-500 font-bold inline-flex items-center uppercase tracking-wide text-sm">
+                View All Experiments
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
             </a>
@@ -108,38 +114,38 @@
         
         
         
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             
-            <article class="bg-white rounded-lg border border-github-border hover:shadow-md transition-shadow">
-                <div class="p-6">
-                    <div class="flex items-center text-sm text-gray-500 mb-3">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <article class="bg-lerian-white rounded-xl border-2 border-lerian-border hover:border-lerian-green hover:shadow-lg transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex items-center text-sm text-gray-500 mb-4">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <span>January 8, 2025</span>
+                        <span class="font-mono">Jan 08, 2025</span>
                         <span class="mx-2">•</span>
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>1 min read</span>
+                        <span class="font-mono">2min</span>
                     </div>
-                    <h4 class="text-xl font-semibold text-github-text mb-3 hover:text-github-blue">
-                        <a href="/posts/getting-started-with-hugo/">Getting Started with Hugo Static Site Generation</a>
+                    <h4 class="text-xl font-bold text-lerian-dark mb-4 hover:text-lerian-green uppercase tracking-tight">
+                        <a href="/posts/hybrid-cms-architecture-experiment/">Hybrid CMS Architecture Experiment</a>
                     </h4>
-                    <p class="text-gray-600 mb-4">
-                        Learn how to get started with Hugo static site generation and why it&#39;s perfect for modern web development.
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Exploring the convergence of static site generation and dynamic content management through a custom Hugo &#43; React architecture experiment.
                     </p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                tutorial
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-lerian-green text-lerian-dark uppercase tracking-wide">
+                                architecture
                             </span>
                             
                         </div>
-                        <a href="/posts/getting-started-with-hugo/" class="text-github-blue hover:text-blue-700 text-sm font-medium inline-flex items-center">
-                            Read more 
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="/posts/hybrid-cms-architecture-experiment/" class="text-lerian-coral hover:text-red-500 text-sm font-bold inline-flex items-center uppercase tracking-wide">
+                            Explore
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
@@ -154,48 +160,50 @@
 
     </main>
     
-    <footer class="bg-white border-t border-github-border py-12 mt-16">
+    <footer class="bg-lerian-white border-t border-lerian-border py-16 mt-20">
     <div class="max-w-6xl mx-auto px-4">
         <div class="grid md:grid-cols-4 gap-8">
             <div class="md:col-span-2">
-                <h5 class="text-lg font-semibold text-github-text mb-4">TechBlog</h5>
-                <p class="text-gray-600 mb-4">A modern blog platform built with Hugo and powered by a custom CMS</p>
+                <h5 class="text-xl font-bold text-lerian-dark mb-4 uppercase tracking-tight">Lerian Labs</h5>
+                <p class="text-gray-600 mb-6 leading-relaxed">Innovation lab exploring cutting-edge technology, product experiments, and the future of digital experiences</p>
                 <div class="flex space-x-4">
-                    <a href="#" class="text-gray-400 hover:text-github-blue transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <a href="https://github.com/lerianstudio" class="text-gray-400 hover:text-lerian-green transition-colors">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                         </svg>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-github-blue transition-colors">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    <a href="https://lerian.studio" class="text-gray-400 hover:text-lerian-coral transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                         </svg>
                     </a>
                 </div>
             </div>
             <div>
-                <h6 class="font-semibold text-github-text mb-4">Quick Links</h6>
-                <ul class="space-y-2 text-gray-600">
+                <h6 class="font-bold text-lerian-dark mb-4 uppercase tracking-wide">Navigation</h6>
+                <ul class="space-y-3 text-gray-600">
                     
-                    <li><a href="/" class="hover:text-github-blue transition-colors">Home</a></li>
+                    <li><a href="/" class="hover:text-lerian-coral transition-colors font-medium">Home</a></li>
                     
-                    <li><a href="/posts/" class="hover:text-github-blue transition-colors">Posts</a></li>
+                    <li><a href="/posts/" class="hover:text-lerian-coral transition-colors font-medium">Experiments</a></li>
                     
-                    <li><a href="/about/" class="hover:text-github-blue transition-colors">About</a></li>
+                    <li><a href="/categories/research/" class="hover:text-lerian-coral transition-colors font-medium">Research</a></li>
                     
-                    <li><a href="/contact/" class="hover:text-github-blue transition-colors">Contact</a></li>
+                    <li><a href="/about/" class="hover:text-lerian-coral transition-colors font-medium">About</a></li>
+                    
+                    <li><a href="/contact/" class="hover:text-lerian-coral transition-colors font-medium">Contact</a></li>
                     
                 </ul>
             </div>
             <div>
-                <h6 class="font-semibold text-github-text mb-4">Categories</h6>
-                <ul class="space-y-2 text-gray-600">
+                <h6 class="font-bold text-lerian-dark mb-4 uppercase tracking-wide">Research Areas</h6>
+                <ul class="space-y-3 text-gray-600">
                     
                 </ul>
             </div>
         </div>
-        <div class="border-t border-github-border mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2025 TechBlog. All rights reserved. Built with Hugo + Custom CMS.</p>
+        <div class="border-t border-lerian-border mt-12 pt-8 text-center text-gray-600">
+            <p class="font-mono text-sm">&copy; 2025 Lerian Labs. Experimental technology lab. Built with Hugo + Custom CMS.</p>
         </div>
     </div>
 </footer>

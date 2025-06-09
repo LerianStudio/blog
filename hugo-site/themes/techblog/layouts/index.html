@@ -1,38 +1,38 @@
 {{ define "main" }}
 <!-- Hero Section -->
-<section class="bg-white py-16">
+<section class="bg-lerian-white py-20">
     <div class="max-w-6xl mx-auto px-4 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold text-github-text mb-6">
+        <h2 class="text-5xl md:text-6xl font-bold text-lerian-dark mb-6 uppercase tracking-tight">
             Welcome to {{ .Site.Title }}
         </h2>
-        <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+        <p class="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
             {{ .Site.Params.description }}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/posts/" class="bg-github-blue hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors inline-flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
+            <a href="/posts/" class="bg-lerian-green hover:bg-green-400 text-lerian-dark px-8 py-4 rounded-lg font-bold transition-colors inline-flex items-center uppercase tracking-wide text-sm">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
                 </svg>
-                Read Latest Posts
+                View Experiments
             </a>
-            <a href="/categories/" class="border border-github-border hover:border-github-blue text-github-text hover:text-github-blue px-6 py-3 rounded-md font-medium transition-colors inline-flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            <a href="/categories/" class="border-2 border-lerian-coral hover:bg-lerian-coral text-lerian-dark hover:text-lerian-white px-8 py-4 rounded-lg font-bold transition-colors inline-flex items-center uppercase tracking-wide text-sm">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                 </svg>
-                Browse Categories
+                Browse Research
             </a>
         </div>
     </div>
 </section>
 
-<!-- Featured Posts -->
-<section class="py-16 bg-gray-50">
+<!-- Featured Experiments -->
+<section class="py-20 bg-lerian-light">
     <div class="max-w-6xl mx-auto px-4">
-        <div class="flex items-center justify-between mb-8">
-            <h3 class="text-3xl font-bold text-github-text">Latest Posts</h3>
-            <a href="/posts/" class="text-github-blue hover:text-blue-700 font-medium inline-flex items-center">
-                View all posts 
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center justify-between mb-12">
+            <h3 class="text-4xl font-bold text-lerian-dark uppercase tracking-tight">Latest Experiments</h3>
+            <a href="/posts/" class="text-lerian-coral hover:text-red-500 font-bold inline-flex items-center uppercase tracking-wide text-sm">
+                View All Experiments
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
             </a>
@@ -42,38 +42,38 @@
         {{ $posts := first 6 $posts }}
         
         {{ if $posts }}
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {{ range $posts }}
-            <article class="bg-white rounded-lg border border-github-border hover:shadow-md transition-shadow">
-                <div class="p-6">
-                    <div class="flex items-center text-sm text-gray-500 mb-3">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <article class="bg-lerian-white rounded-xl border-2 border-lerian-border hover:border-lerian-green hover:shadow-lg transition-all duration-300">
+                <div class="p-8">
+                    <div class="flex items-center text-sm text-gray-500 mb-4">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <span>{{ .Date.Format "January 2, 2006" }}</span>
+                        <span class="font-mono">{{ .Date.Format "Jan 02, 2006" }}</span>
                         <span class="mx-2">•</span>
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
-                        <span>{{ .ReadingTime }} min read</span>
+                        <span class="font-mono">{{ .ReadingTime }}min</span>
                     </div>
-                    <h4 class="text-xl font-semibold text-github-text mb-3 hover:text-github-blue">
+                    <h4 class="text-xl font-bold text-lerian-dark mb-4 hover:text-lerian-green uppercase tracking-tight">
                         <a href="{{ .Permalink }}">{{ .Title }}</a>
                     </h4>
-                    <p class="text-gray-600 mb-4">
+                    <p class="text-gray-600 mb-6 leading-relaxed">
                         {{ if .Params.excerpt }}{{ .Params.excerpt }}{{ else }}{{ .Summary }}{{ end }}
                     </p>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             {{ with .Params.category }}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-lerian-green text-lerian-dark uppercase tracking-wide">
                                 {{ . }}
                             </span>
                             {{ end }}
                         </div>
-                        <a href="{{ .Permalink }}" class="text-github-blue hover:text-blue-700 text-sm font-medium inline-flex items-center">
-                            Read more 
-                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ .Permalink }}" class="text-lerian-coral hover:text-red-500 text-sm font-bold inline-flex items-center uppercase tracking-wide">
+                            Explore
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                         </a>
@@ -83,10 +83,10 @@
             {{ end }}
         </div>
         {{ else }}
-        <div class="text-center py-12">
-            <p class="text-gray-600">No posts published yet.</p>
-            <a href="/admin" class="mt-4 inline-block bg-github-blue hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors">
-                Create your first post
+        <div class="text-center py-16">
+            <p class="text-gray-600 text-lg mb-6">No experiments published yet. Time to start innovating!</p>
+            <a href="/admin" class="inline-block bg-lerian-green hover:bg-green-400 text-lerian-dark px-8 py-4 rounded-lg font-bold transition-colors uppercase tracking-wide">
+                Start First Experiment
             </a>
         </div>
         {{ end }}

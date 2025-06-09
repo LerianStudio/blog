@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on TechBlog</title>
+    <title>Posts on Lerian Labs</title>
     <link>/posts/</link>
-    <description>Recent content in Posts on TechBlog</description>
+    <description>Recent content in Posts on Lerian Labs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Jan 2025 14:19:00 +0000</lastBuildDate>
     <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Getting Started with Hugo Static Site Generation</title>
-      <link>/posts/getting-started-with-hugo/</link>
+      <title>Hybrid CMS Architecture Experiment</title>
+      <link>/posts/hybrid-cms-architecture-experiment/</link>
       <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
-      <guid>/posts/getting-started-with-hugo/</guid>
-      <description>&lt;h1 id=&#34;getting-started-with-hugo&#34;&gt;Getting Started with Hugo&lt;/h1&gt;&#xA;&lt;p&gt;Hugo is one of the most popular open-source static site generators. It&amp;rsquo;s built with Go and is known for its speed and flexibility.&lt;/p&gt;&#xA;&lt;h2 id=&#34;why-choose-hugo&#34;&gt;Why Choose Hugo?&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Speed&lt;/strong&gt; - Hugo is incredibly fast, building most sites in under a second&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Flexibility&lt;/strong&gt; - Supports multiple content formats and themes&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;No Dependencies&lt;/strong&gt; - Single binary with no external dependencies&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;key-features&#34;&gt;Key Features&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Lightning-fast build times&lt;/li&gt;&#xA;&lt;li&gt;Powerful theming system&lt;/li&gt;&#xA;&lt;li&gt;Built-in server for development&lt;/li&gt;&#xA;&lt;li&gt;Multilingual support&lt;/li&gt;&#xA;&lt;li&gt;Custom output formats&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;getting-started&#34;&gt;Getting Started&lt;/h2&gt;&#xA;&lt;p&gt;To create a new Hugo site:&lt;/p&gt;</description>
+      <guid>/posts/hybrid-cms-architecture-experiment/</guid>
+      <description>&lt;h1 id=&#34;hybrid-cms-architecture-experiment&#34;&gt;Hybrid CMS Architecture Experiment&lt;/h1&gt;&#xA;&lt;p&gt;This experiment explores building a modern content management system that combines the performance benefits of static site generation with the flexibility of dynamic admin interfaces.&lt;/p&gt;&#xA;&lt;h2 id=&#34;experiment-goals&#34;&gt;Experiment Goals&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Performance&lt;/strong&gt; - Serve public content as static files for maximum speed&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Developer Experience&lt;/strong&gt; - Modern React-based admin interface&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Security&lt;/strong&gt; - Stateless architecture with minimal attack surface&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Simplicity&lt;/strong&gt; - No database dependencies, file-based storage&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;technical-architecture&#34;&gt;Technical Architecture&lt;/h2&gt;&#xA;&lt;p&gt;Our experiment combines multiple technologies:&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

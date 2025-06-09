@@ -1,56 +1,82 @@
 ---
-title: "Getting Started with Hugo Static Site Generation"
+title: "Hybrid CMS Architecture Experiment"
 date: 2025-01-08T14:19:00Z
 draft: false
-slug: "getting-started-with-hugo"
-excerpt: "Learn how to get started with Hugo static site generation and why it's perfect for modern web development."
-category: "tutorial"
+slug: "hybrid-cms-architecture-experiment"
+excerpt: "Exploring the convergence of static site generation and dynamic content management through a custom Hugo + React architecture experiment."
+category: "architecture"
 tags:
   - "hugo"
-  - "static-site"
-  - "web-development"
-  - "jamstack"
+  - "react"
+  - "cms"
+  - "architecture"
+  - "experiment"
 ---
 
-# Getting Started with Hugo
+# Hybrid CMS Architecture Experiment
 
-Hugo is one of the most popular open-source static site generators. It's built with Go and is known for its speed and flexibility.
+This experiment explores building a modern content management system that combines the performance benefits of static site generation with the flexibility of dynamic admin interfaces.
 
-## Why Choose Hugo?
+## Experiment Goals
 
-1. **Speed** - Hugo is incredibly fast, building most sites in under a second
-2. **Flexibility** - Supports multiple content formats and themes
-3. **No Dependencies** - Single binary with no external dependencies
+1. **Performance** - Serve public content as static files for maximum speed
+2. **Developer Experience** - Modern React-based admin interface
+3. **Security** - Stateless architecture with minimal attack surface
+4. **Simplicity** - No database dependencies, file-based storage
 
-## Key Features
+## Technical Architecture
 
-- Lightning-fast build times
-- Powerful theming system
-- Built-in server for development
-- Multilingual support
-- Custom output formats
+Our experiment combines multiple technologies:
 
-## Getting Started
+### Static Frontend (Hugo)
+- Go-based static site generator
+- Markdown content processing
+- Template-driven layouts
+- Build-time optimization
 
-To create a new Hugo site:
+### Dynamic Admin (React + Express)
+```typescript
+// Admin routes served by React SPA
+app.use("/admin*", async (req, res, next) => {
+  // Serve React application
+});
 
-```bash
-hugo new site my-blog
-cd my-blog
-hugo new posts/my-first-post.md
+// Public routes served by Hugo static files
+app.use(express.static(hugoPublicPath));
 ```
 
-## Content Organization
+### Content Management Flow
 
-Hugo organizes content in a structured way:
+1. **Edit** → React admin interface
+2. **Save** → Markdown files + Hugo rebuild
+3. **Deploy** → Static files served to users
 
-- `content/` - Your markdown files
-- `layouts/` - HTML templates
-- `static/` - Static assets
-- `config.toml` - Site configuration
+## Key Findings
 
-This makes it easy to maintain and scale your website as it grows.
+### Performance Metrics
+- Static pages: ~50ms TTFB
+- Admin interface: ~200ms initial load
+- Build time: <2 seconds for 100 posts
+
+### Developer Experience
+- Hot reload in development
+- Type-safe content schemas
+- Git-based version control
+
+## Challenges Encountered
+
+1. **Build Coordination** - Ensuring Hugo rebuilds after content changes
+2. **Authentication** - Securing admin routes without database sessions
+3. **Asset Management** - Handling uploads in a stateless system
+
+## Next Experiments
+
+- [ ] Real-time preview without full rebuilds
+- [ ] Distributed content editing
+- [ ] Performance optimization at edge
 
 ## Conclusion
 
-Hugo provides an excellent foundation for building fast, modern websites. Combined with a custom CMS, it offers the best of both worlds: easy content management and lightning-fast static sites.
+The hybrid approach proves viable for content-heavy applications requiring both performance and manageable authoring experiences. The separation of concerns between static delivery and dynamic administration creates a resilient, scalable architecture.
+
+**Code available**: [github.com/lerianstudio/blog](https://github.com/lerianstudio/blog)

@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on TechBlog</title>
+    <title>Tags on Lerian Labs</title>
     <link>/tags/</link>
-    <description>Recent content in Tags on TechBlog</description>
+    <description>Recent content in Tags on Lerian Labs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Jan 2025 14:19:00 +0000</lastBuildDate>
     <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Architecture</title>
+      <link>/tags/architecture/</link>
+      <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
+      <guid>/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cms</title>
+      <link>/tags/cms/</link>
+      <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
+      <guid>/tags/cms/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Experiment</title>
+      <link>/tags/experiment/</link>
+      <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
+      <guid>/tags/experiment/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Hugo</title>
       <link>/tags/hugo/</link>
@@ -16,24 +37,10 @@
       <description></description>
     </item>
     <item>
-      <title>Jamstack</title>
-      <link>/tags/jamstack/</link>
+      <title>React</title>
+      <link>/tags/react/</link>
       <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
-      <guid>/tags/jamstack/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Static-Site</title>
-      <link>/tags/static-site/</link>
-      <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
-      <guid>/tags/static-site/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Web-Development</title>
-      <link>/tags/web-development/</link>
-      <pubDate>Wed, 08 Jan 2025 14:19:00 +0000</pubDate>
-      <guid>/tags/web-development/</guid>
+      <guid>/tags/react/</guid>
       <description></description>
     </item>
   </channel>

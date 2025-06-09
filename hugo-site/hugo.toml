@@ -1,11 +1,11 @@
 baseURL = "/"
 languageCode = "en-us"
-title = "TechBlog"
+title = "Lerian Labs"
 theme = "techblog"
 
 [params]
-  description = "A modern blog platform built with Hugo and powered by a custom CMS"
-  author = "TechBlog Team"
+  description = "Innovation lab exploring cutting-edge technology, product experiments, and the future of digital experiences"
+  author = "Lerian Labs Team"
 
 [markup]
   [markup.goldmark]
@@ -22,9 +22,13 @@ theme = "techblog"
     url = "/"
     weight = 10
   [[menu.main]]
-    name = "Posts"
+    name = "Experiments"
     url = "/posts/"
     weight = 20
+  [[menu.main]]
+    name = "Research"
+    url = "/categories/research/"
+    weight = 25
   [[menu.main]]
     name = "About"
     url = "/about/"
