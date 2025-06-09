@@ -5,8 +5,10 @@ import type { Express, RequestHandler } from "express";
 import MemoryStore from "memorystore";
 import { fileStorage } from "./fileStorage";
 
+// Temporary: Allow deployment without OAuth for initial setup
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  throw new Error("Google OAuth credentials (GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET) are required");
+  console.warn("⚠️  Google OAuth not configured - admin access will be disabled");
+  console.warn("   Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables");
 }
 
 if (!process.env.SESSION_SECRET) {
@@ -40,6 +42,12 @@ export async function setupAuth(app: Express) {
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Skip OAuth setup if credentials not available
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    console.warn("⚠️  Skipping OAuth setup - credentials not found");
+    return;
+  }
 
   // Configure Google OAuth strategy
   const strategy = new GoogleStrategy(

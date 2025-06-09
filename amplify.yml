@@ -4,6 +4,13 @@ backend:
     preBuild:
       commands:
         - npm ci
+        # Set environment variables during build (temporary solution)
+        - echo "SESSION_SECRET=32f01c9cdc01a79d393b7219fdcbea63f9a982b077a886416c426405f466f253" >> .env
+        - echo "AMPLIFY_APP_URL=https://blog.lerian.studio" >> .env
+        - echo "NODE_ENV=production" >> .env
+        # Add your Google OAuth credentials via Amplify console or use placeholder approach
+        # - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env
+        # - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env
     build:
       commands:
         - npm run build
@@ -14,6 +21,7 @@ backend:
       - hugo-site/public/**/*
       - package.json
       - node_modules/**/*
+      - .env
 frontend:
   phases:
     preBuild:
